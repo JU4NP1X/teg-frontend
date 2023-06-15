@@ -1,0 +1,10 @@
+
+.selectValidator{
+  display: flex !important;
+  flex-direction: column;
+}
+
+.formValidator{
+  display:flex;
+  flex-direction: column;
+}

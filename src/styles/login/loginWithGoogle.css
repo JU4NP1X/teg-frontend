@@ -1,0 +1,9 @@
+iframe {
+  display: flex !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#root main div {
+  margin-top: 0px;
+}

@@ -1,0 +1,21 @@
+
+
+.btn-primary {
+  background-color: #999999 !important;
+  color: white !important;
+}
+
+.btn-secondary {
+  background-color: white !important;
+  color: black !important
+}
+
+.google-login div {
+  width: 300px !important;
+
+}
+
+.google-login div iframe {
+  width: 300px !important;
+
+}

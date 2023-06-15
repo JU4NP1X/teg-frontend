@@ -1,0 +1,31 @@
+.farm-search-card {
+  height: 70px;
+  margin: 0px !important;
+  border-radius: 0% !important;
+  z-index: 2;
+}
+
+.correct-form-size div {
+  width: 100%;
+  margin-top: 0px !important;
+
+}
+
+.hide-frame div fieldset {
+  display: none;
+  border-width: 0;
+}
+
+.fixed-size div input {
+  padding: 0px;
+}
+
+.fixed-size div {
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .report-type-resume {
+    display: none !important;
+  }
+}

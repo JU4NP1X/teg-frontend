@@ -1,0 +1,101 @@
+.icon-drawer {
+  margin-right: 36px !important;
+}
+
+.layout-header {
+  padding-right: 0px !important;
+}
+
+.appbar-background {
+  background: white !important;
+}
+
+
+.layout-user-information {
+  text-align: right !important;
+  margin-top: auto !important;
+  font-size: 0.55em !important;
+  margin-bottom: 5px !important;
+}
+
+.layout-icon-exit {
+  margin-left: 20px !important;
+  margin-right: 10px !important;
+}
+
+
+.layout-logo {
+  height: 50px;
+  cursor: pointer;
+}
+
+.layout-not-select {
+  cursor: default;
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  user-select: none;
+  /* Standard syntax */
+}
+
+
+@media (max-width: 480px) {
+  .icon-drawer {
+    margin-right: 15px !important;
+  }
+}
+
+input {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.MuiTextField-root {
+  margin-top: 20px !important;
+  margin-bottom: 4px !important
+}
+
+.MuiTextField-root label {
+  top: -5px !important;
+}
+
+.MuiSelect-select {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important
+}
+
+.MuiFormControl-root {
+  padding: 0;
+}
+
+.Mui-focused {
+  color: black !important
+}
+
+.MuiInput-root:after {
+  border-color: black !important;
+}
+
+.btn-primary {
+  background-color: #999999;
+}
+
+.Mui-selected {
+  background-color: #f1f1f1 !important;
+}
+
+.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.power-bi-embed {
+  min-height: 80vh;
+  height: 100%;
+  display: flex;
+}
+
+.power-bi-embed iframe {
+  height: auto !important;
+}

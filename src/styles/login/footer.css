@@ -1,0 +1,99 @@
+.footer-img {
+  height: 80px;
+  width: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.footer-item {
+  height: -webkit-fill-available;
+}
+
+.logo_febeca {
+  content: url(/img/febeca.png);
+  margin-right: 25px;
+}
+
+.logo_beval {
+  content: url(/img/beval.png);
+  margin-right: 25px;
+}
+
+.logo_sillaca {
+  content: url(/img/sillaca.png);
+  margin-right: 25px;
+
+}
+
+.logo_cofersa {
+  content: url(/img/cofersa.png);
+  margin-right: 25px;
+}
+
+.logo_mundipartes {
+  content: url(/img/mundipartes.png);
+  margin-right: 25px;
+}
+
+.logo_olo {
+  content: url(/img/olo.png);
+
+}
+
+.container-desktop {
+  display: flex;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-mobile {
+  display: none;
+}
+
+
+.footer-container {
+  justify-content: center;
+  height: 80px;
+  max-width: 100vw;
+}
+
+@media (max-width: 1000px) {
+  .footer-img {
+    height: auto;
+    width: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .logo_febeca {
+    content: url(/img/febeca-isotipo.png);
+    margin-right: 25px;
+  }
+
+  .logo_beval {
+    content: url(/img/beval-isotipo.png);
+    margin-right: 25px;
+  }
+
+  .logo_sillaca {
+    content: url(/img/sillaca-isotipo.png);
+    margin-right: 25px;
+
+  }
+
+  .logo_cofersa {
+    content: url(/img/cofersa-isotipo.png);
+    margin-right: 25px;
+  }
+
+  .logo_mundipartes {
+    content: url(/img/mundipartes-isotipo.png);
+    margin-right: 25px;
+  }
+
+  .logo_olo {
+    content: url(/img/olo-isotipo.png);
+
+  }
+}
