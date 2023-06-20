@@ -62,16 +62,10 @@ app.use(
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
 })
-app.get('/farm', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
-})
 app.get('/login', function (req, res) {
   res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
 })
 app.get('/admin/*', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
-})
-app.get('/reports/*', function (req, res) {
   res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
 })
 

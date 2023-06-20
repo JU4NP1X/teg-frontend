@@ -1,4 +1,5 @@
 
+import { red } from '@mui/material/colors'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 const drawerWidth = 240
@@ -8,6 +9,8 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
   ({ theme, open }) => {
     return {
       '& .MuiDrawer-paper': {
+        backgroundColor: red[900],
+        color: 'white',
         position: 'relative',
         whiteSpace: 'nowrap',
         width: '100vw',

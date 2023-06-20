@@ -12,26 +12,6 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [auth, setAuth] = useState(false)
 
-  const authenticateUser = async () => {
-    const token = Session.token()
-    if (!token) {
-      setAuth(false)
-      setLoading(false)
-      Navigate('/')
-    }
-    else {
-      setAuth(true)
-      Navigate('/farm')
-
-    }
-    setLoading(false)
-
-  }
-
-  useEffect(() => {
-    authenticateUser()
-  }, [])
-
   return (
     <AuthContext.Provider
       value={{

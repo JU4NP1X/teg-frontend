@@ -1,7 +1,7 @@
 {
   "apps" : [
     {
-      "name"      : "Website Reportes OIC V2- FE",
+      "name"      : "VoCo UC",
       "script"    : "npx",
       "interpreter": "none",
       "args": "npm run server"
