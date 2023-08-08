@@ -1,13 +1,13 @@
 
-import { Tooltip, IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ReplayIcon from "@mui/icons-material/Replay";
+import { Tooltip, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ReplayIcon from '@mui/icons-material/Replay';
 import ApiConnection from '../../utils/apiConnection'
 
 
 import useNotification from '../../hooks/useNotification'
-import useUsers from "../../hooks/useUsers";
+import useUsers from '../../hooks/useUsers';
 
 
 
@@ -23,7 +23,7 @@ const Action = ({ data, setData, handleOpenModal }) => {
 
   const handleResetPassword = async (usrId) => {
     const api = ApiConnection()
-    const resetPasword = confirm("¿Está seguro que desea restabler la contraseña del usuario?")
+    const resetPasword = confirm('¿Está seguro que desea restabler la contraseña del usuario?')
     if (!resetPasword) return
 
     await api.put('users/reset-password', { usrId })
@@ -34,7 +34,7 @@ const Action = ({ data, setData, handleOpenModal }) => {
   }
   const handleDeleteUser = async (usrId) => {
     const api = ApiConnection()
-    const deleteUser = confirm("¿Está seguro que desea eliminar el usuario?")
+    const deleteUser = confirm('¿Está seguro que desea eliminar el usuario?')
 
     if (!deleteUser) return
 

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "react"
-import { Router } from "react-router-dom"
+import { useLayoutEffect, useState } from 'react'
+import { Router } from 'react-router-dom'
 
 const CustomRouter = ({ history, ...props }) => {
   const [state, setState] = useState({

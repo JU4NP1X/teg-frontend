@@ -51,15 +51,21 @@ input {
   padding-bottom: 5px !important;
 }
 
+.title-site {
+  margin-left: -12px !important;
+}
+
 .MuiTextField-root {
   margin-top: 20px !important;
   margin-bottom: 4px !important
 }
 
 .MuiTextField-root label {
-  top: -5px !important;
+  top: -10px !important;
 }
-
+.Mui-selected {
+  background-color: rgba(165, 28, 28, 0.88) !important;
+}
 .MuiSelect-select {
   padding-top: 4px !important;
   padding-bottom: 4px !important

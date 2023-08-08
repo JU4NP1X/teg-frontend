@@ -3,7 +3,7 @@ import '../../styles/layout/filters.css'
 import { isMobile } from '../../utils/utils'
 import Swipe from '../__common/Swipe'
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { PermIdentity, InsertDriveFile, BarChart, LockReset, Search, Visibility } from '@mui/icons-material'
+import { PermIdentity, InsertDriveFile, BarChart, LockReset, Search, Visibility, DoorBack, DoorSliding, Logout } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -46,6 +46,15 @@ export const SideBar = () => {
 						<LockReset />
 					</ListItemIcon>
 					<ListItemText primary='Cambiar Clave' />
+				</ListItemButton>
+
+				{/* change password */}
+				<ListItemButton sx={{mt: 'auto'}} onClick={() => {
+				}}>
+					<ListItemIcon sx={{ color: 'white' }}>
+						<Logout />
+					</ListItemIcon>
+					<ListItemText primary='Cerrar Sesión' />
 				</ListItemButton>
 			</List>
 		</Swipe>

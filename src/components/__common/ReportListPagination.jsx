@@ -82,29 +82,29 @@ const ReportListPagination = ({ list, numOfPages = 0, isFav = false, style, page
                         (
                           <span
                             style={{
-                              backgroundColor: "#f6ffed",
-                              padding: "2px",
-                              border: "1px solid ",
-                              borderColor: "#52c41a",
-                              color: "#52c41a",
-                              height: "10px"
+                              backgroundColor: '#f6ffed',
+                              padding: '2px',
+                              border: '1px solid ',
+                              borderColor: '#52c41a',
+                              color: '#52c41a',
+                              height: '10px'
                             }}
                           >
-                            {" "}
-                            DISPONIBLE{" "}
+                            {' '}
+                            DISPONIBLE{' '}
                           </span>
                         ) : (
                           <span
                             style={{
-                              backgroundColor: "#fff1f0",
-                              padding: "2px",
-                              border: "1px solid",
-                              borderColor: "#ffa39e",
-                              color: "#f5222d",
+                              backgroundColor: '#fff1f0',
+                              padding: '2px',
+                              border: '1px solid',
+                              borderColor: '#ffa39e',
+                              color: '#f5222d',
                             }}
                           >
-                            {" "}
-                            EN MANTENIMIENTO{" "}
+                            {' '}
+                            EN MANTENIMIENTO{' '}
                           </span>
                         )}
                     </TableCell>

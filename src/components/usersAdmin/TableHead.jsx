@@ -1,5 +1,5 @@
-import { TableHead as Head, TableRow, TableCell } from "@mui/material"
-import OrderBy from "./OrderBy"
+import { TableHead as Head, TableRow, TableCell } from '@mui/material'
+import OrderBy from './OrderBy'
 const TableHead = ({headCells, setColumn, setValue, order, setOrder, Filter}) => {
   return (
     <Head>

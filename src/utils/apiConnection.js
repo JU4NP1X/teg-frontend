@@ -1,6 +1,5 @@
 import Session from './session'
 import axios from 'axios'
-import { createSearchParams } from 'react-router-dom'
 import history from './history'
 const env = import.meta.env
 

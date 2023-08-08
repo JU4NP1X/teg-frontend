@@ -184,8 +184,8 @@ export default function ReportDialog({ title, repType, repId, open, setOpen }) {
                 /> :
                 <PowerBIEmbed embedConfig={embedConfig}
                   cssClassName={'power-bi-embed'}
-                  frameBorder="0"
-                  allow="fullscreen"
+                  frameBorder='0'
+                  allow='fullscreen'
                 />
           }
         </FullScreen>

@@ -3,11 +3,11 @@ const Status = (prop) => {
       return (
         <span
           style={{
-            backgroundColor: "#f6ffed",
-            padding: "2px",
-            border: "0.5px solid",
-            borderColor: "#52c41a",
-            color: "#52c41a",
+            backgroundColor: '#f6ffed',
+            padding: '2px',
+            border: '0.5px solid',
+            borderColor: '#52c41a',
+            color: '#52c41a',
           }}
           key={prop.usrStatus}
         >
@@ -18,11 +18,11 @@ const Status = (prop) => {
       return (
         <span
           style={{
-            backgroundColor: "#fff1f0",
-            padding: "2px",
-            border: "0.5px solid",
-            borderColor: "#ffa39e",
-            color: "#f5222d",
+            backgroundColor: '#fff1f0',
+            padding: '2px',
+            border: '0.5px solid',
+            borderColor: '#ffa39e',
+            color: '#f5222d',
           }}
           key={prop.usrStatus}
         >

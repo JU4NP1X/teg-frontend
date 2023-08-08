@@ -28,7 +28,8 @@ import { Class, } from '@mui/icons-material';
 const mdTheme = createTheme({
   palette: {
     primary: {
-      main: red[700],
+      main: red[900],
+
     },
     secondary: {
       main: red[500],
@@ -40,7 +41,7 @@ const Layout = ({ children }) => {
 
   const [filterAction, setFilterAction] = useState(false)
   const [resetFilters, setResetFilters] = useState(false)
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [user] = useState(Session.getAll())
   const [companiesList, setCompaniesList] = useState([])
   const filterProps = { companiesList, setCompaniesList, isOpen: open, resetFilters, setResetFilters, setOpen, user }
@@ -62,10 +63,12 @@ const Layout = ({ children }) => {
   return (
     <>
       <ThemeProvider theme={mdTheme}>
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }} >
           <Drawer variant='permanent' open={open}
+            onMouseEnter={() => { setOpen(true) }} onMouseLeave={() => { setOpen(false) }}
           >
             <Toolbar
+              className='title-site'
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -84,7 +87,7 @@ const Layout = ({ children }) => {
                 }}
               >
                 <Tooltip title='Sistema de gestión del vocabulario controlado de la Universidad de Carabobo'>
-                  <Class />
+                  <img src='img/uc-logo.png' style={{ height: 40 }} />
                 </Tooltip>
                 <Tooltip title='Sistema de gestión del vocabulario controlado de la Universidad de Carabobo'>
                   <strong style={{ marginLeft: 15 }}>VoCo UC</strong>

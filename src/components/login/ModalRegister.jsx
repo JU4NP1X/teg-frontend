@@ -5,10 +5,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
-import '../../styles/userAdmin/editUser.css'
-import ApiConnection from "../../utils/apiConnection"
-import useNotification from "../../hooks/useNotification"
-import { TextValidator, SelectValidator, ValidatorForm } from "react-material-ui-form-validator"
+import ApiConnection from '../../utils/apiConnection'
+import useNotification from '../../hooks/useNotification'
+import { TextValidator, SelectValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import SimpleBar from 'simplebar-react';
 
 const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
@@ -90,7 +89,7 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
   }, [form])
   return (<>
     <Dialog open={openRegisterDialog} maxWidth='sm' sx={{ height: 680 }}>
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle id='alert-dialog-title'>
         <b>Regístrate</b>
       </DialogTitle>
       <DialogContent>
@@ -111,9 +110,9 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
             <TextValidator
               fullWidth
               sx={{ px: '0 !important' }}
-              margin="dense"
+              margin='dense'
               name='usrName'
-              label="Nombre"
+              label='Nombre'
               value={form.usrName}
               onChange={setFormValue}
               validators={['required']}
@@ -124,9 +123,9 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
             <TextValidator
               fullWidth
               sx={{ px: '0 !important' }}
-              margin="dense"
+              margin='dense'
               name='usrLastName'
-              label="Apellido"
+              label='Apellido'
               value={form.usrLastName}
               onChange={setFormValue}
               validators={['required']}
@@ -136,9 +135,9 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
             <TextValidator
               fullWidth
               sx={{ px: '0 !important' }}
-              margin="dense"
+              margin='dense'
               name='usrEmail'
-              label="Email"
+              label='Email'
               value={form.usrEmail}
               onChange={setFormValue}
               validators={['isEmail', 'required']}
@@ -169,9 +168,9 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
               fullWidth
               sx={{ px: '0 !important' }}
               className='TextValidator'
-              label="Contraseña"
-              type="password"
-              name="usrPassword"
+              label='Contraseña'
+              type='password'
+              name='usrPassword'
               value={form.usrPassword}
               onChange={setFormValue}
               validators={['required', 'minStringLength:8']}
@@ -181,22 +180,22 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
             <TextValidator
               fullWidth
               sx={{ px: '0 !important' }}
-              label="Confirmar contraseña"
+              label='Confirmar contraseña'
               onChange={setFormValue}
-              name="confirmUsrPassword"
+              name='confirmUsrPassword'
               value={form.confirmUsrPassword}
               validators={['required', 'isPasswordMatch']}
               errorMessages={['Este campo es requerido', 'Las contraseñas no coinciden']}
-              margin="normal"
-              type="password"
+              margin='normal'
+              type='password'
             />
 
           </SimpleBar>
           <DialogActions>
             {/* <Button color='success' onClick={guardar}>Guardar</Button> */}
             <Button
-              variant="contained"
-              type="submit"
+              variant='contained'
+              type='submit'
               className='btn-primary'
               disabled={openLoading}
             >
@@ -204,7 +203,7 @@ const RegisterForm = ({ openRegisterDialog, setOpenRegisterDialog }) => {
 
             </Button>
             <Button className='btn-primary'
-              variant="contained" onClick={handleClose} autoFocus
+              variant='contained' onClick={handleClose} autoFocus
               disabled={openLoading}>
               Cancelar
             </Button>

@@ -7,7 +7,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
 import EditUser from '../components/usersAdmin/EditUser'
-import ApiConnection from "../utils/apiConnection"
+import ApiConnection from '../utils/apiConnection'
 import ModalMassiveAddUsers from '../components/usersAdmin/ModalMassiveAddUsers'
 import { Typography } from '@mui/material'
 import useUsers from '../hooks/useUsers'
@@ -20,7 +20,7 @@ const UsersAdmin = () => {
   const { setUser } = useUsers()
 
   const content = (<>
-    <Box sx={{ width: "100%", px: 5 }}>
+    <Box sx={{ width: '100%', px: 5 }}>
       <Tooltip title={
         <>
           Administrador de creación, eliminación y edición de usuarios.
@@ -35,7 +35,7 @@ const UsersAdmin = () => {
             setUser({})
             setVisibleModal(true)
           }}><AddCircleOutlineIcon /></IconButton></Tooltip></div>
-        <div><Tooltip title="Carga masiva de Usuarios"><IconButton onClick={() => setVisibleMassiveAddUsers(true)}><FileUploadIcon /></IconButton></Tooltip></div>
+        <div><Tooltip title='Carga masiva de Usuarios'><IconButton onClick={() => setVisibleMassiveAddUsers(true)}><FileUploadIcon /></IconButton></Tooltip></div>
       </div>
 
       <TableUsers

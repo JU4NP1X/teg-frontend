@@ -5,8 +5,9 @@ import useSearch from '../hooks/useSearch'
 import ApiConnection from '../utils/apiConnection'
 import SimpleBar from 'simplebar-react'
 import { Search, Upload } from '@mui/icons-material'
-import InputCard from '../components/finder/inputCard'
-import TagsListCard from '../components/finder/tagsListCard'
+import InputCard from '../components/finder/InputCard'
+import TagsListCard from '../components/finder/TagsListCard'
+import '../styles/finder/finder.css'
 
 const TagsFinder = () => {
 
@@ -19,7 +20,7 @@ const TagsFinder = () => {
 		>
 			<Grid container>
 
-				<Grid item xs={8} sx={{ p: 2 }}>
+				<Grid item xs={8} sx={{ p: 2}}>
 					<InputCard />
 				</Grid>
 				<Grid item xs={4} sx={{ p: 2, display: 'inline-grid', }}>

@@ -3,7 +3,7 @@ import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
 
 const tagsTemplate = {
-  thesaurus: [],
+  categories: [],
   subjectHeading: [],
   authorityList: [],
 }
