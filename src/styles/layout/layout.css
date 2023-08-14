@@ -10,7 +10,6 @@
   background: white !important;
 }
 
-
 .layout-user-information {
   text-align: right !important;
   margin-top: auto !important;
@@ -22,7 +21,6 @@
   margin-left: 20px !important;
   margin-right: 10px !important;
 }
-
 
 .layout-logo {
   height: 50px;
@@ -38,7 +36,6 @@
   user-select: none;
   /* Standard syntax */
 }
-
 
 @media (max-width: 480px) {
   .icon-drawer {
@@ -57,7 +54,7 @@ input {
 
 .MuiTextField-root {
   margin-top: 20px !important;
-  margin-bottom: 4px !important
+  margin-bottom: 4px !important;
 }
 
 .MuiTextField-root label {
@@ -68,7 +65,7 @@ input {
 }
 .MuiSelect-select {
   padding-top: 4px !important;
-  padding-bottom: 4px !important
+  padding-bottom: 4px !important;
 }
 
 .MuiFormControl-root {
@@ -76,7 +73,7 @@ input {
 }
 
 .Mui-focused {
-  color: black !important
+  color: black !important;
 }
 
 .MuiInput-root:after {

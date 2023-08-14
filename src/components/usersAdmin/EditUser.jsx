@@ -1,36 +1,24 @@
-import Dialog from '@mui/material/Dialog'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import Autocomplete from '@mui/material/Autocomplete'
+import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import { useState, useEffect, useReducer } from 'react'
+import { red } from '@mui/material/colors'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField'
-import TextareaAutosize from '@mui/base/TextareaAutosize'
-import FormControl from '@mui/material/FormControl'
-import Input from '@mui/material/Input'
-import Button from '@mui/material/Button'
-import ApiConnection from '../../utils/apiConnection'
-import Backdrop from '@mui/material/Backdrop'
-import InputLabel from '@mui/material/InputLabel'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import useNotification from '../../hooks/useNotification'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import ListItemText from '@mui/material/ListItemText'
+import { useEffect, useState } from 'react'
 import {
-  TextValidator,
   SelectValidator,
+  TextValidator,
   ValidatorForm,
 } from 'react-material-ui-form-validator'
-import Autocomplete from '@mui/material/Autocomplete'
-import { red } from '@mui/material/colors'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import useUsers from '../../hooks/useUsers'
-import { FormControlLabel, Grid } from '@mui/material'
 import SimpleBar from 'simplebar-react'
-
-
+import useNotification from '../../hooks/useNotification'
+import useUsers from '../../hooks/useUsers'
+import ApiConnection from '../../utils/apiConnection'
 
 function EditUser({ handleCloseModal, modal, setModal }) {
   const { listCompanies, user, rolesList, loadingUser, getUsers } = useUsers()
@@ -38,8 +26,8 @@ function EditUser({ handleCloseModal, modal, setModal }) {
 
   const [userToEdit, setUserToEdit] = useState(user)
 
-  const icon = <CheckBoxOutlineBlankIcon fontSize='small' />
-  const checkedIcon = <CheckBoxIcon fontSize='small' />
+  const icon = <CheckBoxOutlineBlankIcon fontSize={'small'} />
+  const checkedIcon = <CheckBoxIcon fontSize={'small'} />
 
   const hanldeChangeValue = (event, field) => {
     const value = event.target.value
@@ -54,7 +42,6 @@ function EditUser({ handleCloseModal, modal, setModal }) {
     })
   }
 
-
   const handleChangeRoles = (values) => {
     setUserToEdit((prevData) => {
       return {
@@ -65,14 +52,11 @@ function EditUser({ handleCloseModal, modal, setModal }) {
   }
 
   const handleSubmit = async () => {
-
     const Api = ApiConnection()
 
     //validacion para roles
     if (userToEdit.roles.length < 1) {
-      return setErrorMessage(
-        'debe seleccionar al menos un rol para este Usere'
-      )
+      return setErrorMessage('debe seleccionar al menos un rol para este Usere')
     }
 
     const data = {
@@ -80,8 +64,7 @@ function EditUser({ handleCloseModal, modal, setModal }) {
       roles: userToEdit.roles.map((role) => role.rolId),
     }
 
-    if (!userToEdit.isNewUser)
-      await Api.put('users', data)
+    if (!userToEdit.isNewUser) await Api.put('users', data)
     else {
       await Api.post('users', data)
     }
@@ -108,24 +91,29 @@ function EditUser({ handleCloseModal, modal, setModal }) {
           open={modal}
           onClose={handleCloseModal}
           fullWidth={true}
-          maxWidth='sm'
+          maxWidth={'sm'}
         >
-          <DialogTitle id='alert-dialog-title'>
+          <DialogTitle id={'alert-dialog-title'}>
             {userToEdit.isNewUser ? 'Crear Usuario' : 'Editar Usuario'}
           </DialogTitle>
 
           <DialogContent>
             <ValidatorForm
-              className='formValidator'
+              className={'formValidator'}
               onSubmit={() => handleSubmit()}
               onError={(errors) => console.log(errors)}
             >
-              <SimpleBar style={{ maxHeight: '70vh', overflow: 'auto', width: '100%'}} onTouchEnd={(e) => {e.stopPropagation()}}>
+              <SimpleBar
+                style={{ maxHeight: '70vh', overflow: 'auto', width: '100%' }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation()
+                }}
+              >
                 {/* usrName */}
                 <TextValidator
-                  margin='dense'
-                  name='usrName'
-                  label='Nombre'
+                  margin={'dense'}
+                  name={'usrName'}
+                  label={'Nombre'}
                   fullWidth
                   value={userToEdit.usrName}
                   onChange={(event) => hanldeChangeValue(event, 'usrName')}
@@ -134,9 +122,9 @@ function EditUser({ handleCloseModal, modal, setModal }) {
                 />
                 {/* usrLastName */}
                 <TextValidator
-                  margin='dense'
-                  name='usrLastName'
-                  label='Apellido'
+                  margin={'dense'}
+                  name={'usrLastName'}
+                  label={'Apellido'}
                   fullWidth
                   value={userToEdit.usrLastName}
                   onChange={(event) => hanldeChangeValue(event, 'usrLastName')}
@@ -146,9 +134,9 @@ function EditUser({ handleCloseModal, modal, setModal }) {
 
                 {/* Company */}
                 <SelectValidator
-                  className='selectValidator'
-                  labelId='cmpId'
-                  label='Compañía'
+                  className={'selectValidator'}
+                  labelId={'cmpId'}
+                  label={'Compañía'}
                   value={userToEdit.cmpId}
                   defaultValue={'Seleccione una compañia'}
                   onChange={(event) => hanldeChangeValue(event, 'cmpId')}
@@ -162,25 +150,27 @@ function EditUser({ handleCloseModal, modal, setModal }) {
                   ))}
                 </SelectValidator>
 
-
                 {/* usrEmail */}
                 <TextValidator
-                  margin='dense'
-                  name='usrEmail'
-                  label='Correo'
+                  margin={'dense'}
+                  name={'usrEmail'}
+                  label={'Correo'}
                   fullWidth
                   value={userToEdit.usrEmail}
                   onChange={(event) => hanldeChangeValue(event, 'usrEmail')}
                   validators={['required', 'isEmail']}
-                  errorMessages={['Ingrese un correo', 'Ingrese un correo válido']}
+                  errorMessages={[
+                    'Ingrese un correo',
+                    'Ingrese un correo válido',
+                  ]}
                 />
 
                 {/* estatus */}
                 <SelectValidator
-                  className='selectValidator'
-                  labelId='statusLabel'
-                  label='Estatus'
-                  name='usrStatus'
+                  className={'selectValidator'}
+                  labelId={'statusLabel'}
+                  label={'Estatus'}
+                  name={'usrStatus'}
                   value={userToEdit.usrStatus}
                   defaultValue={userToEdit.usrStatus}
                   onChange={(event) => hanldeChangeValue(event, 'usrStatus')}
@@ -195,7 +185,7 @@ function EditUser({ handleCloseModal, modal, setModal }) {
                   sx={{ color: red }}
                   onChange={(event, value) => handleChangeRoles(value)}
                   multiple
-                  id='roles'
+                  id={'roles'}
                   options={rolesList}
                   disableCloseOnSelect
                   isOptionEqualToValue={(role, value) =>
@@ -217,8 +207,8 @@ function EditUser({ handleCloseModal, modal, setModal }) {
                   renderInput={(params) => (
                     <TextValidator
                       {...params}
-                      label='Seleccione uno o varios roles'
-                      placeholder='Roles'
+                      label={'Seleccione uno o varios roles'}
+                      placeholder={'Roles'}
                       validators={userToEdit.roles.length ? [] : ['required']}
                       errorMessages={['Seleccione al menos un rol']}
                     />
@@ -227,10 +217,10 @@ function EditUser({ handleCloseModal, modal, setModal }) {
               </SimpleBar>
 
               <DialogActions>
-                <Button id='btn-ok' type='submit'>
+                <Button id={'btn-ok'} type={'submit'}>
                   Guardar
                 </Button>
-                <Button id='btn-cancel' onClick={handleCloseModal} autoFocus>
+                <Button id={'btn-cancel'} onClick={handleCloseModal} autoFocus>
                   Cancelar
                 </Button>
               </DialogActions>
@@ -238,7 +228,8 @@ function EditUser({ handleCloseModal, modal, setModal }) {
           </DialogContent>
         </Dialog>
       </>
-    ))
+    )
+  )
 }
 
 //export const modal

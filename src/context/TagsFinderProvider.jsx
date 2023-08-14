@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
 
@@ -13,7 +13,7 @@ const tagInfoTemplate = {
   englishTrans: '',
   group: {},
   relatedConcepts: [],
-  uri: ''
+  uri: '',
 }
 
 const TagsFinderProviderContext = createContext()
@@ -25,7 +25,7 @@ const TagsFinderProvider = ({ children }) => {
   const [getTags, setGetTags] = useState(false)
   const [showTagInfo, setShowTagInfo] = useState(false)
   const [tagInfo, setTagInfo] = useState(tagInfoTemplate)
-  
+
   const { setErrorMessage } = useNotification()
 
   const Api = ApiConnection()
@@ -44,15 +44,14 @@ const TagsFinderProvider = ({ children }) => {
 
   //Get Companies and roles
   useEffect(() => {
-    if (getTags)
-      getTagsFromApi()
+    if (getTags) getTagsFromApi()
   }, [getTags])
 
   return (
     <TagsFinderProviderContext.Provider
       value={{
         loading,
-        text, 
+        text,
         setText,
         isText,
         setIsText,
@@ -62,7 +61,7 @@ const TagsFinderProvider = ({ children }) => {
         showTagInfo,
         setShowTagInfo,
         tagInfo,
-        setTagInfo
+        setTagInfo,
       }}
     >
       {children}

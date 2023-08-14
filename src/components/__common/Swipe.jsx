@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react'
 
 const minDistance = 150
 
@@ -30,7 +29,7 @@ const Swipe = ({ onSwipeRight, onSwipeLeft, children, style = {} }) => {
       onSwipeRight && onSwipeRight(swipedRight)
       setSwipedRight(true)
       console.log({ onSwipeRight })
-    } else if (swiping && absX < - minDistance) {
+    } else if (swiping && absX < -minDistance) {
       onSwipeLeft && onSwipeLeft(swipedLeft)
       setSwipedLeft(true)
     }
@@ -38,17 +37,15 @@ const Swipe = ({ onSwipeRight, onSwipeLeft, children, style = {} }) => {
   }
 
   return (
-
     <div
       style={style}
       onTouchStart={TouchStartHandler}
       onTouchMove={TouchMoveHandler}
-      onTouchEnd={TouchEndHandler}>
+      onTouchEnd={TouchEndHandler}
+    >
       {children}
     </div>
   )
 }
-
-
 
 export default Swipe

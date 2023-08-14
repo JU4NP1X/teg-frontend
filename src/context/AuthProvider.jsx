@@ -1,14 +1,7 @@
-import { useState, useEffect, createContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Session from '../utils/session'
-
-
+import { createContext, useState } from 'react'
 
 const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
-
-  const Navigate = useNavigate()
-
   const [loading, setLoading] = useState(true)
   const [auth, setAuth] = useState(false)
 
@@ -18,7 +11,7 @@ const AuthProvider = ({ children }) => {
         loading,
         auth,
         setAuth,
-        setLoading
+        setLoading,
       }}
     >
       {children}
@@ -26,8 +19,6 @@ const AuthProvider = ({ children }) => {
   )
 }
 
-export {
-  AuthProvider
-}
+export { AuthProvider }
 
 export default AuthContext

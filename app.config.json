@@ -1,11 +1,10 @@
 {
-  "apps" : [
+  "apps": [
     {
-      "name"      : "VoCo UC",
-      "script"    : "npx",
+      "name": "VoCo UC",
+      "script": "npx",
       "interpreter": "none",
       "args": "npm run server"
     }
   ]
 }
-

@@ -1,12 +1,11 @@
-import { useState, useEffect, createContext } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import ApiConnection from '../utils/apiConnection'
 
 const roleTemplate = {
   rolName: '',
   rolStatus: '',
-  isNewRole: true
+  isNewRole: true,
 }
-
 
 const RolesContext = createContext()
 const RolesProvider = ({ children }) => {
@@ -22,8 +21,6 @@ const RolesProvider = ({ children }) => {
   const [order, setOrder] = useState('DESC')
   const [role, setRoleData] = useState(roleTemplate)
 
-
-
   const Api = ApiConnection()
 
   const setRole = async ({ rolId }) => {
@@ -34,7 +31,6 @@ const RolesProvider = ({ children }) => {
       const role = await Api.get(`roles/${rolId}`)
       setRoleData({ ...role, isNewRole: false })
       setLoadingRole(false)
-
     } catch (error) {
       console.log(error)
     }
@@ -45,7 +41,13 @@ const RolesProvider = ({ children }) => {
       setLoading(true)
       console.log({ roles })
       const result = await Api.get('roles', {
-        params: { page: page + 1 , rows, column, value, orderByUsrStatus: order },
+        params: {
+          page: page + 1,
+          rows,
+          column,
+          value,
+          orderByUsrStatus: order,
+        },
       })
       if (Api.status === 200) {
         const totalRows = result.totalRows
@@ -62,17 +64,14 @@ const RolesProvider = ({ children }) => {
     }
   }
 
-
   //Get Data
   useEffect(() => {
     getRoles()
   }, [page, order, rows])
-  
+
   useEffect(() => {
-    if (page !== 0)
-      setPage(0)
-    else
-      getRoles()
+    if (page !== 0) setPage(0)
+    else getRoles()
   }, [value, column])
 
   return (
@@ -105,8 +104,6 @@ const RolesProvider = ({ children }) => {
   )
 }
 
-export {
-  RolesProvider
-}
+export { RolesProvider }
 
 export default RolesContext

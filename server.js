@@ -22,19 +22,19 @@ const headers = {
   'X-Frame-Options': 'deny',
   'Strict-Transport-Security': ' max-age=15552000; preload',
   'Content-Security-Policy':
-    `default-src 'self' ${sites};`
-    + ` object-src 'none'; `
-    + ` frame-ancestors 'none'; `
+    `default-src 'self' ${sites};` +
+    ` object-src 'none'; ` +
+    ` frame-ancestors 'none'; ` +
     // + `upgrade-insecure-requests; `
     // + `block-all-mixed-content; `
-    + `script-src 'self' ${sites}; `
-    + `style-src 'self' ${sites} 'sha256-lmto2U1o7YINyHPg9TOCjIt+o5pSFNU/T2oLxDPF+uw=' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=' 'sha256-Sum87kgnQMRwVw373ouovl3XXPWBaZ97zQXZQ2LK5Z8='; `
-    + `img-src 'self' ${sites} data:; `
-    + `media-src 'self' ${sites}; `
-    + `frame-src 'self' ${sites}; `
-    + `font-src 'self' ${sites}; `
-    + `connect-src 'self' ${sites}; `
-    + `form-action 'self' ${sites};`
+    `script-src 'self' ${sites}; ` +
+    `style-src 'self' ${sites} 'sha256-lmto2U1o7YINyHPg9TOCjIt+o5pSFNU/T2oLxDPF+uw=' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=' 'sha256-Sum87kgnQMRwVw373ouovl3XXPWBaZ97zQXZQ2LK5Z8='; ` +
+    `img-src 'self' ${sites} data:; ` +
+    `media-src 'self' ${sites}; ` +
+    `frame-src 'self' ${sites}; ` +
+    `font-src 'self' ${sites}; ` +
+    `connect-src 'self' ${sites}; ` +
+    `form-action 'self' ${sites};`,
 }
 
 const unsetCacheHeaders = function () {
@@ -60,30 +60,37 @@ app.use(
 )
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
+  res.sendFile(path.join(__dirname, '/dist', 'index.html'), {
+    headers,
+    lastModified: false,
+    etag: false,
+  })
 })
 app.get('/login', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
+  res.sendFile(path.join(__dirname, '/dist', 'index.html'), {
+    headers,
+    lastModified: false,
+    etag: false,
+  })
 })
 app.get('/admin/*', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist', 'index.html'), { headers, lastModified: false, etag: false })
+  res.sendFile(path.join(__dirname, '/dist', 'index.html'), {
+    headers,
+    lastModified: false,
+    etag: false,
+  })
 })
 
-
-app.use(express.static(path.join(__dirname, '/dist'), {
-  setHeaders: setHeaders
-}))
+app.use(
+  express.static(path.join(__dirname, '/dist'), {
+    setHeaders: setHeaders,
+  })
+)
 
 app.get('*', function (req, res) {
   setHeaders(res)
   res.status(404).send('')
 })
-
-
-
-
-
-
 
 const port = process.env.VITE_PORT || 80
 app.listen(port)

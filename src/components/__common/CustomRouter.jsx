@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom'
 const CustomRouter = ({ history, ...props }) => {
   const [state, setState] = useState({
     action: history.action,
-    location: history.location
+    location: history.location,
   })
 
   useLayoutEffect(() => history.listen(setState), [history])

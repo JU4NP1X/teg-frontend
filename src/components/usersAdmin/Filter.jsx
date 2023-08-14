@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import SearchIcon from '@mui/icons-material/Search'
 import { ClickAwayListener, Menu } from '@mui/material'
-import { Box } from '@mui/system'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import Search from './Search'
-import SearchIcon from '@mui/icons-material/Search'
+import { Box } from '@mui/system'
+import { useState } from 'react'
 import useUsers from '../../hooks/useUsers'
+import Search from './Search'
 
 const styles = {
   overflow: 'visible',
@@ -20,7 +20,7 @@ const styles = {
     mr: 1,
   },
   '&:before': {
-    content: '''',
+    content: '""',
     display: 'block',
     position: 'absolute',
     top: 0,
@@ -34,8 +34,7 @@ const styles = {
 }
 
 const Filter = ({ headCell, setColumn, setValue }) => {
-
-  const {columns, setColumns} = useUsers()
+  const { columns, setColumns } = useUsers()
 
   const handleClickAway = () => {
     handleClose(false)
@@ -45,9 +44,6 @@ const Filter = ({ headCell, setColumn, setValue }) => {
   const open = Boolean(anchorEl)
 
   const handleClick = (event) => {
-
-
-    
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -55,23 +51,28 @@ const Filter = ({ headCell, setColumn, setValue }) => {
   }
   /** */
 
- // console.log(`la columna es: ${useUsers().column}`)
+  // console.log(`la columna es: ${useUsers().column}`)
 
   if (headCell.headCell.filter) {
     return (
       <>
         <ClickAwayListener onClickAway={handleClickAway}>
-          <Box sx={{ position: 'relative', ml: 'auto' }} >
-            <IconButton sx={{ height: '100%' }} color={columns[headCell.headCell.id].length > 0 ? 'info' : 'default'}
-              onClick={handleClick}>
-              <Tooltip title='Filtrar'>
+          <Box sx={{ position: 'relative', ml: 'auto' }}>
+            <IconButton
+              sx={{ height: '100%' }}
+              color={
+                columns[headCell.headCell.id].length > 0 ? 'info' : 'default'
+              }
+              onClick={handleClick}
+            >
+              <Tooltip title={'Filtrar'}>
                 <SearchIcon />
               </Tooltip>
             </IconButton>
             {open ? (
               <Menu
                 anchorEl={anchorEl}
-                id='account-menu'
+                id={'account-menu'}
                 open={open}
                 onClose={handleClose}
                 PaperProps={{

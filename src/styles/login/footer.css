@@ -22,7 +22,6 @@
 .logo_sillaca {
   content: url(/img/sillaca.png);
   margin-right: 25px;
-
 }
 
 .logo_cofersa {
@@ -37,7 +36,6 @@
 
 .logo_olo {
   content: url(/img/olo.png);
-
 }
 
 .container-desktop {
@@ -50,7 +48,6 @@
 .container-mobile {
   display: none;
 }
-
 
 .footer-container {
   justify-content: center;
@@ -79,7 +76,6 @@
   .logo_sillaca {
     content: url(/img/sillaca-isotipo.png);
     margin-right: 25px;
-
   }
 
   .logo_cofersa {
@@ -94,6 +90,5 @@
 
   .logo_olo {
     content: url(/img/olo-isotipo.png);
-
   }
 }

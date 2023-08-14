@@ -1,25 +1,25 @@
-
-import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import CircularProgress from '@mui/material/CircularProgress'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import ApiConnection from '../../utils/apiConnection'
+import TextField from '@mui/material/TextField'
+import { Fragment, useEffect, useState } from 'react'
 import useNotification from '../../hooks/useNotification'
+import ApiConnection from '../../utils/apiConnection'
 
-export default function UserSelector({disabled= false, onChange}) {
+export default function UserSelector({ disabled = false, onChange }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [users, setUsers] = useState([])
   const [searchName, setSearchName] = useState('')
-  const {errorMessage} = useNotification()
+  const { errorMessage } = useNotification()
 
   const getUsers = async () => {
     setLoading(true)
     const Api = ApiConnection()
-    const users = await Api.get('users/search', {params:{search: searchName, limit: 10}})
+    const users = await Api.get('users/search', {
+      params: { search: searchName, limit: 10 },
+    })
 
-    if(Api.status !== 200)
-      errorMessage(Api.message)
+    if (Api.status !== 200) errorMessage(Api.message)
     else {
       setUsers(users)
     }
@@ -27,16 +27,14 @@ export default function UserSelector({disabled= false, onChange}) {
   }
 
   useEffect(() => {
-    if (!open)
-      setUsers([])
-    else
-        getUsers()
+    if (!open) setUsers([])
+    else getUsers()
   }, [open, searchName])
 
   return (
     <Autocomplete
-      sx={{ width: '100% !important', mt:'20px !important'  }}
-      open={open} 
+      sx={{ width: '100% !important', mt: '20px !important' }}
+      open={open}
       onChange={(event, userToSearch) => {
         onChange(userToSearch)
       }}
@@ -50,25 +48,30 @@ export default function UserSelector({disabled= false, onChange}) {
       getOptionLabel={(user) => user.usrEmail}
       options={users}
       loading={loading}
-      disabled = {disabled}
-      onInputChange={(params, value)=>{setSearchName(value)}}
+      disabled={disabled}
+      onInputChange={(params, value) => {
+        setSearchName(value)
+      }}
       renderInput={(params) => {
         return (
-        <TextField
-          {...params}
-          variant='standard'
-          label={'Usuario'}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <Fragment>
-                {loading ? <CircularProgress color='inherit' size={20} /> : null}
-                {params.InputProps.endAdornment}
-              </Fragment>
-            ),
-          }}
-        />
-      )}}
+          <TextField
+            {...params}
+            variant={'standard'}
+            label={'Usuario'}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <Fragment>
+                  {loading ? (
+                    <CircularProgress color={'inherit'} size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </Fragment>
+              ),
+            }}
+          />
+        )
+      }}
     />
   )
 }

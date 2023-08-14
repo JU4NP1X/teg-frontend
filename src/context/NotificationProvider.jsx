@@ -1,10 +1,9 @@
-import { Alert, AlertTitle, Slide, Snackbar } from '@mui/material'
-import { useState, useEffect, createContext, useMemo } from 'react'
+import { Alert, Slide, Snackbar } from '@mui/material'
+import { createContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 const NotificationContext = createContext()
 const NotificationProvider = ({ children }) => {
-
   const [searchParams, setSearchParams] = useSearchParams()
   const [errorMessage, setErrorMessage] = useState('')
   const [warningMessage, setWarningMessage] = useState('')
@@ -14,7 +13,6 @@ const NotificationProvider = ({ children }) => {
     vertical: 'top',
     horizontal: 'center',
   })
-
 
   const handleCloseError = (event, reason) => {
     setErrorMessage('')
@@ -58,8 +56,9 @@ const NotificationProvider = ({ children }) => {
         autoHideDuration={5000}
         onClose={handleCloseError}
         TransitionComponent={Slide}
-        anchorOrigin={anchor}>
-        <Alert variant='filled' severity='error' sx={{ width: '100%' }}>
+        anchorOrigin={anchor}
+      >
+        <Alert variant={'filled'} severity={'error'} sx={{ width: '100%' }}>
           {errorMessage}
         </Alert>
       </Snackbar>
@@ -68,8 +67,9 @@ const NotificationProvider = ({ children }) => {
         autoHideDuration={5000}
         onClose={handleCloseWarning}
         TransitionComponent={Slide}
-        anchorOrigin={anchor}>
-        <Alert variant='filled' severity='warning' sx={{ width: '100%' }}>
+        anchorOrigin={anchor}
+      >
+        <Alert variant={'filled'} severity={'warning'} sx={{ width: '100%' }}>
           {warningMessage}
         </Alert>
       </Snackbar>
@@ -78,8 +78,9 @@ const NotificationProvider = ({ children }) => {
         autoHideDuration={5000}
         onClose={handleCloseInfo}
         TransitionComponent={Slide}
-        anchorOrigin={anchor}>
-        <Alert variant='filled' severity='info' sx={{ width: '100%' }}>
+        anchorOrigin={anchor}
+      >
+        <Alert variant={'filled'} severity={'info'} sx={{ width: '100%' }}>
           {infoMessage}
         </Alert>
       </Snackbar>
@@ -88,21 +89,18 @@ const NotificationProvider = ({ children }) => {
         autoHideDuration={5000}
         onClose={handleCloseSuccess}
         TransitionComponent={Slide}
-        anchorOrigin={anchor}>
-        <Alert variant='filled' severity='success' sx={{ width: '100%' }}>
+        anchorOrigin={anchor}
+      >
+        <Alert variant={'filled'} severity={'success'} sx={{ width: '100%' }}>
           {successMessage}
         </Alert>
       </Snackbar>
-
-
 
       {children}
     </NotificationContext.Provider>
   )
 }
 
-export {
-  NotificationProvider
-}
+export { NotificationProvider }
 
 export default NotificationContext

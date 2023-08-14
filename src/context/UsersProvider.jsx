@@ -1,6 +1,4 @@
-import { useState, useEffect, createContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Session from '../utils/session'
+import { createContext, useEffect, useState } from 'react'
 import ApiConnection from '../utils/apiConnection'
 
 const userTemplate = {
@@ -101,13 +99,10 @@ const UsersProvider = ({ children }) => {
     getUsers()
   }, [page, order, rows])
 
-
   useEffect(() => {
     setPage(1)
     getUsers()
   }, [columns])
-
-
 
   //Get Companies and roles
   useEffect(() => {
@@ -144,7 +139,6 @@ const UsersProvider = ({ children }) => {
         setColumn,
         columns,
         setColumns,
-
       }}
     >
       {children}

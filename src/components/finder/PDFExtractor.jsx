@@ -1,25 +1,26 @@
-import React, { useState } from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import Slide from '@mui/material/Slide'
 import Pagination from '@mui/material/Pagination'
+import Slide from '@mui/material/Slide'
+import React, { useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { pdfjs } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
+  import.meta.url
 ).toString()
 
 import Step from '@mui/material/Step'
-import Stepper from '@mui/material/Stepper'
 import StepLabel from '@mui/material/StepLabel'
+import Stepper from '@mui/material/Stepper'
+import SimpleBar from 'simplebar-react/dist'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
+  return <Slide direction={'up'} ref={ref} {...props} />
 })
 
 const PDFExtractor = ({ open, onClose }) => {
@@ -75,7 +76,7 @@ const PDFExtractor = ({ open, onClose }) => {
       setNumPages(pages)
       setStep(step + 1)
     }
-    console.log("HOLA")
+    console.log('HOLA')
 
     fileReader.readAsArrayBuffer(file)
   }
@@ -138,14 +139,24 @@ const PDFExtractor = ({ open, onClose }) => {
         TransitionComponent={Transition}
         keepMounted
         onClose={closeDialog}
-        aria-describedby="alert-dialog-slide-description"
-        maxWidth="lg" // Añadido para ajustar el tamaño del diálogo
+        aria-describedby={'alert-dialog-slide-description'}
+        maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
       >
-        <DialogTitle>{"Subir y extraer datos del documento"}</DialogTitle>
+        <DialogTitle>{'Subir y extraer datos del documento'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Stepper activeStep={step} alternativeStep={step + 1} alternativeLabel>
+          <DialogContentText id={'alert-dialog-slide-description'}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Stepper
+                activeStep={step}
+                alternativeStep={step + 1}
+                alternativeLabel
+              >
                 {steps.map((label) => (
                   <Step key={label}>
                     <StepLabel>{label}</StepLabel>
@@ -157,37 +168,63 @@ const PDFExtractor = ({ open, onClose }) => {
                 <div
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
-                  style={{ width: '100%', height: '200px', border: '1px dashed gray', textAlign: 'center' }}
+                  style={{
+                    width: '100%',
+                    height: '200px',
+                    border: '1px dashed gray',
+                    display: 'flex',
+                    placeContent: 'center',
+                    placeItems: 'center',
+                  }}
                   onClick={handleDraggerClick}
                 >
                   Arrastra aquí un PDF o haz click para buscarlo
-                  <input id="file-input" type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+                  <input
+                    id={'file-input'}
+                    type={'file'}
+                    accept={'.pdf'}
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
                 </div>
               )}
 
               {step !== 0 && selectedPages[currentPage] && (
-                <div>
-                  <ReactCrop
-                    crop={crop}
-                    onChange={handleCropChange}
-                    onComplete={handleCropComplete}
+                <>
+                  <SimpleBar
+                    style={{
+                      maxHeight: '60vh',
+                      width: '700px',
+                      textAlign: 'center',
+                    }}
                   >
-                    <img src={selectedPages[currentPage].image} alt="Page" />
-                  </ReactCrop>
+                    <ReactCrop
+                      crop={crop}
+                      onChange={handleCropChange}
+                      onComplete={handleCropComplete}
+                    >
+                      <img
+                        src={selectedPages[currentPage].image}
+                        alt={'Page'}
+                      />
+                    </ReactCrop>
+                  </SimpleBar>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button disabled={step === 0}
+                    <Button
+                      disabled={step === 0}
                       onClick={() => {
                         setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
                         setStep(step - 1)
-                      }}>
+                      }}
+                    >
                       Anterior
                     </Button>
                     <Pagination
                       count={numPages}
                       page={currentPage + 1}
                       onChange={handlePageChange}
-                      color="primary"
-                      size="large"
+                      color={'primary'}
+                      size={'large'}
                       style={{ margin: '20px auto' }}
                     />
                     <Button
@@ -200,13 +237,13 @@ const PDFExtractor = ({ open, onClose }) => {
                       Siguiente
                     </Button>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </DialogContentText>
         </DialogContent>
       </Dialog>
-    </div >
+    </div>
   )
 }
 export default PDFExtractor

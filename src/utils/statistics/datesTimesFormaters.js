@@ -1,6 +1,5 @@
-
-import moment from 'moment/moment'
 import 'moment/locale/es'
+import moment from 'moment/moment'
 moment.locale('es')
 
 const arrayRange = (start, stop, step) =>
@@ -9,12 +8,17 @@ const arrayRange = (start, stop, step) =>
     (value, index) => start + index * step
   )
 const timeConvert = (time) =>
-  time > 12 ? `${time - 12} pm` : time === 0 ? '12 am' : time === 12 ? '12 pm' : `${time} am`
-
+  time > 12
+    ? `${time - 12} pm`
+    : time === 0
+    ? '12 am'
+    : time === 12
+    ? '12 pm'
+    : `${time} am`
 
 const getLabels = (start, end, agrupation) => {
   let labels = []
-  
+
   switch (agrupation) {
     case 'TO_DAY':
       labels = arrayRange(0, 23, 1)
@@ -34,12 +38,11 @@ const getLabels = (start, end, agrupation) => {
 }
 
 const formatLabels = (labels, agrupation) => {
-
-  return agrupation === 'TO_DAY' ?
-    labels.map(value => timeConvert(value)) :
-    agrupation === 'LAST_12_MONTHS' ?
-      labels.map(value => moment(value).format('MMMM YYYY')) :
-      labels
+  return agrupation === 'TO_DAY'
+    ? labels.map((value) => timeConvert(value))
+    : agrupation === 'LAST_12_MONTHS'
+    ? labels.map((value) => moment(value).format('MMMM YYYY'))
+    : labels
 }
 
 const createDateRange = (startDate, stopDate, type) => {
@@ -49,21 +52,14 @@ const createDateRange = (startDate, stopDate, type) => {
   let currentDate = startDate
   do {
     let dateFormated
-    if (type === 'months')
-      dateFormated = `${currentDate.format('YYYY-MM')}`
+    if (type === 'months') dateFormated = `${currentDate.format('YYYY-MM')}`
     else if (type === 'years') {
       dateFormated = `${currentDate.format('YYYY')}`
-    }
-    else
-      dateFormated = `${currentDate.format('YYYY-MM-DD')}`
+    } else dateFormated = `${currentDate.format('YYYY-MM-DD')}`
     dateArray.push(dateFormated)
     currentDate = currentDate.add(type, 1)
-
   } while (currentDate.format('YYYY-MM-DD') <= stopDate.format('YYYY-MM-DD'))
   return dateArray
 }
 
-export {
-  getLabels,
-  formatLabels
-}
+export { getLabels, formatLabels }

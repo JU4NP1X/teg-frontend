@@ -1,25 +1,21 @@
-import { useState, useEffect, createContext, useReducer } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { createContext, useEffect, useState } from 'react'
 import ApiConnection from '../utils/apiConnection'
 import { isMobile } from '../utils/utils'
 
 const getTop3ReportsCount = (json) => {
   let top = []
-  for (const key in json)
-    top.push({ key, value: json[key] })
+  for (const key in json) top.push({ key, value: json[key] })
   top.sort((a, b) => b.value - a.value)
 
   const topThreeValues = top.slice(0, 3)
   let topThreeValuesInOrder = []
   for (const index in json)
     topThreeValues.map(({ key, value }) => {
-      if (index === key)
-        topThreeValuesInOrder.push({ key, value })
+      if (index === key) topThreeValuesInOrder.push({ key, value })
     })
 
   return topThreeValuesInOrder
 }
-
 
 const SearchContext = createContext()
 const SearchProvider = ({ children }) => {
@@ -74,18 +70,22 @@ const SearchProvider = ({ children }) => {
       setCancelToken(cancel)
     }
     const Api = ApiConnection()
-    const result = await Api.post('/reports/farm', {
-      page,
-      rows: isMobile() ? 8 : 16,
-      search,
-      companies: companiesList,
-      categories: categoriesList,
-      behavior: behaviorList,
-      constructionFilter,
-      recentFilter,
-      frequent,
-      favorite
-    }, { signal: cancel.signal })
+    const result = await Api.post(
+      '/reports/farm',
+      {
+        page,
+        rows: isMobile() ? 8 : 16,
+        search,
+        companies: companiesList,
+        categories: categoriesList,
+        behavior: behaviorList,
+        constructionFilter,
+        recentFilter,
+        frequent,
+        favorite,
+      },
+      { signal: cancel.signal }
+    )
 
     if (favorite) {
       if (Api.status === 200) {
@@ -106,13 +106,12 @@ const SearchProvider = ({ children }) => {
       setFreqLoading(false)
       setCancelFreqToken(null)
     } else {
-
       if (Api.status === 200) {
         setCardList(result.reports)
         setTotalPages(result.counts.totalPages)
         delete result.counts.total
         delete result.counts.totalPages
-        setCounts([...(getTop3ReportsCount(result.counts))])
+        setCounts([...getTop3ReportsCount(result.counts)])
         if (result.numOfPages < page && result.numOfPages)
           setPage(result.numOfPages)
         setLoading(false)
@@ -123,21 +122,22 @@ const SearchProvider = ({ children }) => {
 
   useEffect(() => {
     if (!recentFilter) {
-      if (page !== 1)
-        setPage(1)
-      else
-        getReports(false, false, 1)
+      if (page !== 1) setPage(1)
+      else getReports(false, false, 1)
 
-      if (favPage !== 1)
-        setFavPage(1)
-      else
-        getReports(true, false, 1)
+      if (favPage !== 1) setFavPage(1)
+      else getReports(true, false, 1)
     }
-    if (freqPage !== 1)
-      setFreqPage(1)
-    else
-      getReports(false, true, 1)
-  }, [companiesList, categoriesList, search, behaviorList, constructionFilter, recentFilter])
+    if (freqPage !== 1) setFreqPage(1)
+    else getReports(false, true, 1)
+  }, [
+    companiesList,
+    categoriesList,
+    search,
+    behaviorList,
+    constructionFilter,
+    recentFilter,
+  ])
 
   useEffect(() => {
     if (refresh) {
@@ -217,7 +217,7 @@ const SearchProvider = ({ children }) => {
         setFreqCardList,
         freqCardList,
         setFreqLoading,
-        freqLoading
+        freqLoading,
       }}
     >
       {children}
@@ -225,8 +225,6 @@ const SearchProvider = ({ children }) => {
   )
 }
 
-export {
-  SearchProvider
-}
+export { SearchProvider }
 
 export default SearchContext
