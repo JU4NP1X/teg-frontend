@@ -1,9 +1,20 @@
 .administration-list {
-  height: 0;
+  opacity: 0;
+  max-height: 0;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
 .administration-list.open {
-  height: auto;
+  opacity: 1;
+  max-height: 300px; /* Ajusta este valor según sea necesario */
+}
+
+.simplebar-content {
+  height: inherit;
+}
+.sidebar-list {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
 }

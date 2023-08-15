@@ -66,6 +66,13 @@ app.get('/', function (req, res) {
     etag: false,
   })
 })
+app.get('/library', function (req, res) {
+  res.sendFile(path.join(__dirname, '/dist', 'index.html'), {
+    headers,
+    lastModified: false,
+    etag: false,
+  })
+})
 app.get('/login', function (req, res) {
   res.sendFile(path.join(__dirname, '/dist', 'index.html'), {
     headers,

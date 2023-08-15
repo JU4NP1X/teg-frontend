@@ -5,25 +5,32 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Pagination from '@mui/material/Pagination'
 import Slide from '@mui/material/Slide'
-import React, { useState } from 'react'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import Stepper from '@mui/material/Stepper'
+import React, { useEffect, useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { pdfjs } from 'react-pdf'
+import SimpleBar from 'simplebar-react/dist'
+
+const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
   import.meta.url
 ).toString()
 
-import Step from '@mui/material/Step'
-import StepLabel from '@mui/material/StepLabel'
-import Stepper from '@mui/material/Stepper'
-import SimpleBar from 'simplebar-react/dist'
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction={'up'} ref={ref} {...props} />
 })
 
-const PDFExtractor = ({ open, onClose }) => {
+const PDFExtractor = ({
+  open,
+  onClose,
+  handleFileExtracted,
+  handleTextExtracted,
+}) => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [selectedPages, setSelectedPages] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -32,10 +39,12 @@ const PDFExtractor = ({ open, onClose }) => {
   const [step, setStep] = useState(0)
   const [titleImage, setTitleImage] = useState(null)
   const [summaryImage, setSummaryImage] = useState(null)
+  const [updatingFile, setUpdatingFile] = useState(false)
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0]
     setSelectedFile(file)
+    if (handleFileExtracted) handleFileExtracted(file)
     await handleUpload(file)
   }
 
@@ -76,7 +85,6 @@ const PDFExtractor = ({ open, onClose }) => {
       setNumPages(pages)
       setStep(step + 1)
     }
-    console.log('HOLA')
 
     fileReader.readAsArrayBuffer(file)
   }
@@ -125,12 +133,27 @@ const PDFExtractor = ({ open, onClose }) => {
   }
 
   const closeDialog = () => {
-    setStep(0)
-    setSelectedFile(null)
-    onClose()
+    if (!updatingFile) {
+      setStep(0)
+      setSelectedFile(null)
+      setTitleImage(null)
+      setSummaryImage(null)
+      onClose()
+    }
   }
 
-  const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
+  const extractText = () => {}
+
+  const handleFinish = () => {
+    setUpdatingFile(true)
+    extractText()
+    if (handleTextExtracted) handleTextExtracted()
+    setUpdatingFile(false)
+  }
+
+  useEffect(() => {
+    closeDialog()
+  }, [updatingFile])
 
   return (
     <div>
@@ -214,6 +237,8 @@ const PDFExtractor = ({ open, onClose }) => {
                       disabled={step === 0}
                       onClick={() => {
                         setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+                        setSummaryImage(null)
+                        setTitleImage(null)
                         setStep(step - 1)
                       }}
                     >
@@ -227,15 +252,24 @@ const PDFExtractor = ({ open, onClose }) => {
                       size={'large'}
                       style={{ margin: '20px auto' }}
                     />
-                    <Button
-                      disabled={step === steps.length - 1}
-                      onClick={() => {
-                        setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
-                        setStep(step + 1)
-                      }}
-                    >
-                      Siguiente
-                    </Button>
+                    {step === steps.length - 1 ? (
+                      <Button
+                        disabled={!summaryImage && step === 2}
+                        onClick={handleFinish}
+                      >
+                        Finalizar
+                      </Button>
+                    ) : (
+                      <Button
+                        disabled={!titleImage && step === 1}
+                        onClick={() => {
+                          setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+                          setStep(step + 1)
+                        }}
+                      >
+                        Siguiente
+                      </Button>
+                    )}
                   </div>
                 </>
               )}
@@ -246,4 +280,5 @@ const PDFExtractor = ({ open, onClose }) => {
     </div>
   )
 }
+
 export default PDFExtractor

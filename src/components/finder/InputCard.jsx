@@ -54,7 +54,6 @@ const InputCard = () => {
           variant={'outlined'}
           startIcon={<Upload />}
           onClick={() => {
-            console.log('HOSDAAASD')
             setOpenPDFExtractor(true)
           }}
         >

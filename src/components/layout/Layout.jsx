@@ -90,7 +90,7 @@ const Layout = ({ children }) => {
                     'Sistema de gestión del vocabulario controlado de la Universidad de Carabobo'
                   }
                 >
-                  <img src={'img/uc-logo.png'} style={{ height: 40 }} />
+                  <img src={'/img/uc-logo.png'} style={{ height: 40 }} />
                 </Tooltip>
                 <Tooltip
                   title={

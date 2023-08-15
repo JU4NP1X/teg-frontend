@@ -1,3 +1,6 @@
 #textToClassify {
   height: calc(100vh - 330px) !important;
 }
+.Mui-selected {
+  color: white !important;
+}
