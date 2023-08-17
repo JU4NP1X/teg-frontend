@@ -198,6 +198,7 @@ const PDFExtractor = ({
                     display: 'flex',
                     placeContent: 'center',
                     placeItems: 'center',
+                    cursor: 'pointer',
                   }}
                   onClick={handleDraggerClick}
                 >
