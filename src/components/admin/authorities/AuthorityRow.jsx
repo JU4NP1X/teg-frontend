@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
+import TrainStep from './TrainStep'
 
 const data = {
   labels: ['Categorías Suficientes', 'Categorías Insuficientes'],
@@ -13,6 +14,7 @@ const data = {
     },
   ],
 }
+
 const AuthorityRow = ({ authority, handleDeleteAuthority, handleReTrain }) => {
   return (
     <TableRow key={authority.name}>
@@ -78,6 +80,13 @@ const AuthorityRow = ({ authority, handleDeleteAuthority, handleReTrain }) => {
             }}
           />
         </div>
+      </TableCell>
+      <TableCell>
+        <TrainStep
+          stepNumber={authority.trainStep.stepNumber}
+          progress={authority.trainStep.progress}
+          status={authority.trainStep.status}
+        />
       </TableCell>
       <TableCell>
         <div

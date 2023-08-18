@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardHeader,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -10,7 +11,6 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -49,8 +49,8 @@ const Filters = ({ filters, handleFilterSearchChange }) => {
 
   return (
     <Card>
+      <CardHeader title={'Filtrar por categoría'} />
       <CardContent>
-        <Typography variant="h6">Filtrar por categoría</Typography>
         <FormControl fullWidth style={{ marginTop: 20, marginBottom: 14 }}>
           <InputLabel id="authority-list" style={{ top: '-12px' }}>
             Lista de autoridad

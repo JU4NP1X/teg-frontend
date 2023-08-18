@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material'
 import React, { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 
@@ -46,10 +46,8 @@ const Profile = () => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Card>
+              <CardHeader title={'Modificar datos'} />
               <CardContent>
-                <Typography variant="h5" component="div">
-                  Modificar datos
-                </Typography>
                 <ValidatorForm onSubmit={handleSave}>
                   <TextValidator
                     label="Nombre"
@@ -92,10 +90,8 @@ const Profile = () => {
 
           <Grid item xs={12}>
             <Card>
+              <CardHeader title={'Cambiar contraseña'} />
               <CardContent>
-                <Typography variant="h5" component="div">
-                  Cambiar contraseña
-                </Typography>
                 <ValidatorForm onSubmit={handleChangePassword}>
                   <TextValidator
                     label="Contraseña"

@@ -2,16 +2,17 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
+import FileUploader from '../../components/__common/FileUploader'
 
 const authoritiesData = [
   {
@@ -29,6 +30,11 @@ const authoritiesData = [
       sufficientCategories: 70,
       insufficientCategories: 30,
     },
+    trainStep: {
+      stepNumber: 1,
+      progress: 50,
+      status: 'IN_PROGRESS',
+    },
   },
 ]
 
@@ -38,7 +44,8 @@ const Authorities = () => {
   const [isClassifierUpdated, setIsClassifierUpdated] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [loadingFile, setLoadingFile] = useState(false)
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [authorityToDelete, setAuthorityToDelete] = useState(null)
   const [openAddAuthority, setOpenAddAuthority] = useState(false)
@@ -97,54 +104,15 @@ const Authorities = () => {
     setPage(0)
   }
 
-  const handleToggleAuthority = (authority) => {
-    // Implementar lógica para activar/desactivar autoridad
-  }
-
-  const handleClassifierUpdate = () => {
-    setIsClassifierUpdated(!isClassifierUpdated)
-  }
-
   const handleReTrain = () => {
     // Implementar lógica para activar/desactivar autoridad
   }
 
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const base64String = e.target.result.split(',').pop()
-        setCsvFile(base64String)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleDrop = (event) => {
-    event.preventDefault()
-    const file = event.dataTransfer.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const base64String = e.target.result.split(',').pop()
-        setCsvFile(base64String)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleDragOver = (event) => {
-    event.preventDefault()
-  }
-
   return (
     <div>
-      <Card>
-        <CardContent>
-          <Typography variant="h5" component="div">
-            Listas de autoridad
-          </Typography>
+      <Card sx={{ pb: 0 }}>
+        <CardHeader title={'Listas de autoridad'} />
+        <CardContent style={{ paddingBottom: 0 }}>
           <AuthoritiesTable
             authorities={authorities}
             page={page}
@@ -160,22 +128,22 @@ const Authorities = () => {
           <Dialog
             open={openConfirmation}
             onClose={handleCancelDelete}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
+            aria-labelledby={'alert-dialog-title'}
+            aria-describedby={'alert-dialog-description'}
           >
-            <DialogTitle id="alert-dialog-title">
+            <DialogTitle id={'alert-dialog-title'}>
               Confirmar eliminación
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
+              <DialogContentText id={'alert-dialog-description'}>
                 ¿Estás seguro de que deseas eliminar esta autoridad?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCancelDelete} color="primary">
+              <Button onClick={handleCancelDelete} color={'primary'}>
                 Cancelar
               </Button>
-              <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+              <Button onClick={handleConfirmDelete} color={'primary'} autoFocus>
                 Eliminar
               </Button>
             </DialogActions>
@@ -183,11 +151,13 @@ const Authorities = () => {
           <Dialog
             open={openAddAuthority}
             onClose={() => setOpenAddAuthority(false)}
-            aria-labelledby="form-dialog-title"
+            aria-labelledby={'form-dialog-title'}
           >
-            <DialogTitle id="form-dialog-title">Agregar Autoridad</DialogTitle>
-            <DialogContent>
-              <ValidatorForm onSubmit={handleAddAuthority}>
+            <DialogTitle id={'form-dialog-title'}>
+              Agregar Autoridad
+            </DialogTitle>
+            <ValidatorForm onSubmit={handleAddAuthority}>
+              <DialogContent>
                 <DialogContentText>
                   Por favor, ingresa el nombre y las categorías de la nueva
                   autoridad.
@@ -204,48 +174,32 @@ const Authorities = () => {
                   validators={['required']}
                   errorMessages={['Este campo es requerido']}
                 />
-                <div
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  style={{
-                    width: '99%',
-                    height: '200px',
-                    border: '1px dashed gray',
-                    display: 'flex',
-                    placeContent: 'center',
-                    placeItems: 'center',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    document.getElementById('file-input').click()
-                  }}
+                <FileUploader
+                  buttonText={'Haz click o arrastra un .csv con las categorías'}
+                  isLoading={setLoadingFile}
+                  fileTypes={['.csv']}
+                  onFileUpload={setCsvFile}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpenAddAuthority(false)}>
+                  Cancelar
+                </Button>
+                <Button
+                  disabled={csvFile === null}
+                  type={'submit'}
+                  color={'primary'}
                 >
-                  Arrastra aquí el CSV con las categorías o haz click para
-                  buscarlo
-                  <input
-                    id={'file-input'}
-                    type={'file'}
-                    accept={'.csv'}
-                    onChange={handleFileInputChange}
-                    style={{ display: 'none' }}
-                  />
-                </div>
-                <Button type="submit" color="primary">
                   Agregar
                 </Button>
-              </ValidatorForm>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setOpenAddAuthority(false)}>
-                Cancelar
-              </Button>
-            </DialogActions>
+              </DialogActions>
+            </ValidatorForm>
           </Dialog>
           <Button
-            variant="contained"
-            color="primary"
+            variant={'contained'}
+            color={'primary'}
             onClick={() => setOpenAddAuthority(true)}
-            style={{ marginTop: -30, marginLeft: 4 }}
+            style={{ marginTop: -70, marginLeft: 4, marginBottom: 0 }}
           >
             Agregar Autoridad
           </Button>

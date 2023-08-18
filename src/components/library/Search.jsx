@@ -52,6 +52,7 @@ const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
         <Button
           variant="contained"
           color="primary"
+          size="small"
           style={{ marginTop: '10px', float: 'right', marginBottom: '10px' }}
         >
           Buscar

@@ -51,7 +51,7 @@ const Documents = ({ paginatedData }) => {
               >
                 <CardMedia
                   component="img"
-                  height="140"
+                  height="50"
                   image={item.imageUrl}
                   alt={item.title}
                   sx={{ width: '140px', flexShrink: 0 }}
@@ -62,6 +62,7 @@ const Documents = ({ paginatedData }) => {
                     href={item.downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    size="small"
                     sx={{
                       display: 'flex',
                       justifyContent: 'center',
@@ -75,6 +76,7 @@ const Documents = ({ paginatedData }) => {
                     variant="outlined"
                     href={item.viewUrl}
                     target="_blank"
+                    size="small"
                     rel="noopener noreferrer"
                     sx={{
                       display: 'flex',

@@ -21,13 +21,20 @@ import Swipe from '../__common/Swipe'
 import { Drawer } from './Drawer'
 import { SideBar } from './SideBar'
 
-const mdTheme = createTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: red[900],
     },
     secondary: {
       main: red[500],
+    },
+  },
+  typography: {
+    fontFamily: 'Arial, sans-serif',
+    h6: {
+      fontWeight: 'bold',
+      fontSize: '1.2rem',
     },
   },
 })
@@ -51,9 +58,10 @@ const Layout = ({ children }) => {
       setTime(moment().format('DD/MM/YYYY hh:mm A'))
     }, 1000)
   }, [])
+
   return (
     <>
-      <ThemeProvider theme={mdTheme}>
+      <ThemeProvider theme={theme}>
         <Box sx={{ display: 'flex' }}>
           <Drawer
             variant={'permanent'}
@@ -87,17 +95,31 @@ const Layout = ({ children }) => {
               >
                 <Tooltip
                   title={
-                    'Sistema de gestión del vocabulario controlado de la Universidad de Carabobo'
+                    'Sistema de clasificación y control del vocabulario controlado de la Universidad de Carabobo'
                   }
                 >
-                  <img src={'/img/uc-logo.png'} style={{ height: 40 }} />
+                  <img
+                    src={'/img/uc-logo.png'}
+                    style={{ marginLeft: -5, height: 50 }}
+                  />
                 </Tooltip>
                 <Tooltip
                   title={
-                    'Sistema de gestión del vocabulario controlado de la Universidad de Carabobo'
+                    'Sistema de clasificación y control del vocabulario controlado de la Universidad de Carabobo'
                   }
                 >
-                  <strong style={{ marginLeft: 15 }}>VoCo UC</strong>
+                  <p
+                    style={{
+                      marginTop: 0,
+                      marginBottom: 0,
+                      marginLeft: 15,
+                      fontSize: '1.8rem',
+                      fontWeight: 'lighter',
+                      textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+                    }}
+                  >
+                    ClaVo <strong>UC</strong>
+                  </p>
                 </Tooltip>
               </Typography>
               {isMobile() ? (
@@ -173,4 +195,5 @@ const Layout = ({ children }) => {
     </>
   )
 }
+
 export default Layout

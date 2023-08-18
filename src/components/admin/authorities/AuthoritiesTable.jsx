@@ -1,4 +1,5 @@
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -21,6 +22,7 @@ const columns = [
   'Nuevas Categorías no Entrenadas',
   'Precisión teórica del modelo',
   'Precisión práctica del modelo',
+  'Estado',
   'Acciones',
 ]
 
@@ -34,8 +36,8 @@ const AuthoritiesTable = ({
   handleReTrain,
 }) => {
   return (
-    <div className="table-container">
-      <TableContainer>
+    <>
+      <TableContainer component={Paper}>
         <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
           <Table>
             <TableHead>
@@ -69,7 +71,7 @@ const AuthoritiesTable = ({
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </div>
+    </>
   )
 }
 

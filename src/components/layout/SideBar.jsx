@@ -1,13 +1,13 @@
 import {
+  Category,
   Description,
   ExpandLess,
   ExpandMore,
-  LibraryBooks,
   ListAlt,
+  LocalLibrary,
   Logout,
   PermIdentity,
   Person,
-  Search,
   Settings,
 } from '@mui/icons-material'
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
@@ -42,7 +42,7 @@ export const SideBar = ({ isOpen }) => {
           selected={window.location.pathname === '/library'}
         >
           <ListItemIcon sx={{ color: 'white' }}>
-            <LibraryBooks />
+            <LocalLibrary />
           </ListItemIcon>
           <ListItemText primary={'Biblioteca'} />
         </ListItemButton>
@@ -56,7 +56,7 @@ export const SideBar = ({ isOpen }) => {
           selected={window.location.pathname === '/'}
         >
           <ListItemIcon sx={{ color: 'white' }}>
-            <Search />
+            <Category />
           </ListItemIcon>
           <ListItemText primary={'Clasificador'} />
         </ListItemButton>

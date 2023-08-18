@@ -3,15 +3,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Card,
   CardContent,
+  CardHeader,
   Checkbox,
   Divider,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
+import SimpleBar from 'simplebar-react'
 
 const TagsListCard = () => {
   const [categories, setCategories] = useState([
@@ -40,6 +41,89 @@ const TagsListCard = () => {
         {
           id: 7,
           name: 'Smartphones',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+        {
+          id: 11,
+          name: 'Cámaras',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+      ],
+      selected: false,
+      expanded: false,
+    },
+    {
+      id: 8,
+      name: 'Computadoras',
+      relatedCategories: [],
+      child: [
+        {
+          id: 12,
+          name: 'Laptops',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+        {
+          id: 13,
+          name: 'Desktops',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+      ],
+      selected: false,
+      expanded: false,
+    },
+    {
+      id: 9,
+      name: 'Electrodomésticos',
+      relatedCategories: [],
+      child: [
+        {
+          id: 14,
+          name: 'Refrigeradores',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+        {
+          id: 15,
+          name: 'Lavadoras',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+      ],
+      selected: false,
+      expanded: false,
+    },
+    {
+      id: 10,
+      name: 'Videojuegos',
+      relatedCategories: [],
+      child: [
+        {
+          id: 16,
+          name: 'Consolas',
+          relatedCategories: [],
+          child: [],
+          selected: false,
+          expanded: false,
+        },
+        {
+          id: 17,
+          name: 'Juegos',
           relatedCategories: [],
           child: [],
           selected: false,
@@ -116,53 +200,60 @@ const TagsListCard = () => {
 
   const renderCategories = (categories) =>
     categories.map((category) => (
-      <List key={category.id} disablePadding>
-        <ListItemButton
-          onClick={() =>
-            category.child && category.child.length
-              ? handleExpand(category.id)
-              : handleToggle(category.id, !category.selected)
-          }
-        >
-          <ListItemIcon>
-            <Checkbox
-              edge="start"
-              checked={category.selected}
-              tabIndex={-1}
-              disableRipple
-              onClick={(e) => {
-                e.stopPropagation()
-                handleToggle(category.id, !category.selected)
-              }}
-            />
-          </ListItemIcon>
-          <ListItemText primary={category.name} />
-          {category.child && category.child.length > 0 && (
+      <>
+        <List key={category.id} disablePadding sx={{ width: '100%' }}>
+          <ListItemButton
+            onClick={() =>
+              category.child && category.child.length
+                ? handleExpand(category.id)
+                : handleToggle(category.id, !category.selected)
+            }
+            sx={{ height: 50 }}
+          >
             <ListItemIcon>
-              {category.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              <Checkbox
+                edge="start"
+                checked={category.selected}
+                tabIndex={-1}
+                disableRipple
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleToggle(category.id, !category.selected)
+                }}
+              />
             </ListItemIcon>
+            <ListItemText primary={category.name} />
+            {category.child && category.child.length > 0 && (
+              <ListItemIcon>
+                {category.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemIcon>
+            )}
+          </ListItemButton>
+          <Divider sx={{ ml: 0 }} />
+          {category.child && category.child.length > 0 && (
+            <List
+              sx={{
+                pl: 4,
+                maxHeight: category.expanded ? 200 : 0,
+                overflow: 'hidden',
+                transition: 'max-height 0.3s',
+              }}
+              disablePadding
+            >
+              {renderCategories(category.child)}
+            </List>
           )}
-        </ListItemButton>
-        {category.child && category.child.length > 0 && category.expanded && (
-          <List sx={{ pl: 4 }} disablePadding>
-            {renderCategories(category.child)}
-          </List>
-        )}
-      </List>
+        </List>
+      </>
     ))
 
   return (
     <Card sx={{ w: '100%', h: '100%' }}>
+      <CardHeader title={'Categorías'} />
       <CardContent sx={{ height: '100%' }}>
-        <Typography
-          sx={{ fontSize: 14, height: '33%' }}
-          color={'text.secondary'}
-          gutterBottom
-        >
-          Categorías:
-          <Divider />
+        <SimpleBar style={{ height: 'calc(100vh - 225px)' }}>
           <List disablePadding>{renderCategories(categories)}</List>
-        </Typography>
+        </SimpleBar>
       </CardContent>
     </Card>
   )

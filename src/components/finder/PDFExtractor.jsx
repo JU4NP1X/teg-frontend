@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -11,8 +12,10 @@ import Stepper from '@mui/material/Stepper'
 import React, { useEffect, useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
+import { ValidatorForm } from 'react-material-ui-form-validator'
 import { pdfjs } from 'react-pdf'
-import SimpleBar from 'simplebar-react/dist'
+import SimpleBar from 'simplebar-react'
+import FileUploader from '../__common/FileUploader'
 
 const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
 
@@ -22,7 +25,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString()
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction={'up'} ref={ref} {...props} />
+  return <Slide direction="up" ref={ref} {...props} />
 })
 
 const PDFExtractor = ({
@@ -31,7 +34,7 @@ const PDFExtractor = ({
   handleFileExtracted,
   handleTextExtracted,
 }) => {
-  const [selectedFile, setSelectedFile] = useState(null)
+  const [base64PdfFile, setBase64PdfFile] = useState(null)
   const [selectedPages, setSelectedPages] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const [numPages, setNumPages] = useState(null)
@@ -41,25 +44,23 @@ const PDFExtractor = ({
   const [summaryImage, setSummaryImage] = useState(null)
   const [updatingFile, setUpdatingFile] = useState(false)
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0]
-    setSelectedFile(file)
-    if (handleFileExtracted) handleFileExtracted(file)
-    await handleUpload(file)
+  const base64ToFile = (base64String) => {
+    try {
+      const byteCharacters = atob(base64String)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new File([byteArray], 'filename.jpg', { type: 'image/jpeg' })
+    } catch (error) {
+      console.error('El string base64 no es válido')
+    }
   }
 
-  const handleDragOver = (event) => {
-    event.preventDefault()
-  }
-
-  const handleDrop = (event) => {
-    event.preventDefault()
-    const file = event.dataTransfer.files[0]
-    setSelectedFile(file)
-    handleUpload(file)
-  }
-
-  const handleUpload = async (file) => {
+  const handleUpload = async (base64) => {
+    setBase64PdfFile(base64)
+    setUpdatingFile(true)
     const fileReader = new FileReader()
     fileReader.onload = async (e) => {
       const arrayBuffer = e.target.result
@@ -83,10 +84,11 @@ const PDFExtractor = ({
       setSelectedPages(extractedPages)
       setCurrentPage(0)
       setNumPages(pages)
+      console.log({ step, pages })
       setStep(step + 1)
     }
 
-    fileReader.readAsArrayBuffer(file)
+    fileReader.readAsArrayBuffer(base64ToFile(base64))
   }
 
   const handleTextSelection = (selectedText) => {
@@ -135,7 +137,7 @@ const PDFExtractor = ({
   const closeDialog = () => {
     if (!updatingFile) {
       setStep(0)
-      setSelectedFile(null)
+      setBase64PdfFile(null)
       setTitleImage(null)
       setSummaryImage(null)
       onClose()
@@ -156,18 +158,18 @@ const PDFExtractor = ({
   }, [updatingFile])
 
   return (
-    <div>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={closeDialog}
-        aria-describedby={'alert-dialog-slide-description'}
-        maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
-      >
-        <DialogTitle>{'Subir y extraer datos del documento'}</DialogTitle>
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={closeDialog}
+      aria-describedby="alert-dialog-slide-description"
+      maxWidth="lg" // Añadido para ajustar el tamaño del diálogo
+    >
+      <DialogTitle>Subir y extraer datos del documento</DialogTitle>
+      <ValidatorForm>
         <DialogContent>
-          <DialogContentText id={'alert-dialog-slide-description'}>
+          <DialogContentText id="alert-dialog-slide-description">
             <div
               style={{
                 display: 'flex',
@@ -186,99 +188,83 @@ const PDFExtractor = ({
                   </Step>
                 ))}
               </Stepper>
-
-              {step === 0 && (
-                <div
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    border: '1px dashed gray',
-                    display: 'flex',
-                    placeContent: 'center',
-                    placeItems: 'center',
-                    cursor: 'pointer',
-                  }}
-                  onClick={handleDraggerClick}
-                >
-                  Arrastra aquí un PDF o haz click para buscarlo
-                  <input
-                    id={'file-input'}
-                    type={'file'}
-                    accept={'.pdf'}
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                  />
-                </div>
-              )}
-
-              {step !== 0 && selectedPages[currentPage] && (
-                <>
-                  <SimpleBar
-                    style={{
-                      maxHeight: '60vh',
-                      width: '700px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <ReactCrop
-                      crop={crop}
-                      onChange={handleCropChange}
-                      onComplete={handleCropComplete}
-                    >
-                      <img
-                        src={selectedPages[currentPage].image}
-                        alt={'Page'}
-                      />
-                    </ReactCrop>
-                  </SimpleBar>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                      disabled={step === 0}
-                      onClick={() => {
-                        setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
-                        setSummaryImage(null)
-                        setTitleImage(null)
-                        setStep(step - 1)
-                      }}
-                    >
-                      Anterior
-                    </Button>
-                    <Pagination
-                      count={numPages}
-                      page={currentPage + 1}
-                      onChange={handlePageChange}
-                      color={'primary'}
-                      size={'large'}
-                      style={{ margin: '20px auto' }}
-                    />
-                    {step === steps.length - 1 ? (
-                      <Button
-                        disabled={!summaryImage && step === 2}
-                        onClick={handleFinish}
-                      >
-                        Finalizar
-                      </Button>
-                    ) : (
-                      <Button
-                        disabled={!titleImage && step === 1}
-                        onClick={() => {
-                          setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
-                          setStep(step + 1)
-                        }}
-                      >
-                        Siguiente
-                      </Button>
-                    )}
-                  </div>
-                </>
-              )}
             </div>
           </DialogContentText>
+          {step === 0 && (
+            <FileUploader
+              buttonText="Haz click o arrastra un .pdf a clasificar"
+              isLoading={() => {}}
+              fileTypes={['.pdf']}
+              onFileUpload={handleUpload}
+            />
+          )}
+
+          {step !== 0 && selectedPages[currentPage] && (
+            <SimpleBar
+              style={{
+                maxHeight: '50vh',
+                width: 400,
+                textAlign: 'center',
+              }}
+            >
+              <ReactCrop
+                crop={crop}
+                onChange={handleCropChange}
+                onComplete={handleCropComplete}
+              >
+                <img src={selectedPages[currentPage].image} alt="Page" />
+              </ReactCrop>
+            </SimpleBar>
+          )}
         </DialogContent>
-      </Dialog>
-    </div>
+        <DialogActions
+          style={{
+            justifyContent: 'center',
+            display: step !== 0 ? undefined : 'none',
+          }}
+        >
+          <Button
+            disabled={step === 0}
+            onClick={() => {
+              setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+              setSummaryImage(null)
+              setTitleImage(null)
+              setStep(step - 1)
+            }}
+            size={'small'}
+          >
+            Anterior
+          </Button>
+          <Pagination
+            count={numPages}
+            page={currentPage + 1}
+            onChange={handlePageChange}
+            color={'primary'}
+            size={'small'}
+            style={{ margin: '20px auto' }}
+          />
+          {step === steps.length - 1 ? (
+            <Button
+              disabled={!summaryImage && step === 2}
+              onClick={handleFinish}
+            >
+              Finalizar
+            </Button>
+          ) : (
+            <Button
+              disabled={!titleImage && step === 1}
+              onClick={() => {
+                setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+                setStep(step + 1)
+              }}
+              size={'small'}
+            >
+              Siguiente
+            </Button>
+          )}
+        </DialogActions>
+      </ValidatorForm>
+    </Dialog>
   )
 }
 
