@@ -14,14 +14,15 @@ import {
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
 import '../../styles/layout/sideBar.css'
 import { isMobile } from '../../utils/utils'
 import Swipe from '../__common/Swipe'
 import LoginDialog from './LoginDialog'
-import Session from '../../utils/session'
 
-export const SideBar = ({ isOpen, user, setUser, loginHandler }) => {
+export const SideBar = ({ isOpen, loginHandler }) => {
   const Navigate = useNavigate()
+  const { auth, setUser } = useAuth()
   const [openAdministration, setOpenAdministration] = useState(false)
   const [openLogin, setOpenLogin] = useState(false)
 
@@ -54,7 +55,7 @@ export const SideBar = ({ isOpen, user, setUser, loginHandler }) => {
           </ListItemIcon>
           <ListItemText primary={'Biblioteca'} />
         </ListItemButton>
-        {user && user.token ? (
+        {auth ? (
           <>
             {/* Classify */}
             <ListItemButton
@@ -152,7 +153,6 @@ export const SideBar = ({ isOpen, user, setUser, loginHandler }) => {
             <ListItemButton
               onClick={() => {
                 if (isMobile()) setOpenAdministration(false)
-                Session.unset()
                 setUser({})
                 Navigate('/')
                 // Agrega aquí la lógica para desloguearse
@@ -179,11 +179,7 @@ export const SideBar = ({ isOpen, user, setUser, loginHandler }) => {
           </ListItemButton>
         )}
       </List>
-      <LoginDialog
-        open={openLogin}
-        setUser={setUser}
-        handleClose={() => setOpenLogin(false)}
-      />
+      <LoginDialog open={openLogin} handleClose={() => setOpenLogin(false)} />
     </Swipe>
   )
 }

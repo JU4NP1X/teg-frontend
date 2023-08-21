@@ -1,4 +1,4 @@
-import { FitnessCenter } from '@mui/icons-material'
+import { Edit, FitnessCenter, Sync } from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
 import React from 'react'
@@ -15,10 +15,28 @@ const data = {
   ],
 }
 
-const AuthorityRow = ({ authority, handleDeleteAuthority, handleReTrain }) => {
+const AuthorityRow = ({
+  authority,
+  handleDeleteAuthority,
+  handleReTrain,
+  handleUpdateAuthority,
+}) => {
+  console.log(authority)
   return (
-    <TableRow key={authority.name}>
-      <TableCell>{authority.name}</TableCell>
+    <TableRow key={authority.id}>
+      <TableCell>
+        <div
+          style={{
+            height: 20,
+            width: 20,
+            backgroundColor: authority.color,
+            borderRadius: 3,
+          }}
+        ></div>
+      </TableCell>
+      <TableCell>
+        <b>{authority.name}</b>
+      </TableCell>
       <TableCell>{authority.lastTrainingDate}</TableCell>
       <TableCell>{authority.trainingData}</TableCell>
       <TableCell>
@@ -92,20 +110,47 @@ const AuthorityRow = ({ authority, handleDeleteAuthority, handleReTrain }) => {
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexFlow: 'column',
           }}
         >
-          <Button variant="contained" color="secondary" onClick={handleReTrain}>
-            <FitnessCenter />
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => handleDeleteAuthority(authority)}
-            sx={{ ml: 1 }}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 10,
+            }}
           >
-            <DeleteIcon />
-          </Button>
+            <Button variant={'outlined'} color={'secondary'} onClick={() => {}}>
+              <Sync />
+            </Button>
+            <Button
+              variant={'outlined'}
+              color={'success'}
+              onClick={() => handleUpdateAuthority(authority)}
+              sx={{ ml: 1 }}
+            >
+              <Edit />
+            </Button>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Button variant={'outlined'} color={'info'} onClick={handleReTrain}>
+              <FitnessCenter />
+            </Button>
+            <Button
+              variant={'outlined'}
+              onClick={() => handleDeleteAuthority(authority)}
+              sx={{ ml: 1 }}
+            >
+              <DeleteIcon />
+            </Button>
+          </div>
         </div>
       </TableCell>
     </TableRow>

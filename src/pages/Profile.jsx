@@ -1,42 +1,45 @@
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material'
 import React, { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import useNotification from '../hooks/useNotification'
+import ApiConnection from '../utils/apiConnection'
+import Session from '../utils/session'
 
 const Profile = () => {
-  const [name, setName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
+  const [user, setUser] = useState(Session.getAll())
+  const { setSuccessMessage, setErrorMessage } = useNotification()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleNameChange = (event) => {
-    setName(event.target.value)
+    setUser({ ...user, firstName: event.target.value })
   }
 
   const handleLastNameChange = (event) => {
-    setLastName(event.target.value)
+    setUser({ ...user, lastName: event.target.value })
   }
 
   const handleEmailChange = (event) => {
-    setEmail(event.target.value)
+    setUser({ ...user, email: event.target.value })
   }
 
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
+    setUser({ ...user, password: event.target.value })
   }
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value)
   }
 
-  const handleSave = () => {
-    // Lógica para guardar el nombre en la base de datos
-    console.log('Nombre guardado:', name)
-  }
+  const handleSave = () => {}
 
-  const handleChangePassword = () => {
-    // Lógica para guardar la contraseña en la base de datos
-    console.log('Contraseña guardada:', password)
+  const handleChangePassword = async () => {
+    const api = ApiConnection()
+    await api.put(`/users/list/${user.id}/`, { password: user.password })
+
+    if (api.status === 200)
+      setSuccessMessage('Contraseña cambiada exitosamente')
+    else setErrorMessage('Error al cambiar contraseña, intente más tarde.')
   }
 
   return (
@@ -52,7 +55,7 @@ const Profile = () => {
                   <TextValidator
                     label="Nombre"
                     fullWidth
-                    value={name}
+                    value={user.firstName}
                     onChange={handleNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
@@ -60,7 +63,7 @@ const Profile = () => {
                   <TextValidator
                     label="Apellido"
                     fullWidth
-                    value={lastName}
+                    value={user.lastName}
                     onChange={handleLastNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
@@ -68,7 +71,7 @@ const Profile = () => {
                   <TextValidator
                     label="Correo"
                     fullWidth
-                    value={email}
+                    value={user.email}
                     onChange={handleEmailChange}
                     validators={['required', 'isEmail']}
                     errorMessages={[

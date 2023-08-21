@@ -15,7 +15,6 @@ import { Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react'
 import 'simplebar-react/dist/simplebar.min.css'
 import '../../styles/layout/layout.css'
-import Session from '../../utils/session'
 import { isMobile } from '../../utils/utils'
 import Swipe from '../__common/Swipe'
 import { Drawer } from './Drawer'
@@ -42,12 +41,9 @@ const theme = createTheme({
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(false)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
-  const [user, setUser] = useState(Session.getAll())
   const filterProps = {
     isOpen: open,
     setOpen,
-    user,
-    setUser,
     loginHandler: (value) => {
       setLoginModalOpen(value)
     },

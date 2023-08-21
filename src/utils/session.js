@@ -12,41 +12,25 @@ const Session = {
       ? JSON.parse(localStorage.getItem('__session')).nav
       : undefined,
   unset: () => localStorage.removeItem('__session'),
-  usrId: () =>
+  id: () =>
     sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrId
+      ? JSON.parse(localStorage.getItem('__session')).id
       : undefined,
-  usrCompany: () =>
+  email: () =>
     sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrCompany
+      ? JSON.parse(localStorage.getItem('__session')).email
       : undefined,
-  usrEmail: () =>
+  firstName: () =>
     sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrEmail
+      ? JSON.parse(localStorage.getItem('__session')).firstName
       : undefined,
-  usrName: () =>
+  lastName: () =>
     sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrName
+      ? JSON.parse(localStorage.getItem('__session')).lastName
       : undefined,
-  usrLastName: () =>
+  isAdmin: () =>
     sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrLastName
-      : undefined,
-  usrRol: () =>
-    sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).rolId
-      : undefined,
-  status: () =>
-    sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrStatus
-      : undefined,
-  usrStatus: () =>
-    sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).usrStatus
-      : undefined,
-  notReg: () =>
-    sessionExist()
-      ? JSON.parse(localStorage.getItem('__session')).notReg
+      ? JSON.parse(localStorage.getItem('__session')).isAdmin
       : undefined,
   token: () =>
     sessionExist()

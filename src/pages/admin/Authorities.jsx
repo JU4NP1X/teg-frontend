@@ -18,6 +18,7 @@ const authoritiesData = [
   {
     name: 'Autoridad 1',
     lastTrainingDate: '2023-08-15',
+    color: '#000000',
     trainingData: 20,
     updatedCategories: 20,
     deprecatedCategories: 20,
@@ -38,45 +39,40 @@ const authoritiesData = [
   },
 ]
 
+const authorityTemplate = {
+  name: '',
+  color: 'ffffff',
+  csvFile: null,
+}
+
 const Authorities = () => {
+  const [authority, setAuthority] = useState(authorityTemplate)
   const [authorities, setAuthorities] = useState(authoritiesData)
-  const [newAuthority, setNewAuthority] = useState('')
-  const [isClassifierUpdated, setIsClassifierUpdated] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [isLoading, setIsLoading] = useState(true)
   const [loadingFile, setLoadingFile] = useState(false)
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [authorityToDelete, setAuthorityToDelete] = useState(null)
-  const [openAddAuthority, setOpenAddAuthority] = useState(false)
-  const [newAuthorityName, setNewAuthorityName] = useState('')
-  const [newAuthorityCategories, setNewAuthorityCategories] = useState('')
-  const [csvFile, setCsvFile] = useState(null)
+  const [openAuthorityModal, setOpenAuthorityModal] = useState(false)
 
   const handleAddAuthority = () => {
-    if (
-      newAuthorityName.trim() !== '' &&
-      newAuthorityCategories.trim() !== ''
-    ) {
-      const newAuthority = {
-        name: newAuthorityName,
-        categories: newAuthorityCategories,
-        lastTrainingDate: '',
-        trainingData: '',
-        theoreticalAccuracy: {
-          sufficientCategories: 0,
-          untrainedCategories: 0,
-        },
-        practicalAccuracy: {
-          sufficientCategories: 0,
-          untrainedCategories: 0,
-        },
-      }
-      setAuthorities([...authorities, newAuthority])
-      setNewAuthorityName('')
-      setNewAuthorityCategories('')
-      setOpenAddAuthority(false)
+    const newAuthority = {
+      ...authority,
+      lastTrainingDate: '',
+      trainingData: '',
+      theoreticalAccuracy: {
+        sufficientCategories: 0,
+        untrainedCategories: 0,
+      },
+      practicalAccuracy: {
+        sufficientCategories: 0,
+        untrainedCategories: 0,
+      },
     }
+    setAuthorities([...authorities, newAuthority])
+    setAuthority(authorityTemplate)
+    setOpenAuthorityModal(false)
   }
 
   const handleDeleteAuthority = (authority) => {
@@ -104,6 +100,11 @@ const Authorities = () => {
     setPage(0)
   }
 
+  const handleUpdateAuthority = (authority) => {
+    setAuthority(authority)
+    setOpenAuthorityModal(true)
+  }
+
   const handleReTrain = () => {
     // Implementar lógica para activar/desactivar autoridad
   }
@@ -120,6 +121,7 @@ const Authorities = () => {
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
             handleDeleteAuthority={handleDeleteAuthority}
+            handleUpdateAuthority={handleUpdateAuthority}
             handleReTrain={handleReTrain}
           />
           {isLoading && (
@@ -149,8 +151,11 @@ const Authorities = () => {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={openAddAuthority}
-            onClose={() => setOpenAddAuthority(false)}
+            open={openAuthorityModal}
+            onClose={() => {
+              setAuthority(authorityTemplate)
+              setOpenAuthorityModal(false)
+            }}
             aria-labelledby={'form-dialog-title'}
           >
             <DialogTitle id={'form-dialog-title'}>
@@ -164,29 +169,54 @@ const Authorities = () => {
                 </DialogContentText>
                 <TextValidator
                   autoFocus
-                  margin="dense"
-                  id="name"
-                  label="Nombre"
-                  type="text"
+                  margin={'dense'}
+                  id={'name'}
+                  label={'Nombre'}
+                  type={'text'}
                   fullWidth
-                  value={newAuthorityName}
-                  onChange={(e) => setNewAuthorityName(e.target.value)}
+                  value={authority.name}
+                  onChange={(e) =>
+                    setAuthority({ ...authority, name: e.target.value })
+                  }
                   validators={['required']}
                   errorMessages={['Este campo es requerido']}
                 />
+
+                <TextValidator
+                  autoFocus
+                  margin={'dense'}
+                  id={'color'}
+                  label={'Color'}
+                  type={'color'}
+                  fullWidth
+                  value={authority.color}
+                  onChange={(e) =>
+                    setAuthority({ ...authority, color: e.target.value })
+                  }
+                  validators={['required']}
+                  errorMessages={['Este campo es requerido']}
+                />
+
                 <FileUploader
                   buttonText={'Haz click o arrastra un .csv con las categorías'}
                   isLoading={setLoadingFile}
                   fileTypes={['.csv']}
-                  onFileUpload={setCsvFile}
+                  onFileUpload={(file) =>
+                    setAuthority({ ...authority, csvFile: file })
+                  }
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setOpenAddAuthority(false)}>
+                <Button
+                  onClick={() => {
+                    setAuthority(authorityTemplate)
+                    setOpenAuthorityModal(false)
+                  }}
+                >
                   Cancelar
                 </Button>
                 <Button
-                  disabled={csvFile === null}
+                  disabled={authority.csvFile === null}
                   type={'submit'}
                   color={'primary'}
                 >
@@ -198,7 +228,7 @@ const Authorities = () => {
           <Button
             variant={'contained'}
             color={'primary'}
-            onClick={() => setOpenAddAuthority(true)}
+            onClick={() => setOpenAuthorityModal(true)}
             style={{ marginTop: -70, marginLeft: 4, marginBottom: 0 }}
           >
             Agregar Autoridad

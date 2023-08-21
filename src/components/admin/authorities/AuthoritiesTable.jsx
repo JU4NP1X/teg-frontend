@@ -13,6 +13,7 @@ import SimpleBar from 'simplebar-react'
 import AuthorityRow from './AuthorityRow'
 
 const columns = [
+  'Color',
   'Autoridad',
   'Última Fecha de Entrenamiento',
   'Datos de Entrenamiento Utilizados',
@@ -34,6 +35,7 @@ const AuthoritiesTable = ({
   handleChangeRowsPerPage,
   handleDeleteAuthority,
   handleReTrain,
+  handleUpdateAuthority,
 }) => {
   return (
     <>
@@ -56,6 +58,7 @@ const AuthoritiesTable = ({
                     authority={authority}
                     handleDeleteAuthority={handleDeleteAuthority}
                     handleReTrain={handleReTrain}
+                    handleUpdateAuthority={handleUpdateAuthority}
                   />
                 ))}
             </TableBody>

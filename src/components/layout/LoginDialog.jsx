@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-import ApiConnection from '../../utils/apiConnection'
-import Session from '../../utils/session'
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
 } from '@mui/material'
+import React, { useState } from 'react'
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import useAuth from '../../hooks/useAuth'
+import ApiConnection from '../../utils/apiConnection'
+import LoginWithGoogle from './LoginWithGoogle'
 
-const LoginDialog = ({ open, handleClose, setUser }) => {
+const LoginDialog = ({ open, handleClose }) => {
+  const { setUser } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isRequesting, setIsRequesting] = useState(false)
@@ -21,7 +24,6 @@ const LoginDialog = ({ open, handleClose, setUser }) => {
     const api = ApiConnection()
 
     const data = await api.post('users/login/', { username, password })
-    Session.set(data)
     setUser(data)
     setIsRequesting(false)
     handleClose()
@@ -29,6 +31,18 @@ const LoginDialog = ({ open, handleClose, setUser }) => {
 
   const closeValidarte = () => {
     if (!isRequesting) handleClose()
+  }
+
+  const responseGoogle = async (response) => {
+    if (response && response.credential) {
+      const api = ApiConnection()
+      const user = await api.post('/users/login/google/', {
+        token: response.credential,
+      })
+
+      if (api.status === 200) setUser(user)
+      else setErrorMessage('Error al autenticar')
+    }
   }
 
   return (
@@ -56,6 +70,10 @@ const LoginDialog = ({ open, handleClose, setUser }) => {
             errorMessages={['La contraseña es requerida']}
           />
         </DialogContent>
+
+        <Grid container style={{ placeContent: 'center' }}>
+          <LoginWithGoogle responseGoogle={responseGoogle} />
+        </Grid>
         <DialogActions>
           <Button onClick={closeValidarte} disabled={isRequesting}>
             Cancelar

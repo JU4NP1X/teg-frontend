@@ -8,40 +8,30 @@ import {
   CardHeader,
   CircularProgress,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import useClassifier from '../../hooks/useClassifier'
 import PDFExtractor from './PDFExtractor'
-import ApiConnection from '../../utils/apiConnection'
 
 const InputCard = () => {
   const [openPDFExtractor, setOpenPDFExtractor] = useState(false)
-  const [loadingAuthorities, setLoadingAuthorities] = useState(false)
-  const [authorities, setAuthorities] = useState([])
-  const [title, setTitle] = useState('')
-  const [summary, setSummary] = useState('')
+  const [summaryFocus, setSummaryFocus] = useState(false)
+  const [titleFocus, setTitleFocus] = useState(false)
+  const {
+    authorities,
+    loadingAuthorities,
+    summary,
+    setSummary,
+    title,
+    setTitle,
+    classify,
+  } = useClassifier()
 
   const handleSubmit = (event) => {
     event.preventDefault()
     // Lógica para clasificar el documento
   }
-
-  const getAuthorityList = async () => {
-    setLoadingAuthorities(true)
-    const api = ApiConnection()
-    const data = await api.get('/categories/authorities/')
-
-    setLoadingAuthorities(false)
-    setAuthorities(data.results)
-    console.log(data)
-  }
-
-  useEffect(() => {
-    getAuthorityList()
-  }, [])
 
   return (
     <Card sx={{ minHeight: '100%' }}>
@@ -68,7 +58,11 @@ const InputCard = () => {
                     endAdornment: (
                       <>
                         {loadingAuthorities ? (
-                          <CircularProgress color={'inherit'} size={20} />
+                          <CircularProgress
+                            color={'inherit'}
+                            size={20}
+                            sx={{ mt: '-10px' }}
+                          />
                         ) : null}
                         {params.InputProps.endAdornment}
                       </>
@@ -88,8 +82,10 @@ const InputCard = () => {
               errorMessages={['Este campo es requerido']}
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              onFocus={(event) => setTitleFocus(true)}
+              onBlur={(event) => setTitleFocus(false)}
               InputLabelProps={{
-                shrink: title !== '',
+                shrink: title !== '' || titleFocus,
               }}
             />
             <TextValidator
@@ -105,8 +101,12 @@ const InputCard = () => {
               errorMessages={['Este campo es requerido']}
               value={summary}
               onChange={(event) => setSummary(event.target.value)}
+              onFocus={(event) => setSummaryFocus(true)}
+              onBlur={(event) => {
+                setSummaryFocus(false)
+              }}
               InputLabelProps={{
-                shrink: summary !== '',
+                shrink: summary !== '' || summaryFocus,
               }}
             />
           </FormControl>
@@ -126,6 +126,9 @@ const InputCard = () => {
             variant={'contained'}
             startIcon={<Category />}
             sx={{ ml: 'auto' }}
+            onClick={() => {
+              classify()
+            }}
           >
             Clasificar
           </Button>

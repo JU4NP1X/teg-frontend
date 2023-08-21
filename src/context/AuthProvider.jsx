@@ -1,9 +1,16 @@
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
+import Session from '../utils/session'
 
 const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [auth, setAuth] = useState(false)
+  const [user, setUser] = useState(Session.getAll())
+
+  useEffect(() => {
+    setAuth(user.token && true)
+    Session.set(user)
+  }, [user])
 
   return (
     <AuthContext.Provider
@@ -12,6 +19,8 @@ const AuthProvider = ({ children }) => {
         auth,
         setAuth,
         setLoading,
+        user,
+        setUser,
       }}
     >
       {children}
