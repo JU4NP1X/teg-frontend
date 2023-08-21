@@ -5,6 +5,7 @@ import {
   ExpandMore,
   ListAlt,
   LocalLibrary,
+  Login,
   Logout,
   PermIdentity,
   Person,
@@ -16,14 +17,21 @@ import { useNavigate } from 'react-router-dom'
 import '../../styles/layout/sideBar.css'
 import { isMobile } from '../../utils/utils'
 import Swipe from '../__common/Swipe'
+import LoginDialog from './LoginDialog'
+import Session from '../../utils/session'
 
-export const SideBar = ({ isOpen }) => {
+export const SideBar = ({ isOpen, user, setUser, loginHandler }) => {
   const Navigate = useNavigate()
   const [openAdministration, setOpenAdministration] = useState(false)
+  const [openLogin, setOpenLogin] = useState(false)
 
   useEffect(() => {
     if (!isOpen) setOpenAdministration(false)
   }, [isOpen])
+
+  useEffect(() => {
+    loginHandler(openLogin)
+  }, [openLogin])
 
   return (
     <Swipe
@@ -37,122 +45,145 @@ export const SideBar = ({ isOpen }) => {
         <ListItemButton
           onClick={() => {
             if (isMobile()) setOpenAdministration(false)
-            Navigate('/library')
+            Navigate('/')
           }}
-          selected={window.location.pathname === '/library'}
+          selected={window.location.pathname === '/'}
         >
           <ListItemIcon sx={{ color: 'white' }}>
             <LocalLibrary />
           </ListItemIcon>
           <ListItemText primary={'Biblioteca'} />
         </ListItemButton>
+        {user && user.token ? (
+          <>
+            {/* Classify */}
+            <ListItemButton
+              onClick={() => {
+                if (isMobile()) setOpenAdministration(false)
+                Navigate('/classify')
+              }}
+              selected={window.location.pathname === '/classify'}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <Category />
+              </ListItemIcon>
+              <ListItemText primary={'Clasificador'} />
+            </ListItemButton>
 
-        {/* Classify */}
-        <ListItemButton
-          onClick={() => {
-            if (isMobile()) setOpenAdministration(false)
-            Navigate('/')
-          }}
-          selected={window.location.pathname === '/'}
-        >
-          <ListItemIcon sx={{ color: 'white' }}>
-            <Category />
-          </ListItemIcon>
-          <ListItemText primary={'Clasificador'} />
-        </ListItemButton>
+            {/* change password */}
+            <ListItemButton
+              onClick={() => {
+                if (isMobile()) setOpenAdministration(false)
+                Navigate('/admin/profile')
+              }}
+              selected={window.location.pathname === '/admin/profile'}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary={'Perfil'} />
+            </ListItemButton>
 
-        {/* change password */}
-        <ListItemButton
-          onClick={() => {
-            if (isMobile()) setOpenAdministration(false)
-            Navigate('/admin/profile')
-          }}
-          selected={window.location.pathname === '/admin/profile'}
-        >
-          <ListItemIcon sx={{ color: 'white' }}>
-            <Person />
-          </ListItemIcon>
-          <ListItemText primary={'Perfil'} />
-        </ListItemButton>
+            {/* Desplegable Administración */}
+            <ListItemButton
+              onClick={() => setOpenAdministration(!openAdministration)}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <Settings />
+              </ListItemIcon>
+              <ListItemText primary={'Administración'} />
+              {openAdministration ? (
+                <ExpandLess sx={{ color: 'white' }} />
+              ) : (
+                <ExpandMore sx={{ color: 'white' }} />
+              )}
+            </ListItemButton>
 
-        {/* Desplegable Administración */}
-        <ListItemButton
-          onClick={() => setOpenAdministration(!openAdministration)}
-        >
-          <ListItemIcon sx={{ color: 'white' }}>
-            <Settings />
-          </ListItemIcon>
-          <ListItemText primary={'Administración'} />
-          {openAdministration ? (
-            <ExpandLess sx={{ color: 'white' }} />
-          ) : (
-            <ExpandMore sx={{ color: 'white' }} />
-          )}
-        </ListItemButton>
+            <List
+              className={`administration-list ${
+                openAdministration && isOpen ? 'open' : ''
+              } `}
+              sx={{
+                paddingLeft: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '30vh',
+              }}
+            >
+              <ListItemButton
+                onClick={() => {
+                  if (isMobile()) setOpenAdministration(false)
+                  Navigate('/admin/users')
+                }}
+                selected={window.location.pathname === '/admin/users'}
+              >
+                <ListItemIcon sx={{ color: 'white' }}>
+                  <PermIdentity />
+                </ListItemIcon>
+                <ListItemText primary={'Usuarios'} />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  if (isMobile()) setOpenAdministration(false)
+                  Navigate('/admin/authorities')
+                }}
+                selected={window.location.pathname === '/admin/authorities'}
+              >
+                <ListItemIcon sx={{ color: 'white' }}>
+                  <ListAlt />
+                </ListItemIcon>
+                <ListItemText primary={'Listas de autoridad'} />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  if (isMobile()) setOpenAdministration(false)
+                  Navigate('/admin/documents')
+                }}
+                selected={window.location.pathname === '/admin/documents'}
+              >
+                <ListItemIcon sx={{ color: 'white' }}>
+                  <Description />
+                </ListItemIcon>
+                <ListItemText primary={'Documentos'} />
+              </ListItemButton>
+            </List>
 
-        <List
-          className={`administration-list ${
-            openAdministration && isOpen ? 'open' : ''
-          } `}
-          sx={{
-            paddingLeft: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '30vh',
-          }}
-        >
+            {/* Salir */}
+            <ListItemButton
+              onClick={() => {
+                if (isMobile()) setOpenAdministration(false)
+                Session.unset()
+                setUser({})
+                Navigate('/')
+                // Agrega aquí la lógica para desloguearse
+              }}
+              style={{ marginTop: 'auto' }}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <Logout />
+              </ListItemIcon>
+              <ListItemText primary={'Salir'} />
+            </ListItemButton>
+          </>
+        ) : (
           <ListItemButton
             onClick={() => {
-              if (isMobile()) setOpenAdministration(false)
-              Navigate('/admin/users')
+              setOpenLogin(true)
             }}
-            selected={window.location.pathname === '/admin/users'}
+            style={{ marginTop: 'auto' }}
           >
             <ListItemIcon sx={{ color: 'white' }}>
-              <PermIdentity />
+              <Login />
             </ListItemIcon>
-            <ListItemText primary={'Usuarios'} />
+            <ListItemText primary={'Iniciar Sesión'} />
           </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              if (isMobile()) setOpenAdministration(false)
-              Navigate('/admin/authorities')
-            }}
-            selected={window.location.pathname === '/admin/authorities'}
-          >
-            <ListItemIcon sx={{ color: 'white' }}>
-              <ListAlt />
-            </ListItemIcon>
-            <ListItemText primary={'Listas de autoridad'} />
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              if (isMobile()) setOpenAdministration(false)
-              Navigate('/admin/documents')
-            }}
-            selected={window.location.pathname === '/admin/documents'}
-          >
-            <ListItemIcon sx={{ color: 'white' }}>
-              <Description />
-            </ListItemIcon>
-            <ListItemText primary={'Documentos'} />
-          </ListItemButton>
-        </List>
-
-        {/* Salir */}
-        <ListItemButton
-          onClick={() => {
-            if (isMobile()) setOpenAdministration(false)
-            // Agrega aquí la lógica para desloguearse
-          }}
-          style={{ marginTop: 'auto' }}
-        >
-          <ListItemIcon sx={{ color: 'white' }}>
-            <Logout />
-          </ListItemIcon>
-          <ListItemText primary={'Salir'} />
-        </ListItemButton>
+        )}
       </List>
+      <LoginDialog
+        open={openLogin}
+        setUser={setUser}
+        handleClose={() => setOpenLogin(false)}
+      />
     </Swipe>
   )
 }

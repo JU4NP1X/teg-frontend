@@ -17,10 +17,9 @@ const ApiConnection = () => {
     (response) => {
       let data = response.data
       Api.status = response.status
-      Api.message = data.message
-      Api.data = data.data
+      Api.data = data
 
-      return data.data
+      return data
     },
     (error) => {
       console.log({ error })
@@ -29,17 +28,13 @@ const ApiConnection = () => {
       let data = response.data ?? {}
 
       Api.status = response.status
-      Api.message = data.message
-      Api.data = data.data
+      Api.data = data
 
-      if (data.message && typeof data.message === 'string')
-        message = data.message
-      else message = 'Error desconocido. Inicie sesión de nuevo.'
       if (Api.status === 401) {
         Session.unset()
         history.replace(`/?errorMessage=${message}`)
       }
-      return data.data
+      return data
     }
   )
 

@@ -1,43 +1,82 @@
 import { Category, Upload } from '@mui/icons-material'
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-
 import PDFExtractor from './PDFExtractor'
+import ApiConnection from '../../utils/apiConnection'
 
 const InputCard = () => {
   const [openPDFExtractor, setOpenPDFExtractor] = useState(false)
+  const [loadingAuthorities, setLoadingAuthorities] = useState(false)
+  const [authorities, setAuthorities] = useState([])
+  const [title, setTitle] = useState('')
+  const [summary, setSummary] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
     // Lógica para clasificar el documento
   }
 
+  const getAuthorityList = async () => {
+    setLoadingAuthorities(true)
+    const api = ApiConnection()
+    const data = await api.get('/categories/authorities/')
+
+    setLoadingAuthorities(false)
+    setAuthorities(data.results)
+    console.log(data)
+  }
+
+  useEffect(() => {
+    getAuthorityList()
+  }, [])
+
   return (
     <Card sx={{ minHeight: '100%' }}>
       <CardHeader title={'Documento a clasificar'} />
       <ValidatorForm onSubmit={handleSubmit}>
         <CardContent>
-          <FormControl size={'small'} fullWidth>
-            <InputLabel>Lista de autoridad emisora</InputLabel>
-            <Select
-              sx={{ mt: '10px !important' }}
-              fullWidth
-              value={10}
-              label={'Lista de autoridad emisora'}
-            >
-              <MenuItem value={10}>UNESCO</MenuItem>
-            </Select>
+          <FormControl
+            size={'small'}
+            fullWidth
+            style={{ height: 'calc(100vh - 250px)' }}
+          >
+            <Autocomplete
+              getOptionLabel={({ name }) => name}
+              options={authorities}
+              loading={loadingAuthorities}
+              renderInput={(params) => (
+                <TextValidator
+                  {...params}
+                  label={'Lista de autoridad emisora'}
+                  validators={['required']}
+                  errorMessages={['Este campo es requerido']}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingAuthorities ? (
+                          <CircularProgress color={'inherit'} size={20} />
+                        ) : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
             <TextValidator
               label={'Título'}
               id={'title'}
@@ -47,6 +86,11 @@ const InputCard = () => {
               fullWidth
               validators={['required']}
               errorMessages={['Este campo es requerido']}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              InputLabelProps={{
+                shrink: title !== '',
+              }}
             />
             <TextValidator
               label={'Resumen'}
@@ -59,6 +103,11 @@ const InputCard = () => {
               fullWidth
               validators={['required']}
               errorMessages={['Este campo es requerido']}
+              value={summary}
+              onChange={(event) => setSummary(event.target.value)}
+              InputLabelProps={{
+                shrink: summary !== '',
+              }}
             />
           </FormControl>
         </CardContent>
@@ -85,6 +134,10 @@ const InputCard = () => {
       <PDFExtractor
         open={openPDFExtractor}
         onClose={() => setOpenPDFExtractor(false)}
+        handleTextExtracted={({ title, summary }) => {
+          setTitle(title)
+          setSummary(summary)
+        }}
       />
     </Card>
   )

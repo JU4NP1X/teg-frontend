@@ -16,6 +16,7 @@ import { ValidatorForm } from 'react-material-ui-form-validator'
 import { pdfjs } from 'react-pdf'
 import SimpleBar from 'simplebar-react'
 import FileUploader from '../__common/FileUploader'
+import ApiConnection from '../../utils/apiConnection'
 
 const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
 
@@ -84,8 +85,9 @@ const PDFExtractor = ({
       setSelectedPages(extractedPages)
       setCurrentPage(0)
       setNumPages(pages)
-      console.log({ step, pages })
       setStep(step + 1)
+      setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+      setUpdatingFile(false)
     }
 
     fileReader.readAsArrayBuffer(base64ToFile(base64))
@@ -103,34 +105,33 @@ const PDFExtractor = ({
     setCurrentPage(page - 1)
   }
 
-  const handleDraggerClick = () => {
-    const fileInput = document.getElementById('file-input')
-    fileInput.click()
-  }
-
   const handleCropChange = (newCrop) => {
     setCrop(newCrop)
   }
 
-  const handleCropComplete = (crop, pixelCrop) => {
+  const handleCropComplete = (pixelCrop, crop) => {
     const canvas = document.createElement('canvas')
     const image = new Image()
     image.src = selectedPages[currentPage].image
-    canvas.width = pixelCrop.width
-    canvas.height = pixelCrop.height
-    const context = canvas.getContext('2d')
-    context.drawImage(
+    const scaleX = image.width / 100
+    const scaleY = image.height / 100
+    canvas.width = crop.width * scaleX
+    canvas.height = crop.height * scaleY
+    console.log({ crop })
+    const ctx = canvas.getContext('2d')
+
+    ctx.drawImage(
       image,
-      pixelCrop.x,
-      pixelCrop.y,
-      pixelCrop.width,
-      pixelCrop.height,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
       0,
       0,
-      pixelCrop.width,
-      pixelCrop.height
+      crop.width * scaleX,
+      crop.height * scaleY
     )
-    const croppedImage = canvas.toDataURL('image/jpeg')
+    const croppedImage = canvas.toDataURL('image/png')
     handleTextSelection(croppedImage)
   }
 
@@ -143,19 +144,23 @@ const PDFExtractor = ({
       onClose()
     }
   }
+  const extractText = async () => {
+    const api = ApiConnection()
+    const data = await api.post('documents/text-extractor/', {
+      title: titleImage,
+      summary: summaryImage,
+    })
+    if (api.status === 200) return data
 
-  const extractText = () => {}
-
-  const handleFinish = () => {
-    setUpdatingFile(true)
-    extractText()
-    if (handleTextExtracted) handleTextExtracted()
-    setUpdatingFile(false)
+    return { title: '', summary: '' }
   }
 
-  useEffect(() => {
+  const handleFinish = async () => {
+    const text = await extractText()
+    if (handleTextExtracted) handleTextExtracted(text)
+    if (handleFileExtracted) handleFileExtracted(base64PdfFile)
     closeDialog()
-  }, [updatingFile])
+  }
 
   return (
     <Dialog

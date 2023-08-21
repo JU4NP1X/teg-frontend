@@ -98,3 +98,10 @@ input {
 .power-bi-embed iframe {
   height: auto !important;
 }
+
+.MuiAutocomplete-inputRoot {
+  height: 33px;
+}
+.MuiAutocomplete-input {
+  margin-top: -7px !important;
+}

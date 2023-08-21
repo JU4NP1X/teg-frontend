@@ -41,11 +41,16 @@ const theme = createTheme({
 
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(false)
-  const [user] = useState(Session.getAll())
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
+  const [user, setUser] = useState(Session.getAll())
   const filterProps = {
     isOpen: open,
     setOpen,
     user,
+    setUser,
+    loginHandler: (value) => {
+      setLoginModalOpen(value)
+    },
   }
   const [time, setTime] = useState(moment().format('DD/MM/YYYY hh:mm A'))
 
@@ -65,7 +70,7 @@ const Layout = ({ children }) => {
         <Box sx={{ display: 'flex' }}>
           <Drawer
             variant={'permanent'}
-            open={open}
+            open={open && !loginModalOpen}
             onMouseEnter={() => {
               setOpen(true)
             }}

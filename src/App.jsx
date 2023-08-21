@@ -26,8 +26,8 @@ function App() {
 
             {/* Private Routes */}
             <Route element={<Layout />}>
-              <Route path={'/'} element={<TagsFinder />} />
-              <Route path={'/library'} element={<Library />} />
+              <Route path={'/'} element={<Library />} />
+              <Route path={'/classify'} element={<TagsFinder />} />
               <Route path={'/admin/profile'} element={<Profile />} />
               <Route path={'/admin/authorities'} element={<Authorities />} />
               <Route path={'/admin/users'} element={<Users />} />

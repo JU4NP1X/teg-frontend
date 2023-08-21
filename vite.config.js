@@ -14,7 +14,10 @@ export default ({ mode }) => {
         [process.env.VITE_PROXY_ENDPOINT]: {
           target: process.env.VITE_API_BASE_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(process.env.VITE_PROXY_ENDPOINT, ''),
+          rewrite: (path) => {
+            console.log(path.replace(process.env.VITE_PROXY_ENDPOINT, ''))
+            return path.replace(process.env.VITE_PROXY_ENDPOINT, '')
+          },
         },
       },
     },
