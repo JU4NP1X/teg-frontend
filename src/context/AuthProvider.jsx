@@ -9,7 +9,8 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     setAuth(user.token && true)
-    Session.set(user)
+    if (user.token) Session.set(user)
+    else Session.unset(user)
   }, [user])
 
   return (
