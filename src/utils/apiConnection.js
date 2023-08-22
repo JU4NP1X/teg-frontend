@@ -1,6 +1,7 @@
 import axios from 'axios'
 import history from './history'
 import Session from './session'
+import useAuth from '../hooks/useAuth'
 const env = import.meta.env
 
 let apiUrl = env.VITE_PROXY_ENDPOINT
@@ -8,7 +9,9 @@ apiUrl = apiUrl.slice(-1) !== '/' ? apiUrl + '/' : apiUrl
 const ApiConnection = () => {
   let Api = axios.create({
     baseURL: apiUrl,
-    headers: { Authorization: `Bearer ${Session.token()}` },
+    headers: Session.token()
+      ? { Authorization: `Token ${Session.token()}` }
+      : {},
   })
 
   Api.status = 0
@@ -23,7 +26,7 @@ const ApiConnection = () => {
     },
     (error) => {
       console.log({ error })
-      let message = ''
+      let message = 'No autorizado'
       const response = error.response ?? {}
       let data = response.data ?? {}
 
@@ -32,7 +35,7 @@ const ApiConnection = () => {
 
       if (Api.status === 401) {
         Session.unset()
-        history.replace(`/?errorMessage=${message}`)
+        history.replace(`/?errorMessage=${message}&unsetUser=true`)
       }
       return data
     }

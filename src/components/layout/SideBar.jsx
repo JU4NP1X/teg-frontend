@@ -19,10 +19,12 @@ import '../../styles/layout/sideBar.css'
 import { isMobile } from '../../utils/utils'
 import Swipe from '../__common/Swipe'
 import LoginDialog from './LoginDialog'
+import useNotification from '../../hooks/useNotification'
 
 export const SideBar = ({ isOpen, loginHandler }) => {
   const Navigate = useNavigate()
   const { auth, setUser } = useAuth()
+  const { setSuccessMessage } = useNotification()
   const [openAdministration, setOpenAdministration] = useState(false)
   const [openLogin, setOpenLogin] = useState(false)
 
@@ -155,6 +157,8 @@ export const SideBar = ({ isOpen, loginHandler }) => {
                 if (isMobile()) setOpenAdministration(false)
                 setUser({})
                 Navigate('/')
+                setSuccessMessage("Sesión cerrada exitosamente")
+                
                 // Agrega aquí la lógica para desloguearse
               }}
               style={{ marginTop: 'auto' }}

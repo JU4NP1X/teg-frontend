@@ -1,9 +1,11 @@
 import { Alert, Slide, Snackbar } from '@mui/material'
 import { createContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
 
 const NotificationContext = createContext()
 const NotificationProvider = ({ children }) => {
+  const { setUser } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const [errorMessage, setErrorMessage] = useState('')
   const [warningMessage, setWarningMessage] = useState('')
@@ -36,6 +38,9 @@ const NotificationProvider = ({ children }) => {
     setWarningMessage(searchParams.get('warningMessage') ?? '')
     setInfoMessage(searchParams.get('infoMessage') ?? '')
     setSuccessMessage(searchParams.get('successMessage') ?? '')
+
+    if (searchParams.get('unsetUser') === 'true') setUser({})
+    
   }, [searchParams])
 
   return (

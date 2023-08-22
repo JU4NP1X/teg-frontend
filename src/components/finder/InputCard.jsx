@@ -47,29 +47,33 @@ const InputCard = () => {
               getOptionLabel={({ name }) => name}
               options={authorities}
               loading={loadingAuthorities}
-              renderInput={(params) => (
-                <TextValidator
-                  {...params}
-                  label={'Lista de autoridad emisora'}
-                  validators={['required']}
-                  errorMessages={['Este campo es requerido']}
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loadingAuthorities ? (
-                          <CircularProgress
-                            color={'inherit'}
-                            size={20}
-                            sx={{ mt: '-10px' }}
-                          />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
+              renderInput={(params) => {
+                console.log(params)
+                return (
+                  <TextValidator
+                    {...params}
+                    label={'Lista de autoridad emisora'}
+                    validators={['required']}
+                    errorMessages={['Este campo es requerido']}
+                    value={params.InputProps.value}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingAuthorities ? (
+                            <CircularProgress
+                              color={'inherit'}
+                              size={20}
+                              sx={{ mt: '-10px' }}
+                            />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )
+              }}
             />
             <TextValidator
               label={'Título'}

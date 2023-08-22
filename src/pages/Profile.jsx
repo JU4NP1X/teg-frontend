@@ -24,22 +24,35 @@ const Profile = () => {
   }
 
   const handlePasswordChange = (event) => {
-    setUser({ ...user, password: event.target.value })
+    setPassword(event.target.value)
   }
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value)
   }
 
-  const handleSave = () => {}
+  console.log(user)
+  const handleSave = async () => {
+    const api = ApiConnection()
+    console.log(user)
+    const userUpdated = await api.patch(`/users/list/${user.id}/`, {
+      email: user.email,
+      first_name: user.firstName,
+      last_name: user.lastName,
+    })
+    setUser(userUpdated)
+    if (api.status === 200) setSuccessMessage('Usuario modificado exitosamente')
+    else setErrorMessage('Error al modificar usuario, intente más tarde.')
+  }
 
   const handleChangePassword = async () => {
     const api = ApiConnection()
-    await api.put(`/users/list/${user.id}/`, { password: user.password })
-
-    if (api.status === 200)
+    await api.patch(`/users/list/${user.id}/`, { password: user.password })
+    if (api.status === 200) {
       setSuccessMessage('Contraseña cambiada exitosamente')
-    else setErrorMessage('Error al cambiar contraseña, intente más tarde.')
+      setPassword('')
+      setConfirmPassword('')
+    } else setErrorMessage('Error al cambiar contraseña, intente más tarde.')
   }
 
   return (
@@ -59,6 +72,9 @@ const Profile = () => {
                     onChange={handleNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
+                    InputLabelProps={{
+                      shrink: user.firstName !== '',
+                    }}
                   />
                   <TextValidator
                     label="Apellido"
@@ -67,6 +83,9 @@ const Profile = () => {
                     onChange={handleLastNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
+                    InputLabelProps={{
+                      shrink: user.lastName !== '',
+                    }}
                   />
                   <TextValidator
                     label="Correo"
@@ -78,6 +97,9 @@ const Profile = () => {
                       'Este campo es requerido',
                       'Correo inválido',
                     ]}
+                    InputLabelProps={{
+                      shrink: user.email !== '',
+                    }}
                   />
                   <Button
                     type="submit"
@@ -111,7 +133,7 @@ const Profile = () => {
                     fullWidth
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
-                    validators={['required', 'isPasswordMatch']}
+                    validators={['required']}
                     errorMessages={[
                       'Este campo es requerido',
                       'Las contraseñas no coinciden',

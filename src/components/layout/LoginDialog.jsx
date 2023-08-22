@@ -11,9 +11,11 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import useAuth from '../../hooks/useAuth'
 import ApiConnection from '../../utils/apiConnection'
 import LoginWithGoogle from './LoginWithGoogle'
+import useNotification from '../../hooks/useNotification'
 
 const LoginDialog = ({ open, handleClose }) => {
   const { setUser } = useAuth()
+  const { setErrorMessage, setSuccessMessage } = useNotification()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isRequesting, setIsRequesting] = useState(false)
@@ -24,9 +26,12 @@ const LoginDialog = ({ open, handleClose }) => {
     const api = ApiConnection()
 
     const data = await api.post('users/login/', { username, password })
-    setUser(data)
-    setIsRequesting(false)
-    handleClose()
+    if (api.status === 200) {
+      setUser(data)
+      setIsRequesting(false)
+      handleClose()
+      setSuccessMessage('Sesión iniciada exitosamente')
+    } else setErrorMessage('Credeciales inválidas')
   }
 
   const closeValidarte = () => {
