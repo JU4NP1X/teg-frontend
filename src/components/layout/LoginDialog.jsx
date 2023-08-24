@@ -9,9 +9,9 @@ import {
 import React, { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import useAuth from '../../hooks/useAuth'
+import useNotification from '../../hooks/useNotification'
 import ApiConnection from '../../utils/apiConnection'
 import LoginWithGoogle from './LoginWithGoogle'
-import useNotification from '../../hooks/useNotification'
 
 const LoginDialog = ({ open, handleClose }) => {
   const { setUser } = useAuth()
@@ -28,10 +28,10 @@ const LoginDialog = ({ open, handleClose }) => {
     const data = await api.post('users/login/', { username, password })
     if (api.status === 200) {
       setUser(data)
-      setIsRequesting(false)
       handleClose()
       setSuccessMessage('Sesión iniciada exitosamente')
     } else setErrorMessage('Credeciales inválidas')
+    setIsRequesting(false)
   }
 
   const closeValidarte = () => {

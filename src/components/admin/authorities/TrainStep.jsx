@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material'
 import React from 'react'
-import CircularProgressWithLabel from '../../__common/CircularProgressWithLabel'
+import CircularProgressWithLabel from '../../common/CircularProgressWithLabel'
 
 const TrainStep = ({ stepNumber, progress, status }) => {
   const getStatusColor = (status) => {

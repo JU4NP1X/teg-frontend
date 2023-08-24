@@ -2,9 +2,9 @@ const manifestForPlugin = {
   registerType: 'prompt',
   includeAssets: ['favicon.ico', 'logo-192.png', 'logo-512.png'],
   manifest: {
-    short_name: 'Reportes OIC',
-    name: 'Sistema de reportes OIC',
-    description: 'Sistema de manejo de reportes en PowerBi y otros de OIC',
+    short_name: 'Voco UC',
+    name: 'Sistema de gestión de categorías de la biblioteca de la UC',
+    description: '',
     icons: [
       {
         src: 'favicon.ico',

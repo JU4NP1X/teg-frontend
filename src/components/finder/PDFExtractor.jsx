@@ -9,14 +9,14 @@ import Slide from '@mui/material/Slide'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { ValidatorForm } from 'react-material-ui-form-validator'
 import { pdfjs } from 'react-pdf'
 import SimpleBar from 'simplebar-react'
-import FileUploader from '../__common/FileUploader'
 import ApiConnection from '../../utils/apiConnection'
+import FileUploader from '../common/FileUploader'
 
 const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
 

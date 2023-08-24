@@ -16,7 +16,7 @@ import SimpleBar from 'simplebar-react'
 import 'simplebar-react/dist/simplebar.min.css'
 import '../../styles/layout/layout.css'
 import { isMobile } from '../../utils/utils'
-import Swipe from '../__common/Swipe'
+import Swipe from '../common/Swipe'
 import { Drawer } from './Drawer'
 import { SideBar } from './SideBar'
 

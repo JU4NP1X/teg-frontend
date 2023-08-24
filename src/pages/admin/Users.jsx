@@ -1,75 +1,50 @@
-import { Delete, Edit } from '@mui/icons-material'
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from '@mui/material'
-import React, { useState } from 'react'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-import SimpleBar from 'simplebar-react'
+import { Button, Card, CardContent, CardHeader } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import UserDialog from '../../components/admin/users/UserDialog'
+import UsersTable from '../../components/admin/users/UsersTable'
+import ConfirmationDialog from '../../components/common/ConfirmationDialog'
+import ApiConnection from '../../utils/apiConnection'
 
-const initialUsers = [
-  {
-    id: 1,
-    email: 'usuario1@example.com',
-    firstName: 'Juan',
-    lastName: 'Pérez',
-  },
-  // Resto de los usuarios...
-]
-
-const ConfirmationDialog = ({ open, onClose, onConfirm }) => {
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogContent>
-        <DialogContentText>
-          ¿Estás seguro de que deseas eliminar este usuario?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>No</Button>
-        <Button onClick={onConfirm}>Sí</Button>
-      </DialogActions>
-    </Dialog>
-  )
+const userTemplate = {
+  fistName: '',
+  lastName: '',
+  email: '',
+  isAdmin: false,
 }
 
 const Users = () => {
-  const [users, setUsers] = useState(initialUsers)
+  const [users, setUsers] = useState({
+    count: null,
+    next: null,
+    previous: null,
+    results: [],
+  })
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
-  const [formValues, setFormValues] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-  })
-
-  const [page, setPage] = useState(0)
+  const [formValues, setFormValues] = useState(userTemplate)
+  const [loading, setLoading] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [page, setPage] = useState(0)
 
   const handleDeleteUser = (userId) => {
     setSelectedUser(userId)
     setDeleteDialogOpen(true)
   }
 
-  const handleConfirmDelete = () => {
-    setUsers(users.filter((user) => user.id !== selectedUser))
-    setDeleteDialogOpen(false)
+  const handleEditUser = (user) => {
+    setFormValues(user)
+    setEditDialogOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    try {
+      const api = ApiConnection()
+      await api.delete(`/users/list/${selectedUser}`)
+      fetchUsers()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleCloseDeleteDialog = () => {
@@ -80,44 +55,21 @@ const Users = () => {
     setEditDialogOpen(false)
   }
 
-  const handleEditUser = (user) => {
-    setSelectedUser(user)
-    setFormValues({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    })
-    setEditDialogOpen(true)
-  }
-
-  const handleAddUser = () => {
-    setSelectedUser(null)
-    setFormValues({
-      email: '',
-      firstName: '',
-      lastName: '',
-    })
-    setEditDialogOpen(true)
-  }
-
-  const handleSaveUser = () => {
-    const { email, firstName, lastName } = formValues
-    const newUser = {
-      id: selectedUser ? selectedUser.id : users.length + 1,
-      email,
-      firstName,
-      lastName,
+  const handleSaveUser = async () => {
+    try {
+      const api = ApiConnection()
+      setLoading(true)
+      if (formValues.id) {
+        await api.patch(`/users/list/${formValues.id}/`, formValues)
+      } else {
+        await api.post('/users/list/', formValues)
+      }
+      fetchUsers()
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
-
-    if (selectedUser) {
-      setUsers(
-        users.map((user) => (user.id === selectedUser.id ? newUser : user))
-      )
-    } else {
-      setUsers([...users, newUser])
-    }
-
-    editDialogOpen(false)
   }
 
   const handleChange = (event) => {
@@ -128,129 +80,69 @@ const Users = () => {
     }))
   }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
+  const fetchUsers = async () => {
+    try {
+      const api = ApiConnection()
+      setLoading(true)
+      const data = await api.get('/users/list/', {
+        params: {
+          limit: rowsPerPage,
+          offset: page * rowsPerPage,
+        },
+      })
+      setUsers(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage)
+  useEffect(() => {
+    fetchUsers()
+  }, [page, rowsPerPage])
 
   return (
     <>
       <Card>
-        <CardHeader title={'Administrador de Usuarios'} />
-        <CardContent style={{ paddingBottom: 0 }}>
-          <TableContainer component={Paper}>
-            <SimpleBar style={{ height: 'calc(100vh - 270px)' }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Nombre</TableCell>
-                    <TableCell>Apellido</TableCell>
-                    <TableCell align="right">Acciones</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(rowsPerPage > 0
-                    ? users.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                    : users
-                  ).map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.firstName}</TableCell>
-                      <TableCell>{user.lastName}</TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant={'outlined'}
-                          onClick={() => handleEditUser(user)}
-                          size={'small'}
-                        >
-                          <Edit />
-                        </Button>
-                        <Button
-                          variant={'contained'}
-                          onClick={() => handleDeleteUser(user.id)}
-                          size={'small'}
-                          sx={{ ml: 2 }}
-                        >
-                          <Delete />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </SimpleBar>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25]}
-            component={'div'}
-            count={users.length}
-            rowsPerPage={rowsPerPage}
+        <CardHeader title={'Usuarios'} />
+        <CardContent>
+          <UsersTable
+            users={users}
+            handleEditUser={handleEditUser}
+            handleDeleteUser={handleDeleteUser}
+            loading={loading}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
           />
-
-          <Button onClick={handleAddUser} variant={'contained'} sx={{ mt: -7 }}>
+          <Button
+            onClick={() => {
+              handleEditUser(userTemplate)
+            }}
+            variant={'contained'}
+            sx={{ mt: -10, ml: 2 }}
+          >
             Agregar usuario
           </Button>
         </CardContent>
       </Card>
-      <Dialog open={editDialogOpen} onClose={handleCloseDialog} maxWidth={'md'}>
-        <DialogTitle>
-          {selectedUser ? 'Editar Usuario' : 'Agregar Usuario'}
-        </DialogTitle>
-        <ValidatorForm onSubmit={handleSaveUser}>
-          <DialogContent>
-            <DialogContentText width={500}>
-              <TextValidator
-                label="Email"
-                name="email"
-                value={formValues.email}
-                validators={['required', 'isEmail']}
-                errorMessages={['Este campo es requerido', 'Email inválido']}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextValidator
-                label="Nombre"
-                name="firstName"
-                value={formValues.firstName}
-                validators={['required']}
-                errorMessages={['Este campo es requerido']}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextValidator
-                label="Apellido"
-                name="lastName"
-                value={formValues.lastName}
-                validators={['required']}
-                errorMessages={['Este campo es requerido']}
-                onChange={handleChange}
-                fullWidth
-              />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button type="submit">Guardar</Button>
-          </DialogActions>
-        </ValidatorForm>
-      </Dialog>
+      <UserDialog
+        open={editDialogOpen}
+        onClose={handleCloseDialog}
+        onSave={handleSaveUser}
+        formValues={formValues}
+        handleChange={handleChange}
+      />
       <ConfirmationDialog
+        title={'Eliminar usuario'}
+        message={'¿Está seguro que desea borrar este usuario?'}
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
+        cancelButtonText={'Cancelar'}
+        confirmButtonText={'Eliminar'}
       />
     </>
   )

@@ -1,18 +1,8 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material'
+import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import React, { useState } from 'react'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
-import FileUploader from '../../components/__common/FileUploader'
+import AuthorityDialog from '../../components/admin/authorities/AuthorityDialog'
+import ConfirmationDialog from '../../components/common/ConfirmationDialog'
 
 const authoritiesData = [
   {
@@ -127,104 +117,28 @@ const Authorities = () => {
           {isLoading && (
             <div>{/* Lógica para mostrar el indicador de carga */}</div>
           )}
-          <Dialog
+
+          <ConfirmationDialog
+            cancelButtonText={'Cancelar'}
+            confirmButtonText={'Eliminar'}
+            title={'Confirmar eliminación'}
+            message={'¿Estás seguro de que deseas eliminar esta autoridad?'}
             open={openConfirmation}
             onClose={handleCancelDelete}
-            aria-labelledby={'alert-dialog-title'}
-            aria-describedby={'alert-dialog-description'}
-          >
-            <DialogTitle id={'alert-dialog-title'}>
-              Confirmar eliminación
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id={'alert-dialog-description'}>
-                ¿Estás seguro de que deseas eliminar esta autoridad?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCancelDelete} color={'primary'}>
-                Cancelar
-              </Button>
-              <Button onClick={handleConfirmDelete} color={'primary'} autoFocus>
-                Eliminar
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
+            onConfirm={handleConfirmDelete}
+          />
+          <AuthorityDialog
             open={openAuthorityModal}
             onClose={() => {
               setAuthority(authorityTemplate)
               setOpenAuthorityModal(false)
             }}
-            aria-labelledby={'form-dialog-title'}
-          >
-            <DialogTitle id={'form-dialog-title'}>
-              Agregar Autoridad
-            </DialogTitle>
-            <ValidatorForm onSubmit={handleAddAuthority}>
-              <DialogContent>
-                <DialogContentText>
-                  Por favor, ingresa el nombre y las categorías de la nueva
-                  autoridad.
-                </DialogContentText>
-                <TextValidator
-                  autoFocus
-                  margin={'dense'}
-                  id={'name'}
-                  label={'Nombre'}
-                  type={'text'}
-                  fullWidth
-                  value={authority.name}
-                  onChange={(e) =>
-                    setAuthority({ ...authority, name: e.target.value })
-                  }
-                  validators={['required']}
-                  errorMessages={['Este campo es requerido']}
-                />
-
-                <TextValidator
-                  autoFocus
-                  margin={'dense'}
-                  id={'color'}
-                  label={'Color'}
-                  type={'color'}
-                  fullWidth
-                  value={authority.color}
-                  onChange={(e) =>
-                    setAuthority({ ...authority, color: e.target.value })
-                  }
-                  validators={['required']}
-                  errorMessages={['Este campo es requerido']}
-                />
-
-                <FileUploader
-                  buttonText={'Haz click o arrastra un .csv con las categorías'}
-                  isLoading={setLoadingFile}
-                  fileTypes={['.csv']}
-                  onFileUpload={(file) =>
-                    setAuthority({ ...authority, csvFile: file })
-                  }
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => {
-                    setAuthority(authorityTemplate)
-                    setOpenAuthorityModal(false)
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  disabled={authority.csvFile === null}
-                  type={'submit'}
-                  color={'primary'}
-                >
-                  Agregar
-                </Button>
-              </DialogActions>
-            </ValidatorForm>
-          </Dialog>
+            onSubmit={handleAddAuthority}
+            authority={authority}
+            setAuthority={setAuthority}
+            authorityTemplate={authorityTemplate}
+            setLoadingFile={setLoadingFile}
+          />
           <Button
             variant={'contained'}
             color={'primary'}
