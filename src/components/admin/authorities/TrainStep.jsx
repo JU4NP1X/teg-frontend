@@ -2,49 +2,59 @@ import { Chip } from '@mui/material'
 import React from 'react'
 import CircularProgressWithLabel from '../../common/CircularProgressWithLabel'
 
-const TrainStep = ({ stepNumber, progress, status }) => {
+const TrainStep = ({ progress, status }) => {
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PENDING':
-        return 'orange'
-      case 'IN_PROGRESS':
-        return 'blue'
+      case 'NOT_TRAINED':
+        return 'primary'
+      case 'GETTING_DATA':
+        return 'secondary'
+      case 'TRAINING':
+        return 'info'
       case 'COMPLETE':
-        return 'green'
+        return 'success'
       default:
-        return 'black'
+        return 'warning'
     }
   }
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'PENDING':
-        return 'Pendiente'
-      case 'IN_PROGRESS':
-        return 'En progreso'
+      case 'NOT_TRAINED':
+        return 'No entrenado'
+      case 'GETTING_DATA':
+        return 'Obteniendo información'
+      case 'TRAINING':
+        return 'Entrenando'
       case 'COMPLETE':
-        return 'Completado'
+        return 'Entrenado'
       default:
         return ''
     }
   }
 
   return (
-    <div>
-      {status === 'IN_PROGRESS' && (
-        <CircularProgressWithLabel value={progress} label={`${stepNumber}/5`} />
-      )}
-      {status !== 'IN_PROGRESS' && (
+    <>
+      <>
+        {(status === 'TRAINING' || status === 'GETTING_DATA') && (
+          <CircularProgressWithLabel
+            value={progress}
+            label={`${progress}`.slice(0, 3) + '%'}
+            color={getStatusColor(status)}
+          />
+        )}
+      </>
+      <>
         <Chip
           label={getStatusText(status)}
+          color={getStatusColor(status)}
           style={{
-            backgroundColor: getStatusColor(status),
             color: 'white',
             minWidth: '100px',
           }}
         />
-      )}
-    </div>
+      </>
+    </>
   )
 }
 

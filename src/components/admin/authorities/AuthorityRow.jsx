@@ -6,7 +6,7 @@ import { Doughnut } from 'react-chartjs-2'
 import TrainStep from './TrainStep'
 
 const data = {
-  labels: ['Categorías Suficientes', 'Categorías Insuficientes'],
+  labels: ['CategoríasSuficientes', 'CategoríasInsuficientes'],
   datasets: [
     {
       backgroundColor: ['#36A2EB', '#FF6384'],
@@ -21,7 +21,6 @@ const AuthorityRow = ({
   handleReTrain,
   handleUpdateAuthority,
 }) => {
-  console.log(authority)
   return (
     <TableRow key={authority.id}>
       <TableCell>
@@ -38,7 +37,7 @@ const AuthorityRow = ({
         <b>{authority.name}</b>
       </TableCell>
       <TableCell>{authority.lastTrainingDate}</TableCell>
-      <TableCell>{authority.trainingData}</TableCell>
+      <TableCell>{authority.resume.datasetsCount}</TableCell>
       <TableCell>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
@@ -49,8 +48,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.theoreticalAccuracy.sufficientCategories,
-                    authority.theoreticalAccuracy.insufficientCategories,
+                    authority.resume.representatedCategoryCount,
+                    authority.resume.notRepresentatedCategoryCount,
                   ],
                 },
               ],
@@ -58,9 +57,9 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell>{authority.updatedCategories}</TableCell>
-      <TableCell>{authority.deprecatedCategories}</TableCell>
-      <TableCell>{authority.newUntrainedCategories}</TableCell>
+      <TableCell>{authority.resume.categoryTrainedCount}</TableCell>
+      <TableCell>{authority.resume.deprecatedCategoryTrainedCount}</TableCell>
+      <TableCell>{authority.resume.categoryNotTrainedCount}</TableCell>
       <TableCell>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
@@ -71,8 +70,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.theoreticalAccuracy.sufficientCategories,
-                    authority.theoreticalAccuracy.insufficientCategories,
+                    authority.resume.representatedCategoryCount,
+                    authority.resume.notRepresentatedCategoryCount,
                   ],
                 },
               ],
@@ -90,8 +89,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.practicalAccuracy.sufficientCategories,
-                    authority.practicalAccuracy.insufficientCategories,
+                    authority.resume.categoryTrainedCount,
+                    authority.resume.categoryNotTrainedCount,
                   ],
                 },
               ],
@@ -99,12 +98,8 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell>
-        <TrainStep
-          stepNumber={authority.trainStep.stepNumber}
-          progress={authority.trainStep.progress}
-          status={authority.trainStep.status}
-        />
+      <TableCell align={'center'}>
+        <TrainStep progress={authority.percentage} status={authority.status} />
       </TableCell>
       <TableCell>
         <div
@@ -121,7 +116,15 @@ const AuthorityRow = ({
               marginBottom: 10,
             }}
           >
-            <Button variant={'outlined'} color={'secondary'} onClick={() => {}}>
+            <Button
+              variant={'outlined'}
+              color={'secondary'}
+              onClick={() => {}}
+              disabled={
+                authority.status === 'GETTING_DATA' ||
+                authority.status === 'TRAINING'
+              }
+            >
               <Sync />
             </Button>
             <Button
@@ -140,10 +143,19 @@ const AuthorityRow = ({
               justifyContent: 'center',
             }}
           >
-            <Button variant={'outlined'} color={'info'} onClick={handleReTrain}>
+            <Button
+              variant={'outlined'}
+              color={'info'}
+              onClick={handleReTrain}
+              disabled={
+                authority.status === 'GETTING_DATA' ||
+                authority.status === 'TRAINING'
+              }
+            >
               <FitnessCenter />
             </Button>
             <Button
+              disabled={authority.native}
               variant={'outlined'}
               onClick={() => handleDeleteAuthority(authority)}
               sx={{ ml: 1 }}

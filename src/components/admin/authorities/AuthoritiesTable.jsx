@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -16,7 +17,7 @@ const columns = [
   'Color',
   'Autoridad',
   'Última Fecha de Entrenamiento',
-  'Datos de Entrenamiento Utilizados',
+  'Datos de Entrenamiento Disponibles',
   'Representación de las categorías',
   'Categorías Actualizadas',
   'Categorías Obsoletas',
@@ -36,6 +37,7 @@ const AuthoritiesTable = ({
   handleDeleteAuthority,
   handleReTrain,
   handleUpdateAuthority,
+  loading,
 }) => {
   return (
     <>
@@ -45,22 +47,40 @@ const AuthoritiesTable = ({
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column}>{column}</TableCell>
+                  <TableCell
+                    key={column}
+                    align={column === 'Estado' ? 'center' : 'left'}
+                  >
+                    {column}
+                  </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {authorities
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((authority) => (
-                  <AuthorityRow
-                    key={authority.name}
-                    authority={authority}
-                    handleDeleteAuthority={handleDeleteAuthority}
-                    handleReTrain={handleReTrain}
-                    handleUpdateAuthority={handleUpdateAuthority}
-                  />
-                ))}
+              {!loading &&
+                authorities.results
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((authority) => (
+                    <AuthorityRow
+                      key={authority.name}
+                      authority={authority}
+                      handleDeleteAuthority={handleDeleteAuthority}
+                      handleReTrain={handleReTrain}
+                      handleUpdateAuthority={handleUpdateAuthority}
+                    />
+                  ))}
+
+              {loading && (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    align="center"
+                    style={{ height: 'calc(100vh - 310px)' }}
+                  >
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </SimpleBar>
@@ -68,7 +88,7 @@ const AuthoritiesTable = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={authorities.length}
+        count={authorities.count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

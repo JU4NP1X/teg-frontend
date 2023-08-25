@@ -1,43 +1,27 @@
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
 import AuthorityDialog from '../../components/admin/authorities/AuthorityDialog'
 import ConfirmationDialog from '../../components/common/ConfirmationDialog'
-
-const authoritiesData = [
-  {
-    name: 'Autoridad 1',
-    lastTrainingDate: '2023-08-15',
-    color: '#000000',
-    trainingData: 20,
-    updatedCategories: 20,
-    deprecatedCategories: 20,
-    newUntrainedCategories: 20,
-    theoreticalAccuracy: {
-      sufficientCategories: 70,
-      insufficientCategories: 30,
-    },
-    practicalAccuracy: {
-      sufficientCategories: 70,
-      insufficientCategories: 30,
-    },
-    trainStep: {
-      stepNumber: 1,
-      progress: 50,
-      status: 'IN_PROGRESS',
-    },
-  },
-]
+import ApiConnection from '../../utils/apiConnection'
 
 const authorityTemplate = {
+  id: 1,
   name: '',
-  color: 'ffffff',
-  csvFile: null,
+  color: null,
+  active: true,
+}
+
+const authoritiesTemplate = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: [],
 }
 
 const Authorities = () => {
   const [authority, setAuthority] = useState(authorityTemplate)
-  const [authorities, setAuthorities] = useState(authoritiesData)
+  const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [isLoading, setIsLoading] = useState(true)
@@ -45,24 +29,73 @@ const Authorities = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [authorityToDelete, setAuthorityToDelete] = useState(null)
   const [openAuthorityModal, setOpenAuthorityModal] = useState(false)
+  const [abortController, setAbortController] = useState(null)
+  const [refresh, setRefresh] = useState(false)
+
+  const fetchAuthorities = async (signal, isRefresh = false) => {
+    if (!isRefresh) setIsLoading(true)
+    try {
+      const api = ApiConnection()
+      const limit = rowsPerPage
+      const offset = page * rowsPerPage
+      const data = await api.get(`/categories/authorities/`, {
+        params: {
+          limit,
+          offset,
+        },
+        signal,
+      })
+      if (api.status === 200) setAuthorities(data)
+    } catch (error) {
+      console.error(error)
+    }
+    if (isRefresh) setRefresh(false)
+    else setIsLoading(false)
+  }
+
+  const addAuthority = async () => {
+    try {
+      const api = ApiConnection()
+      await api.post('/categories/authorities/', authority)
+      setAuthority(authorityTemplate)
+      setOpenAuthorityModal(false)
+      if (refresh !== 'NONE') {
+        fetchAuthorities(abortController.signal)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const deleteAuthority = async () => {
+    try {
+      const api = ApiConnection()
+      await api.delete(`/categories/authorities/${authorityToDelete.id}/`)
+      setAuthorityToDelete(null)
+      setOpenConfirmation(false)
+      setRefresh(true)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const updateAuthority = async () => {
+    try {
+      const api = ApiConnection()
+      await api.patch(`/categories/authorities/${authority.id}/`, authority)
+      setOpenAuthorityModal(false)
+      setRefresh(true)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleAddAuthority = () => {
-    const newAuthority = {
-      ...authority,
-      lastTrainingDate: '',
-      trainingData: '',
-      theoreticalAccuracy: {
-        sufficientCategories: 0,
-        untrainedCategories: 0,
-      },
-      practicalAccuracy: {
-        sufficientCategories: 0,
-        untrainedCategories: 0,
-      },
+    if (authority.id) {
+      updateAuthority()
+    } else {
+      addAuthority()
     }
-    setAuthorities([...authorities, newAuthority])
-    setAuthority(authorityTemplate)
-    setOpenAuthorityModal(false)
   }
 
   const handleDeleteAuthority = (authority) => {
@@ -71,9 +104,7 @@ const Authorities = () => {
   }
 
   const handleConfirmDelete = () => {
-    setAuthorities(authorities.filter((item) => item !== authorityToDelete))
-    setAuthorityToDelete(null)
-    setOpenConfirmation(false)
+    deleteAuthority()
   }
 
   const handleCancelDelete = () => {
@@ -99,6 +130,34 @@ const Authorities = () => {
     // Implementar lógica para activar/desactivar autoridad
   }
 
+  const getPageData = (isRefresh = false) => {
+    const controller = new AbortController()
+    setAbortController(controller)
+    fetchAuthorities(controller.signal, isRefresh)
+
+    return () => {
+      controller.abort()
+    }
+  }
+  useEffect(() => {
+    return getPageData(false)
+  }, [page, rowsPerPage])
+
+  useEffect(() => {
+    if (!isLoading && refresh) {
+      return getPageData(true)
+    }
+  }, [refresh, isLoading])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setRefresh(true)
+    }, 10000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [])
   return (
     <div>
       <Card sx={{ pb: 0 }}>
@@ -113,10 +172,8 @@ const Authorities = () => {
             handleDeleteAuthority={handleDeleteAuthority}
             handleUpdateAuthority={handleUpdateAuthority}
             handleReTrain={handleReTrain}
+            loading={isLoading}
           />
-          {isLoading && (
-            <div>{/* Lógica para mostrar el indicador de carga */}</div>
-          )}
 
           <ConfirmationDialog
             cancelButtonText={'Cancelar'}
@@ -130,7 +187,7 @@ const Authorities = () => {
           <AuthorityDialog
             open={openAuthorityModal}
             onClose={() => {
-              setAuthority(authorityTemplate)
+              setAuthority({})
               setOpenAuthorityModal(false)
             }}
             onSubmit={handleAddAuthority}
