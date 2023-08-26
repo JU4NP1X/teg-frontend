@@ -48,7 +48,6 @@ const InputCard = () => {
               options={authorities}
               loading={loadingAuthorities}
               renderInput={(params) => {
-                console.log(params)
                 return (
                   <TextValidator
                     {...params}

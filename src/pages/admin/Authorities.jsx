@@ -6,7 +6,6 @@ import ConfirmationDialog from '../../components/common/ConfirmationDialog'
 import ApiConnection from '../../utils/apiConnection'
 
 const authorityTemplate = {
-  id: 1,
   name: '',
   color: null,
   active: true,
@@ -24,7 +23,7 @@ const Authorities = () => {
   const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [loadingFile, setLoadingFile] = useState(false)
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [authorityToDelete, setAuthorityToDelete] = useState(null)
@@ -33,7 +32,7 @@ const Authorities = () => {
   const [refresh, setRefresh] = useState(false)
 
   const fetchAuthorities = async (signal, isRefresh = false) => {
-    if (!isRefresh) setIsLoading(true)
+    if (!isRefresh) setLoading(true)
     try {
       const api = ApiConnection()
       const limit = rowsPerPage
@@ -45,12 +44,14 @@ const Authorities = () => {
         },
         signal,
       })
-      if (api.status === 200) setAuthorities(data)
+      if (api.status === 200) {
+        setAuthorities(data)
+        setLoading(false)
+      }
+      if (isRefresh) setRefresh(false)
     } catch (error) {
       console.error(error)
     }
-    if (isRefresh) setRefresh(false)
-    else setIsLoading(false)
   }
 
   const addAuthority = async () => {
@@ -139,15 +140,16 @@ const Authorities = () => {
       controller.abort()
     }
   }
+
   useEffect(() => {
     return getPageData(false)
   }, [page, rowsPerPage])
 
   useEffect(() => {
-    if (!isLoading && refresh) {
+    if (!loading && refresh) {
       return getPageData(true)
     }
-  }, [refresh, isLoading])
+  }, [refresh, loading])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -158,6 +160,7 @@ const Authorities = () => {
       clearInterval(intervalId)
     }
   }, [])
+
   return (
     <div>
       <Card sx={{ pb: 0 }}>
@@ -172,7 +175,7 @@ const Authorities = () => {
             handleDeleteAuthority={handleDeleteAuthority}
             handleUpdateAuthority={handleUpdateAuthority}
             handleReTrain={handleReTrain}
-            loading={isLoading}
+            loading={loading}
           />
 
           <ConfirmationDialog
@@ -193,7 +196,6 @@ const Authorities = () => {
             onSubmit={handleAddAuthority}
             authority={authority}
             setAuthority={setAuthority}
-            authorityTemplate={authorityTemplate}
             setLoadingFile={setLoadingFile}
           />
           <Button

@@ -30,7 +30,9 @@ const AuthorityDialog = ({
       onClose={handleCancel}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Agregar Autoridad</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
+      </DialogTitle>
       <ValidatorForm onSubmit={onSubmit}>
         <DialogContent>
           <DialogContentText>
@@ -78,7 +80,7 @@ const AuthorityDialog = ({
         <DialogActions>
           <Button onClick={handleCancel}>Cancelar</Button>
           <Button
-            disabled={authority.csvFile === null}
+            disabled={!authority.csvFile && !authority.id}
             type="submit"
             color="primary"
           >

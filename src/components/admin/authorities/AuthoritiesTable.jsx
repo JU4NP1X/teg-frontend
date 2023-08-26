@@ -57,7 +57,7 @@ const AuthoritiesTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {!loading &&
+              {!loading ? (
                 authorities.results
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((authority) => (
@@ -68,9 +68,8 @@ const AuthoritiesTable = ({
                       handleReTrain={handleReTrain}
                       handleUpdateAuthority={handleUpdateAuthority}
                     />
-                  ))}
-
-              {loading && (
+                  ))
+              ) : (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
