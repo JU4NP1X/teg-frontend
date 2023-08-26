@@ -25,7 +25,7 @@ const ConfirmationDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <Button onClick={onConfirm} variant="contained" color="error">
+        <Button onClick={onConfirm} variant={'contained'} color={'error'}>
           {confirmButtonText}
         </Button>
       </DialogActions>

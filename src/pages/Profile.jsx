@@ -1,26 +1,35 @@
-import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material'
-import React, { useState } from 'react'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Grid,
+} from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import useAuth from '../hooks/useAuth'
 import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
-import Session from '../utils/session'
 
 const Profile = () => {
-  const [user, setUser] = useState(Session.getAll())
+  const { user, setUser } = useAuth()
+  const [userInfo, setUserInfo] = useState(user)
   const { setSuccessMessage, setErrorMessage } = useNotification()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleNameChange = (event) => {
-    setUser({ ...user, firstName: event.target.value })
+    setUserInfo({ ...userInfo, firstName: event.target.value })
   }
 
   const handleLastNameChange = (event) => {
-    setUser({ ...user, lastName: event.target.value })
+    setUserInfo({ ...userInfo, lastName: event.target.value })
   }
 
   const handleEmailChange = (event) => {
-    setUser({ ...user, email: event.target.value })
+    setUserInfo({ ...userInfo, email: event.target.value })
   }
 
   const handlePasswordChange = (event) => {
@@ -31,29 +40,47 @@ const Profile = () => {
     setConfirmPassword(event.target.value)
   }
 
-  console.log(user)
   const handleSave = async () => {
+    setLoading(true)
     const api = ApiConnection()
-    console.log(user)
-    const userUpdated = await api.patch(`/users/list/${user.id}/`, {
-      email: user.email,
-      first_name: user.firstName,
-      last_name: user.lastName,
+    const userUpdated = await api.patch(`/users/list/${userInfo.id}/`, {
+      email: userInfo.email,
+      first_name: userInfo.firstName,
+      last_name: userInfo.lastName,
     })
-    setUser(userUpdated)
+    setUserInfo(userUpdated)
+    setUser({ ...userUpdated, token: user.token })
     if (api.status === 200) setSuccessMessage('Usuario modificado exitosamente')
     else setErrorMessage('Error al modificar usuario, intente más tarde.')
+    setLoading(false)
   }
 
   const handleChangePassword = async () => {
+    setLoading(true)
     const api = ApiConnection()
-    await api.patch(`/users/list/${user.id}/`, { password: user.password })
+    await api.patch(`/users/list/${userInfo.id}/`, {
+      password,
+    })
     if (api.status === 200) {
       setSuccessMessage('Contraseña cambiada exitosamente')
       setPassword('')
       setConfirmPassword('')
     } else setErrorMessage('Error al cambiar contraseña, intente más tarde.')
+    setLoading(false)
   }
+
+  const handleGetUser = async () => {
+    const api = ApiConnection()
+    const currentUser = await api.get(`/users/list/${user.id}/`)
+    if (api.status === 200) {
+      setUser({ ...currentUser, token: user.token })
+      setUserInfo(currentUser)
+    } else setErrorMessage('Error al traer información del usuario.')
+  }
+
+  useEffect(() => {
+    handleGetUser()
+  }, [])
 
   return (
     <Grid container>
@@ -66,31 +93,31 @@ const Profile = () => {
               <CardContent>
                 <ValidatorForm onSubmit={handleSave}>
                   <TextValidator
-                    label="Nombre"
+                    label={'Nombre'}
                     fullWidth
-                    value={user.firstName}
+                    value={userInfo.firstName}
                     onChange={handleNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
                     InputLabelProps={{
-                      shrink: user.firstName !== '',
+                      shrink: userInfo.firstName !== '',
                     }}
                   />
                   <TextValidator
-                    label="Apellido"
+                    label={'Apellido'}
                     fullWidth
-                    value={user.lastName}
+                    value={userInfo.lastName}
                     onChange={handleLastNameChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
                     InputLabelProps={{
-                      shrink: user.lastName !== '',
+                      shrink: userInfo.lastName !== '',
                     }}
                   />
                   <TextValidator
-                    label="Correo"
+                    label={'Correo'}
                     fullWidth
-                    value={user.email}
+                    value={userInfo.email}
                     onChange={handleEmailChange}
                     validators={['required', 'isEmail']}
                     errorMessages={[
@@ -98,15 +125,20 @@ const Profile = () => {
                       'Correo inválido',
                     ]}
                     InputLabelProps={{
-                      shrink: user.email !== '',
+                      shrink: userInfo.email !== '',
                     }}
                   />
                   <Button
-                    type="submit"
-                    variant="contained"
+                    type={'submit'}
+                    variant={'contained'}
+                    disabled={loading}
                     style={{ float: 'right', marginBottom: 14, marginTop: 10 }}
                   >
-                    Guardar
+                    {loading ? (
+                      <CircularProgress size={24} color={'inherit'} />
+                    ) : (
+                      'Guardar'
+                    )}
                   </Button>
                 </ValidatorForm>
               </CardContent>
@@ -119,8 +151,8 @@ const Profile = () => {
               <CardContent>
                 <ValidatorForm onSubmit={handleChangePassword}>
                   <TextValidator
-                    label="Contraseña"
-                    type="password"
+                    label={'Contraseña'}
+                    type={'password'}
                     fullWidth
                     value={password}
                     onChange={handlePasswordChange}
@@ -128,8 +160,8 @@ const Profile = () => {
                     errorMessages={['Este campo es requerido']}
                   />
                   <TextValidator
-                    label="Confirmar contraseña"
-                    type="password"
+                    label={'Confirmar contraseña'}
+                    type={'password'}
                     fullWidth
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
@@ -140,12 +172,16 @@ const Profile = () => {
                     ]}
                   />
                   <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={password !== confirmPassword}
+                    type={'submit'}
+                    variant={'contained'}
+                    disabled={loading || password !== confirmPassword}
                     style={{ float: 'right', marginBottom: 14, marginTop: 10 }}
                   >
-                    Guardar
+                    {loading ? (
+                      <CircularProgress size={24} color={'inherit'} />
+                    ) : (
+                      'Guardar'
+                    )}
                   </Button>
                 </ValidatorForm>
               </CardContent>

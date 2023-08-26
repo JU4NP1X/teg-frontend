@@ -125,7 +125,7 @@ const InputCard = () => {
             Subir PDF
           </Button>
           <Button
-            type="submit"
+            type={'submit'}
             variant={'contained'}
             startIcon={<Category />}
             sx={{ ml: 'auto' }}

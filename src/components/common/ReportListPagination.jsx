@@ -54,7 +54,12 @@ const ReportListPagination = ({
       sx={{ minHeight: '490px', maxWidth: 1800, mx: 'auto', p: 2 }}
     >
       <TableContainer component={Paper}>
-        <SimpleBar style={{ height: 393, overflow: 'auto' }}>
+        <SimpleBar
+          onTouchStart={(e) => {
+            e.stopPropagation()
+          }}
+          style={{ height: 393, overflow: 'auto' }}
+        >
           <Table aria-label={'simple table'} stickyHeader>
             <TableHead>
               <TableRow>

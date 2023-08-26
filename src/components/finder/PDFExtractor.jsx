@@ -26,7 +26,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString()
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
+  return <Slide direction={'up'} ref={ref} {...props} />
 })
 
 const PDFExtractor = ({
@@ -168,13 +168,13 @@ const PDFExtractor = ({
       TransitionComponent={Transition}
       keepMounted
       onClose={closeDialog}
-      aria-describedby="alert-dialog-slide-description"
-      maxWidth="lg" // Añadido para ajustar el tamaño del diálogo
+      aria-describedby={'alert-dialog-slide-description'}
+      maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
     >
       <DialogTitle>Subir y extraer datos del documento</DialogTitle>
       <ValidatorForm>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText id={'alert-dialog-slide-description'}>
             <div
               style={{
                 display: 'flex',
@@ -197,7 +197,7 @@ const PDFExtractor = ({
           </DialogContentText>
           {step === 0 && (
             <FileUploader
-              buttonText="Haz click o arrastra un .pdf a clasificar"
+              buttonText={'Haz click o arrastra un .pdf a clasificar'}
               isLoading={() => {}}
               fileTypes={['.pdf']}
               onFileUpload={handleUpload}
@@ -206,6 +206,9 @@ const PDFExtractor = ({
 
           {step !== 0 && selectedPages[currentPage] && (
             <SimpleBar
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
               style={{
                 maxHeight: '50vh',
                 width: 400,
@@ -217,7 +220,7 @@ const PDFExtractor = ({
                 onChange={handleCropChange}
                 onComplete={handleCropComplete}
               >
-                <img src={selectedPages[currentPage].image} alt="Page" />
+                <img src={selectedPages[currentPage].image} alt={'Page'} />
               </ReactCrop>
             </SimpleBar>
           )}

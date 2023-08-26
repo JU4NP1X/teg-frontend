@@ -95,7 +95,7 @@ const TagsListCard = () => {
           >
             <ListItemIcon>
               <Checkbox
-                edge="start"
+                edge={'start'}
                 checked={category.selected}
                 tabIndex={-1}
                 disableRipple
@@ -134,7 +134,12 @@ const TagsListCard = () => {
     <Card sx={{ w: '100%', h: '100%' }}>
       <CardHeader title={'Categorías'} />
       <CardContent sx={{ height: '100%' }}>
-        <SimpleBar style={{ height: 'calc(100vh - 225px)' }}>
+        <SimpleBar
+          onTouchStart={(e) => {
+            e.stopPropagation()
+          }}
+          style={{ height: 'calc(100vh - 225px)' }}
+        >
           <List disablePadding>{renderCategories(categories)}</List>
         </SimpleBar>
       </CardContent>

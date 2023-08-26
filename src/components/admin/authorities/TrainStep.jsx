@@ -23,7 +23,7 @@ const TrainStep = ({ progress, status }) => {
       case 'NOT_TRAINED':
         return 'No entrenado'
       case 'GETTING_DATA':
-        return 'Obteniendo información'
+        return 'Buscando datos'
       case 'TRAINING':
         return 'Entrenando'
       case 'COMPLETE':

@@ -26,7 +26,7 @@ const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
             <TextValidator
               label={'Email'}
               name={'email'}
-              value={formValues.email}
+              value={formValues.email || ''}
               validators={['required', 'isEmail']}
               errorMessages={['Este campo es requerido', 'Email inválido']}
               onChange={handleChange}
@@ -35,7 +35,7 @@ const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
             <TextValidator
               label={'Usuario'}
               name={'username'}
-              value={formValues.username}
+              value={formValues.username || ''}
               validators={['required']}
               errorMessages={['Este campo es requerido']}
               onChange={handleChange}
@@ -44,7 +44,7 @@ const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
             <TextValidator
               label={'Nombre'}
               name={'firstName'}
-              value={formValues.firstName}
+              value={formValues.firstName || ''}
               validators={['required']}
               errorMessages={['Este campo es requerido']}
               onChange={handleChange}
@@ -53,15 +53,27 @@ const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
             <TextValidator
               label={'Apellido'}
               name={'lastName'}
-              value={formValues.lastName}
+              value={formValues.lastName || ''}
               validators={['required']}
               errorMessages={['Este campo es requerido']}
               onChange={handleChange}
               fullWidth
             />
+            {!formValues.id && (
+              <TextValidator
+                label={'Contraseña'}
+                type={'password'}
+                name={'password'}
+                value={formValues.password || ''}
+                validators={['required']}
+                errorMessages={['Este campo es requerido']}
+                onChange={handleChange}
+                fullWidth
+              />
+            )}
             <SelectValidator
               label={'¿Es administrador?'}
-              labelId={'admin-label'}
+              labelid={'admin-label'}
               id={'admin-select'}
               name={'isAdmin'}
               value={formValues.isAdmin}

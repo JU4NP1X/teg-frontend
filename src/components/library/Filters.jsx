@@ -1,88 +1,157 @@
 import {
+  Autocomplete,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
-  InputLabel,
   List,
   ListItem,
-  MenuItem,
-  Select,
   TextField,
 } from '@mui/material'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
+import ApiConnection from '../../utils/apiConnection'
 
 const Filters = ({ filters, handleFilterSearchChange }) => {
   const [apiFilters, setApiFilters] = useState([])
   const [authorityList, setAuthorityList] = useState([])
+  const [selectedAuthority, setSelectedAuthority] = useState(null)
+  const [loadingFilters, setLoadingFilters] = useState(false)
+  const [loadingAuthorities, setLoadingAuthorities] = useState(false)
 
-  useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        const response = await axios.get('URL_DE_LA_API/filters', {
-          params: {
-            search: filters.filterSearch,
-          },
-        })
-        setApiFilters(response.data)
-      } catch (error) {
+  const fetchFilters = async (signal) => {
+    try {
+      setLoadingFilters(true)
+      const api = ApiConnection()
+      const data = await api.get('categories/translations/', {
+        params: {
+          search: filters.filterSearch,
+          language: 'es',
+          ordering: 'name',
+          authority: selectedAuthority?.id,
+        },
+        signal,
+      })
+      if (api.status === 200) {
+        setApiFilters(data.results)
+        setLoadingFilters(false)
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('Búsqueda de filtros cancelada')
+      } else {
         console.error('Error al obtener los filtros:', error)
       }
     }
+  }
 
-    const fetchAuthorityList = async () => {
-      try {
-        const response = await axios.get('URL_DE_LA_API/authorityList')
-        setAuthorityList(response.data)
-      } catch (error) {
-        console.error('Error al obtener la lista de autoridad:', error)
+  const fetchAuthorityList = async () => {
+    try {
+      setLoadingAuthorities(true)
+      const api = ApiConnection()
+      const data = await api.get('categories/authorities/')
+      if (api.status === 200) {
+        setAuthorityList(data.results)
+        setLoadingAuthorities(false)
       }
+    } catch (error) {
+      console.error('Error al obtener la lista de autoridad:', error)
     }
+  }
 
-    fetchFilters()
+  useEffect(() => {
+    let abortController = new AbortController()
+
+    fetchFilters(abortController.signal)
+
+    return () => {
+      abortController.abort()
+    }
+  }, [filters.filterSearch, selectedAuthority])
+
+  useEffect(() => {
     fetchAuthorityList()
-  }, [filters.filterSearch])
-
+  }, [])
   return (
     <Card>
       <CardHeader title={'Filtrar por categoría'} />
       <CardContent>
         <FormControl fullWidth style={{ marginTop: 20, marginBottom: 14 }}>
-          <InputLabel id="authority-list" style={{ top: '-12px' }}>
-            Lista de autoridad
-          </InputLabel>
-          <Select
-            labelId="authority-list"
-            label="Lista de autoridad"
-            value={filters.authority}
-            onChange={(event) => handleFilterSearchChange(event.target.value)}
-          >
-            {authorityList.map((authority) => (
-              <MenuItem key={authority.id} value={authority.id}>
-                {authority.name}
-              </MenuItem>
-            ))}
-          </Select>
+          <Autocomplete
+            id={'controllable-states-demo'}
+            getOptionLabel={({ name }) => name}
+            options={authorityList}
+            loading={loadingAuthorities}
+            value={selectedAuthority}
+            onInputChange={(event, value) => {
+              console.log(value)
+              setSelectedAuthority(value)
+            }}
+            onChange={(event, value) => {
+              console.log(value)
+              setSelectedAuthority(value)
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={'Lista de autoridad emisora'}
+                value={params.InputProps.value}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingAuthorities ? (
+                        <CircularProgress
+                          color={'inherit'}
+                          size={20}
+                          sx={{ mt: '-10px' }}
+                        />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
           <TextField
-            label="Buscar categoría"
-            variant="outlined"
+            label={'Buscar categoría'}
+            variant={'outlined'}
             value={filters.filterSearch}
             onChange={handleFilterSearchChange}
             fullWidth
             style={{ marginBottom: '16px' }}
           />
         </FormControl>
-        <SimpleBar style={{ height: '50vh', border: '1px solid #ccc' }}>
+        <SimpleBar
+          style={{ height: 'calc(100vh - 382px)', border: '1px solid #ccc' }}
+        >
           <List>
-            {apiFilters.map((filter) => (
-              <ListItem key={filter.id}>
-                <FormControlLabel control={<Checkbox />} label={filter.name} />
-              </ListItem>
-            ))}
+            {loadingFilters ? (
+              <div
+                style={{
+                  height: '50vh',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <CircularProgress />
+              </div>
+            ) : (
+              apiFilters.map((filter) => (
+                <ListItem key={filter.id}>
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label={filter.name}
+                  />
+                </ListItem>
+              ))
+            )}
           </List>
         </SimpleBar>
       </CardContent>

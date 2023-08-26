@@ -10,10 +10,10 @@ const TagsFinder = () => {
   return (
     <Box component={'main'}>
       <Grid container>
-        <Grid item xs={8} sx={{ p: 2 }}>
+        <Grid item xs={12} md={8} sx={{ p: 2 }}>
           <InputCard />
         </Grid>
-        <Grid item xs={4} sx={{ p: 2, display: 'inline-grid' }}>
+        <Grid item xs={12} md={4} sx={{ p: 2, display: 'inline-grid' }}>
           <TagsListCard />
         </Grid>
       </Grid>

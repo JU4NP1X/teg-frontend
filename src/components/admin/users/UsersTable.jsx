@@ -37,36 +37,30 @@ const UsersTable = ({
 
   return (
     <TableContainer component={Paper}>
-      {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 'calc(100vh - 270px)',
-          }}
-        >
-          <CircularProgress />
-        </div>
-      ) : (
-        <SimpleBar style={{ height: 'calc(100vh - 270px)' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: '20%' }}>Email</TableCell>
-                <TableCell style={{ width: '20%' }}>Usuario</TableCell>
-                <TableCell style={{ width: '20%' }}>Nombre</TableCell>
-                <TableCell style={{ width: '20%' }}>Apellido</TableCell>
-                <TableCell align={'center'} style={{ width: '10%' }}>
-                  Administrador
-                </TableCell>
-                <TableCell align={'right'} style={{ width: '10%' }}>
-                  Acciones
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.results.map((user) => (
+      <SimpleBar
+        onTouchStart={(e) => {
+          e.stopPropagation()
+        }}
+        style={{ height: 'calc(100vh - 270px)' }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ width: '20%' }}>Email</TableCell>
+              <TableCell style={{ width: '20%' }}>Usuario</TableCell>
+              <TableCell style={{ width: '20%' }}>Nombre</TableCell>
+              <TableCell style={{ width: '20%' }}>Apellido</TableCell>
+              <TableCell align={'center'} style={{ width: '10%' }}>
+                Administrador
+              </TableCell>
+              <TableCell align={'right'} style={{ width: '10%' }}>
+                Acciones
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!loading ? (
+              users.results.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.username}</TableCell>
@@ -78,7 +72,7 @@ const UsersTable = ({
                       color={user.isAdmin ? 'success' : 'error'}
                     />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align={'right'}>
                     <Button
                       variant={'outlined'}
                       onClick={() => handleEditUser(user)}
@@ -97,11 +91,21 @@ const UsersTable = ({
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </SimpleBar>
-      )}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  align={'center'}
+                  style={{ height: 'calc(100vh - 380px)' }}
+                >
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </SimpleBar>
       <TablePagination
         rowsPerPageOptions={[10, 25]}
         component={'div'}

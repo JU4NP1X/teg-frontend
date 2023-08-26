@@ -38,11 +38,17 @@ const AuthoritiesTable = ({
   handleReTrain,
   handleUpdateAuthority,
   loading,
+  handleSyncAuthority,
 }) => {
   return (
     <>
       <TableContainer component={Paper}>
-        <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
+        <SimpleBar
+          style={{ height: 'calc(100vh - 230px)' }}
+          onTouchStart={(e) => {
+            e.stopPropagation()
+          }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -67,13 +73,14 @@ const AuthoritiesTable = ({
                       handleDeleteAuthority={handleDeleteAuthority}
                       handleReTrain={handleReTrain}
                       handleUpdateAuthority={handleUpdateAuthority}
+                      handleSyncAuthority={handleSyncAuthority}
                     />
                   ))
               ) : (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    align="center"
+                    align={'center'}
                     style={{ height: 'calc(100vh - 310px)' }}
                   >
                     <CircularProgress />
@@ -86,7 +93,7 @@ const AuthoritiesTable = ({
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
-        component="div"
+        component={'div'}
         count={authorities.count}
         rowsPerPage={rowsPerPage}
         page={page}

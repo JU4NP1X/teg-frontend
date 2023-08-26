@@ -1,8 +1,10 @@
+import { Add } from '@mui/icons-material'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
 import AuthorityDialog from '../../components/admin/authorities/AuthorityDialog'
 import ConfirmationDialog from '../../components/common/ConfirmationDialog'
+import useNotification from '../../hooks/useNotification'
 import ApiConnection from '../../utils/apiConnection'
 
 const authorityTemplate = {
@@ -19,6 +21,7 @@ const authoritiesTemplate = {
 }
 
 const Authorities = () => {
+  const { setErrorMessage } = useNotification()
   const [authority, setAuthority] = useState(authorityTemplate)
   const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
@@ -80,6 +83,16 @@ const Authorities = () => {
     }
   }
 
+  const handleSyncAuthority = async (authority) => {
+    try {
+      const api = ApiConnection()
+      await api.post(`/datasets/sync/`, { authorities: [authority.id] })
+      if (api.status === 200) setRefresh(true)
+      else setErrorMessage('Error al sincronizar los datos de la categoría.')
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const updateAuthority = async () => {
     try {
       const api = ApiConnection()
@@ -164,7 +177,26 @@ const Authorities = () => {
   return (
     <div>
       <Card sx={{ pb: 0 }}>
-        <CardHeader title={'Listas de autoridad'} />
+        <CardHeader
+          title={
+            <span
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              Listas de autoridad
+              <Button
+                variant={'outlined'}
+                color={'primary'}
+                size={'small'}
+                onClick={() => setOpenAuthorityModal(true)}
+              >
+                <Add />
+              </Button>
+            </span>
+          }
+        />
         <CardContent style={{ paddingBottom: 0 }}>
           <AuthoritiesTable
             authorities={authorities}
@@ -176,6 +208,7 @@ const Authorities = () => {
             handleUpdateAuthority={handleUpdateAuthority}
             handleReTrain={handleReTrain}
             loading={loading}
+            handleSyncAuthority={handleSyncAuthority}
           />
 
           <ConfirmationDialog
@@ -198,14 +231,6 @@ const Authorities = () => {
             setAuthority={setAuthority}
             setLoadingFile={setLoadingFile}
           />
-          <Button
-            variant={'contained'}
-            color={'primary'}
-            onClick={() => setOpenAuthorityModal(true)}
-            style={{ marginTop: -70, marginLeft: 4, marginBottom: 0 }}
-          >
-            Agregar Autoridad
-          </Button>
         </CardContent>
       </Card>
     </div>

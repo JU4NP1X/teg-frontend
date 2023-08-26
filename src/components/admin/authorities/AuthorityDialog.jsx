@@ -28,9 +28,9 @@ const AuthorityDialog = ({
     <Dialog
       open={open}
       onClose={handleCancel}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby={'form-dialog-title'}
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id={'form-dialog-title'}>
         {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
       </DialogTitle>
       <ValidatorForm onSubmit={onSubmit}>
@@ -40,10 +40,10 @@ const AuthorityDialog = ({
           </DialogContentText>
           <TextValidator
             autoFocus
-            margin="dense"
-            id="name"
-            label="Nombre"
-            type="text"
+            margin={'dense'}
+            id={'name'}
+            label={'Nombre'}
+            type={'text'}
             fullWidth
             value={authority.name}
             onChange={(e) =>
@@ -55,10 +55,10 @@ const AuthorityDialog = ({
 
           <TextValidator
             autoFocus
-            margin="dense"
-            id="color"
-            label="Color"
-            type="color"
+            margin={'dense'}
+            id={'color'}
+            label={'Color'}
+            type={'color'}
             fullWidth
             value={authority.color}
             onChange={(e) =>
@@ -69,7 +69,7 @@ const AuthorityDialog = ({
           />
 
           <FileUploader
-            buttonText="Haz click o arrastra un .csv con las categorías"
+            buttonText={'Haz click o arrastra un .csv con las categorías'}
             isLoading={setLoadingFile}
             fileTypes={['.csv']}
             onFileUpload={(file) =>
@@ -81,8 +81,8 @@ const AuthorityDialog = ({
           <Button onClick={handleCancel}>Cancelar</Button>
           <Button
             disabled={!authority.csvFile && !authority.id}
-            type="submit"
-            color="primary"
+            type={'submit'}
+            color={'primary'}
           >
             Agregar
           </Button>

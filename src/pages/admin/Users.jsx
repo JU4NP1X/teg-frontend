@@ -1,8 +1,10 @@
+import { Add } from '@mui/icons-material'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import UserDialog from '../../components/admin/users/UserDialog'
 import UsersTable from '../../components/admin/users/UsersTable'
 import ConfirmationDialog from '../../components/common/ConfirmationDialog'
+import useNotification from '../../hooks/useNotification'
 import ApiConnection from '../../utils/apiConnection'
 
 const userTemplate = {
@@ -26,6 +28,7 @@ const Users = () => {
   const [loading, setLoading] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [page, setPage] = useState(0)
+  const { setSuccessMessage, setErrorMessage } = useNotification()
 
   const handleDeleteUser = (userId) => {
     setSelectedUser(userId)
@@ -56,20 +59,23 @@ const Users = () => {
   }
 
   const handleSaveUser = async () => {
-    try {
-      const api = ApiConnection()
-      setLoading(true)
-      if (formValues.id) {
-        await api.patch(`/users/list/${formValues.id}/`, formValues)
-      } else {
-        await api.post('/users/list/', formValues)
-      }
-      fetchUsers()
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
+    const api = ApiConnection()
+    if (formValues.id) {
+      await api.patch(`/users/list/${formValues.id}/`, formValues)
+    } else {
+      await api.post('/users/list/', formValues)
     }
+    if (api.status === 200) {
+      setSuccessMessage(
+        `Usuario ${formValues.id ? 'Modificado' : 'Guardado'} exitosamente`
+      )
+
+      setEditDialogOpen(false)
+      fetchUsers()
+    } else
+      setErrorMessage(
+        `Error al modificar, asegúrese que el correo o el usuario no se encuentren ya en uso`
+      )
   }
 
   const handleChange = (event) => {
@@ -81,9 +87,9 @@ const Users = () => {
   }
 
   const fetchUsers = async () => {
+    setLoading(true)
     try {
       const api = ApiConnection()
-      setLoading(true)
       const data = await api.get('/users/list/', {
         params: {
           limit: rowsPerPage,
@@ -105,7 +111,26 @@ const Users = () => {
   return (
     <>
       <Card>
-        <CardHeader title={'Usuarios'} />
+        <CardHeader
+          title={
+            <span
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              Usuarios
+              <Button
+                variant={'outlined'}
+                color={'primary'}
+                size={'small'}
+                onClick={() => handleEditUser(userTemplate)}
+              >
+                <Add />
+              </Button>
+            </span>
+          }
+        />
         <CardContent>
           <UsersTable
             users={users}
@@ -117,15 +142,6 @@ const Users = () => {
             rowsPerPage={rowsPerPage}
             setRowsPerPage={setRowsPerPage}
           />
-          <Button
-            onClick={() => {
-              handleEditUser(userTemplate)
-            }}
-            variant={'contained'}
-            sx={{ mt: -10, ml: 2 }}
-          >
-            Agregar usuario
-          </Button>
         </CardContent>
       </Card>
       <UserDialog

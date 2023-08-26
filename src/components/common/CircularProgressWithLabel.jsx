@@ -6,7 +6,7 @@ import * as React from 'react'
 const CircularProgressWithLabel = (props) => {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <CircularProgress variant="determinate" {...props} />
+      <CircularProgress variant={'determinate'} {...props} />
       <Box
         sx={{
           top: 2,
@@ -19,7 +19,11 @@ const CircularProgressWithLabel = (props) => {
           justifyContent: 'center',
         }}
       >
-        <Typography variant="caption" component="div" color="text.secondary">
+        <Typography
+          variant={'caption'}
+          component={'div'}
+          color={'text.secondary'}
+        >
           {props.label}
         </Typography>
       </Box>

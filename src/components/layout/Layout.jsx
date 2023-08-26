@@ -1,14 +1,12 @@
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import { Tooltip } from '@mui/material'
 import Box from '@mui/material/Box'
-import { grey, red } from '@mui/material/colors'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { grey, red } from '@mui/material/colors'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import moment from 'moment/moment'
 import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
@@ -101,7 +99,7 @@ const Layout = ({ children }) => {
                 >
                   <img
                     src={'/img/uc-logo.png'}
-                    style={{ marginLeft: -5, height: 50 }}
+                    style={{ marginLeft: isMobile() ? 5 : -5, height: 50 }}
                   />
                 </Tooltip>
                 <Tooltip
@@ -123,13 +121,6 @@ const Layout = ({ children }) => {
                   </p>
                 </Tooltip>
               </Typography>
-              {isMobile() ? (
-                <IconButton onClick={toggleDrawer}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              ) : (
-                <></>
-              )}
             </Toolbar>
             <Divider />
 

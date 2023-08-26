@@ -16,11 +16,11 @@ const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
     <Card>
       <CardContent>
         <FormControl fullWidth sx={{ marginTop: '10px' }}>
-          <Grid container alignItems="center" spacing={1}>
+          <Grid container alignItems={'center'} spacing={1}>
             <Grid item xs={9}>
               <TextField
-                label="Buscar"
-                variant="outlined"
+                label={'Buscar'}
+                variant={'outlined'}
                 value={filters.search}
                 onChange={handleSearchChange}
                 fullWidth
@@ -33,26 +33,26 @@ const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
                 size={'small'}
                 style={{ marginTop: '15px' }}
               >
-                <InputLabel id="order-by-label" style={{ top: '-5px' }}>
+                <InputLabel id={'order-by-label'} style={{ top: '-5px' }}>
                   Ordenar por
                 </InputLabel>
                 <Select
-                  label="Ordenar por"
-                  labelId="order-by-label"
+                  label={'Ordenar por'}
+                  labelId={'order-by-label'}
                   value={filters.orderBy}
                   onChange={handleOrderByChange}
                 >
                   <MenuItem value={'title'}>Título</MenuItem>
-                  <MenuItem value="description">Descripción</MenuItem>
+                  <MenuItem value={'description'}>Descripción</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
           </Grid>
         </FormControl>
         <Button
-          variant="contained"
-          color="primary"
-          size="small"
+          variant={'contained'}
+          color={'primary'}
+          size={'small'}
           style={{ marginTop: '10px', float: 'right', marginBottom: '10px' }}
         >
           Buscar

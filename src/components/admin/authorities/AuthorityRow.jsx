@@ -19,6 +19,7 @@ const AuthorityRow = ({
   authority,
   handleDeleteAuthority,
   handleReTrain,
+  handleSyncAuthority,
   handleUpdateAuthority,
 }) => {
   return (
@@ -70,8 +71,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.resume.representatedCategoryCount,
-                    authority.resume.notRepresentatedCategoryCount,
+                    authority.theoreticalPrecision,
+                    100 - authority.theoreticalPrecision,
                   ],
                 },
               ],
@@ -89,8 +90,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.resume.categoryTrainedCount,
-                    authority.resume.categoryNotTrainedCount,
+                    authority.resume.practicalPrecision ?? 0,
+                    100 - (authority.resume.practicalPrecision ?? 0),
                   ],
                 },
               ],
@@ -119,7 +120,7 @@ const AuthorityRow = ({
             <Button
               variant={'outlined'}
               color={'secondary'}
-              onClick={() => {}}
+              onClick={() => handleSyncAuthority(authority)}
               disabled={
                 authority.status === 'GETTING_DATA' ||
                 authority.status === 'TRAINING'

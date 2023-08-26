@@ -21,7 +21,7 @@ import { isMobile } from '../../utils/utils'
 import Swipe from '../common/Swipe'
 import LoginDialog from './LoginDialog'
 
-export const SideBar = ({ isOpen, loginHandler }) => {
+export const SideBar = ({ isOpen, loginHandler, setOpen }) => {
   const Navigate = useNavigate()
   const { auth, setUser } = useAuth()
   const { setSuccessMessage } = useNotification()
@@ -39,7 +39,7 @@ export const SideBar = ({ isOpen, loginHandler }) => {
   return (
     <Swipe
       onSwipeLeft={() => {
-        setOpenAdministration(false)
+        setOpen(false)
       }}
       style={{ height: 'inherit' }}
     >
@@ -47,7 +47,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
         {/* Biblioteca */}
         <ListItemButton
           onClick={() => {
-            if (isMobile()) setOpenAdministration(false)
+            if (isMobile()) {
+              setOpenAdministration(false)
+              setOpen(false)
+            }
             Navigate('/')
           }}
           selected={window.location.pathname === '/'}
@@ -62,7 +65,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
             {/* Classify */}
             <ListItemButton
               onClick={() => {
-                if (isMobile()) setOpenAdministration(false)
+                if (isMobile()) {
+                  setOpenAdministration(false)
+                  setOpen(false)
+                }
                 Navigate('/classify')
               }}
               selected={window.location.pathname === '/classify'}
@@ -76,7 +82,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
             {/* change password */}
             <ListItemButton
               onClick={() => {
-                if (isMobile()) setOpenAdministration(false)
+                if (isMobile()) {
+                  setOpenAdministration(false)
+                  setOpen(false)
+                }
                 Navigate('/admin/profile')
               }}
               selected={window.location.pathname === '/admin/profile'}
@@ -115,7 +124,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
             >
               <ListItemButton
                 onClick={() => {
-                  if (isMobile()) setOpenAdministration(false)
+                  if (isMobile()) {
+                    setOpenAdministration(false)
+                    setOpen(false)
+                  }
                   Navigate('/admin/users')
                 }}
                 selected={window.location.pathname === '/admin/users'}
@@ -127,7 +139,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
               </ListItemButton>
               <ListItemButton
                 onClick={() => {
-                  if (isMobile()) setOpenAdministration(false)
+                  if (isMobile()) {
+                    setOpenAdministration(false)
+                    setOpen(false)
+                  }
                   Navigate('/admin/authorities')
                 }}
                 selected={window.location.pathname === '/admin/authorities'}
@@ -139,7 +154,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
               </ListItemButton>
               <ListItemButton
                 onClick={() => {
-                  if (isMobile()) setOpenAdministration(false)
+                  if (isMobile()) {
+                    setOpenAdministration(false)
+                    setOpen(false)
+                  }
                   Navigate('/admin/documents')
                 }}
                 selected={window.location.pathname === '/admin/documents'}
@@ -154,7 +172,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
             {/* Salir */}
             <ListItemButton
               onClick={() => {
-                if (isMobile()) setOpenAdministration(false)
+                if (isMobile()) {
+                  setOpenAdministration(false)
+                  setOpen(false)
+                }
                 setUser({})
                 Navigate('/')
                 setSuccessMessage('Sesión cerrada exitosamente')
@@ -172,6 +193,10 @@ export const SideBar = ({ isOpen, loginHandler }) => {
         ) : (
           <ListItemButton
             onClick={() => {
+              if (isMobile()) {
+                setOpenAdministration(false)
+                setOpen(false)
+              }
               setOpenLogin(true)
             }}
             style={{ marginTop: 'auto' }}
