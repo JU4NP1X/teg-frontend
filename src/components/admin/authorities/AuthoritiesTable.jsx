@@ -14,18 +14,18 @@ import SimpleBar from 'simplebar-react'
 import AuthorityRow from './AuthorityRow'
 
 const columns = [
-  'Color',
-  'Autoridad',
-  'Última Fecha de Entrenamiento',
-  'Datos de Entrenamiento Disponibles',
-  'Representación de las categorías',
-  'Categorías Actualizadas',
-  'Categorías Obsoletas',
-  'Nuevas Categorías no Entrenadas',
-  'Precisión teórica del modelo',
-  'Precisión práctica del modelo',
-  'Estado',
-  'Acciones',
+  { label: 'Color', align: 'center' },
+  { label: 'Autoridad', align: 'center' },
+  { label: 'Última Fecha de Entrenamiento', align: 'left' },
+  { label: 'Datos de Entrenamiento Disponibles', align: 'center' },
+  { label: 'Representación de las categorías', align: 'center' },
+  { label: 'Categorías Actualizadas', align: 'center' },
+  { label: 'Categorías Obsoletas', align: 'center' },
+  { label: 'Nuevas Categorías no Entrenadas', align: 'center' },
+  { label: 'Precisión teórica del modelo', align: 'center' },
+  { label: 'Precisión práctica del modelo', align: 'center' },
+  { label: 'Estado', align: 'center' },
+  { label: 'Acciones', align: 'center' },
 ]
 
 const AuthoritiesTable = ({
@@ -39,6 +39,7 @@ const AuthoritiesTable = ({
   handleUpdateAuthority,
   loading,
   handleSyncAuthority,
+  loadingAction
 }) => {
   return (
     <>
@@ -54,10 +55,11 @@ const AuthoritiesTable = ({
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
-                    key={column}
-                    align={column === 'Estado' ? 'center' : 'left'}
+                    key={column.label}
+                    align={column.align}
+                    style={{ fontWeight: 'bold', textAlign: column.align }}
                   >
-                    {column}
+                    {column.label}
                   </TableCell>
                 ))}
               </TableRow>
@@ -74,6 +76,7 @@ const AuthoritiesTable = ({
                       handleReTrain={handleReTrain}
                       handleUpdateAuthority={handleUpdateAuthority}
                       handleSyncAuthority={handleSyncAuthority}
+                      loadingAction={loadingAction}
                     />
                   ))
               ) : (

@@ -1,4 +1,4 @@
-import { ArcElement, Chart } from 'chart.js'
+import { ArcElement, Chart, Tooltip } from 'chart.js'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import CustomRouter from './components/common/CustomRouter'
@@ -12,7 +12,9 @@ import Library from './pages/Library'
 import Profile from './pages/Profile'
 import TagsFinder from './pages/TagsFinder'
 import history from './utils/history'
+import 'moment/locale/es'
 
+Chart.register([Tooltip])
 Chart.register(ArcElement)
 
 function App() {

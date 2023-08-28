@@ -4,15 +4,31 @@ import { Button, TableCell, TableRow } from '@mui/material'
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import TrainStep from './TrainStep'
+import moment from 'moment/moment'
+const esMoment = moment.locale('es')
 
 const data = {
-  labels: ['CategoríasSuficientes', 'CategoríasInsuficientes'],
   datasets: [
     {
       backgroundColor: ['#36A2EB', '#FF6384'],
       hoverBackgroundColor: ['#36A2EB', '#FF6384'],
     },
   ],
+}
+const options = {
+  plugins: {
+    tooltip: {
+      titleFont: {
+        size: 5,
+      },
+      bodyFont: {
+        size: 10,
+      },
+      footerFont: {
+        size: 5, // there is no footer by default
+      },
+    },
+  },
 }
 
 const AuthorityRow = ({
@@ -21,10 +37,11 @@ const AuthorityRow = ({
   handleReTrain,
   handleSyncAuthority,
   handleUpdateAuthority,
+  loadingAction,
 }) => {
   return (
     <TableRow key={authority.id}>
-      <TableCell>
+    <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div
           style={{
             height: 20,
@@ -34,17 +51,24 @@ const AuthorityRow = ({
           }}
         ></div>
       </TableCell>
-      <TableCell>
+      <TableCell align={'center'}>
         <b>{authority.name}</b>
       </TableCell>
-      <TableCell>{authority.lastTrainingDate}</TableCell>
-      <TableCell>{authority.resume.datasetsCount}</TableCell>
       <TableCell>
+        {moment(authority.lastTrainingDate).locale('ve').format('LL hh:mm A')}
+      </TableCell>
+      <TableCell align={'center'}>{authority.resume.datasetsCount}</TableCell>
+      <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
             style={{ height: '100px', width: '100px' }}
+            options={options}
             data={{
               ...data,
+              labels: [
+                'Categorías con suficientes datos',
+                'Categorías sin datos suficientes',
+              ],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -58,15 +82,20 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell>{authority.resume.categoryTrainedCount}</TableCell>
-      <TableCell>{authority.resume.deprecatedCategoryTrainedCount}</TableCell>
-      <TableCell>{authority.resume.categoryNotTrainedCount}</TableCell>
-      <TableCell>
+      <TableCell align={'center'}>{authority.resume.categoryTrainedCount}</TableCell>
+      <TableCell align={'center'}>{authority.resume.deprecatedCategoryTrainedCount}</TableCell>
+      <TableCell align={'center'}>{authority.resume.categoryNotTrainedCount}</TableCell>
+      <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
             style={{ height: '100px', width: '100px' }}
+            options={options}
             data={{
               ...data,
+              labels: [
+                'Porcentaje de éxito teórico',
+                'Porcentaje de fracaso teórico',
+              ],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -80,12 +109,17 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
             style={{ height: '100px', width: '100px' }}
+            options={options}
             data={{
               ...data,
+              labels: [
+                'Porcentaje de éxito práctico',
+                'Porcentaje de fracaso práctico',
+              ],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -123,7 +157,8 @@ const AuthorityRow = ({
               onClick={() => handleSyncAuthority(authority)}
               disabled={
                 authority.status === 'GETTING_DATA' ||
-                authority.status === 'TRAINING'
+                authority.status === 'TRAINING' ||
+                loadingAction
               }
             >
               <Sync />
@@ -131,6 +166,7 @@ const AuthorityRow = ({
             <Button
               variant={'outlined'}
               color={'success'}
+              disabled={loadingAction}
               onClick={() => handleUpdateAuthority(authority)}
               sx={{ ml: 1 }}
             >
@@ -150,13 +186,14 @@ const AuthorityRow = ({
               onClick={handleReTrain}
               disabled={
                 authority.status === 'GETTING_DATA' ||
-                authority.status === 'TRAINING'
+                authority.status === 'TRAINING' ||
+                loadingAction
               }
             >
               <FitnessCenter />
             </Button>
             <Button
-              disabled={authority.native}
+              disabled={authority.native || loadingAction}
               variant={'outlined'}
               onClick={() => handleDeleteAuthority(authority)}
               sx={{ ml: 1 }}

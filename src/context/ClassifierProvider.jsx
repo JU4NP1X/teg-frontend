@@ -8,7 +8,7 @@ const ClassifierProvider = ({ children }) => {
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
   const [authorities, setAuthorities] = useState([])
-  const [selectedAuthority, setSelectedAuthority] = useState(null)
+  const [authority, setAuthority] = useState(null)
   const [title, setTitle] = useState('')
   const [summary, setSummary] = useState('')
   const [categories, setCategories] = useState([])
@@ -30,7 +30,7 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.post('/categories/classify/', {
       title,
       summary,
-      authority: selectedAuthority,
+      authority: authority && authority.id ? authority.id : undefined,
     })
     if (api.status === 200) {
       addExpandNSelectedOptions(data.results, true)
@@ -64,6 +64,8 @@ const ClassifierProvider = ({ children }) => {
         setCategories,
         classify,
         loadingCategories,
+        authority,
+        setAuthority,
       }}
     >
       {children}

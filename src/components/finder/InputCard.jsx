@@ -26,13 +26,13 @@ const InputCard = () => {
     title,
     setTitle,
     classify,
+    authority,
+    setAuthority,
   } = useClassifier()
 
   const handleSubmit = (event) => {
-    event.preventDefault()
-    // Lógica para clasificar el documento
+    classify()
   }
-
   return (
     <Card sx={{ minHeight: '100%' }}>
       <CardHeader title={'Documento a clasificar'} />
@@ -47,6 +47,10 @@ const InputCard = () => {
               getOptionLabel={({ name }) => name}
               options={authorities}
               loading={loadingAuthorities}
+              value={authority}
+              onChange={(event, value) => {
+                setAuthority(value)
+              }}
               renderInput={(params) => {
                 return (
                   <TextValidator
@@ -54,7 +58,7 @@ const InputCard = () => {
                     label={'Lista de autoridad emisora'}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
-                    value={params.InputProps.value}
+                    value={authority}
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
@@ -129,9 +133,6 @@ const InputCard = () => {
             variant={'contained'}
             startIcon={<Category />}
             sx={{ ml: 'auto' }}
-            onClick={() => {
-              classify()
-            }}
           >
             Clasificar
           </Button>

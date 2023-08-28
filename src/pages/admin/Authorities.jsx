@@ -21,12 +21,13 @@ const authoritiesTemplate = {
 }
 
 const Authorities = () => {
-  const { setErrorMessage } = useNotification()
+  const { setSuccessMessage, setErrorMessage } = useNotification()
   const [authority, setAuthority] = useState(authorityTemplate)
   const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [loading, setLoading] = useState(true)
+  const [loadingAction, setLoadingAction] = useState(false)
   const [loadingFile, setLoadingFile] = useState(false)
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [authorityToDelete, setAuthorityToDelete] = useState(null)
@@ -44,11 +45,16 @@ const Authorities = () => {
         params: {
           limit,
           offset,
+          excludeCounts: isRefresh ? true: undefined,
         },
         signal,
       })
       if (api.status === 200) {
-        setAuthorities(data)
+        if (isRefresh)
+          setAuthorities(
+            {...data, results:data.results.map((data, i) => ({ ...data, resume: authorities.results[i].resume }))}
+          )
+        else setAuthorities(data)
         setLoading(false)
       }
       if (isRefresh) setRefresh(false)
@@ -72,25 +78,42 @@ const Authorities = () => {
   }
 
   const deleteAuthority = async () => {
+    setLoadingAction(true)
     try {
       const api = ApiConnection()
       await api.delete(`/categories/authorities/${authorityToDelete.id}/`)
       setAuthorityToDelete(null)
       setOpenConfirmation(false)
       setRefresh(true)
+      if (api.status === 200) {
+        setSuccessMessage('Autoridad eliminada.')
+        setLoadingAction(false)
+      } else {
+        setErrorMessage('Error al sincronizar los datos de la autoridad.')
+        setLoadingAction(false)
+      }
     } catch (error) {
       console.error(error)
+      setLoadingAction(false)
     }
   }
 
   const handleSyncAuthority = async (authority) => {
+    setLoadingAction(true)
     try {
       const api = ApiConnection()
       await api.post(`/datasets/sync/`, { authorities: [authority.id] })
-      if (api.status === 200) setRefresh(true)
-      else setErrorMessage('Error al sincronizar los datos de la categoría.')
+      if (api.status === 200) {
+        setSuccessMessage('Autoridad sincronizando.')
+        setRefresh(true)
+        setLoadingAction(false)
+      } else {
+        setErrorMessage('Error al sincronizar los datos de la autoridad.')
+        setLoadingAction(false)
+      }
     } catch (error) {
       console.error(error)
+      setLoadingAction(false)
     }
   }
   const updateAuthority = async () => {
@@ -208,6 +231,7 @@ const Authorities = () => {
             handleUpdateAuthority={handleUpdateAuthority}
             handleReTrain={handleReTrain}
             loading={loading}
+            loadingAction={loadingAction}
             handleSyncAuthority={handleSyncAuthority}
           />
 

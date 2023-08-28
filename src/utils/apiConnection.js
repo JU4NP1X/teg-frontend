@@ -16,7 +16,11 @@ const ApiConnection = () => {
   Api.status = 0
 
   Api.interceptors.request.use((config) => {
-    config.data = transformToSnakeCase(config.data)
+    if (config.method === 'get') {
+      config.params = transformToSnakeCase(config.params)
+    } else {
+      config.data = transformToSnakeCase(config.data)
+    }
     return config
   })
 
