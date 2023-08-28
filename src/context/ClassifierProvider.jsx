@@ -17,7 +17,10 @@ const ClassifierProvider = ({ children }) => {
     setLoadingAuthorities(true)
     const api = ApiConnection()
     const data = await api.get('/categories/authorities/', {
-      params: { exclude_counts: true },
+      params: {
+        ordering: 'id',
+        exclude_counts: true,
+      },
     })
     if (api.status === 200) {
       setAuthorities(data.results)

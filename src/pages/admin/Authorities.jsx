@@ -45,15 +45,19 @@ const Authorities = () => {
         params: {
           limit,
           offset,
-          excludeCounts: isRefresh ? true: undefined,
+          ordering: 'id',
         },
         signal,
       })
       if (api.status === 200) {
-        if (isRefresh)
-          setAuthorities(
-            {...data, results:data.results.map((data, i) => ({ ...data, resume: authorities.results[i].resume }))}
-          )
+        if (false && isRefresh)
+          setAuthorities({
+            ...data,
+            results: data.results.map((data, i) => ({
+              ...data,
+              resume: authorities.results[i].resume,
+            })),
+          })
         else setAuthorities(data)
         setLoading(false)
       }

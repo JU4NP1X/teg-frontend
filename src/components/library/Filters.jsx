@@ -53,7 +53,10 @@ const Filters = ({ filters, handleFilterSearchChange }) => {
       setLoadingAuthorities(true)
       const api = ApiConnection()
       const data = await api.get('categories/authorities/', {
-        params: { excludeCounts: true },
+        params: {
+          ordering: 'id',
+          excludeCounts: true,
+        },
       })
       if (api.status === 200) {
         setAuthorityList(data.results)
