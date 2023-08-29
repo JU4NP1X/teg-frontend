@@ -15,8 +15,10 @@ import React from 'react'
 import SimpleBar from 'simplebar-react'
 import useLibrary from '../../hooks/useLibrary'
 
-const Filters = ({ handleFilterSearchChange }) => {
+const Filters = () => {
   const {
+    filterSearch,
+    setFilterSearch,
     loadingAuthorities,
     loadingFilters,
     selectedAuthority,
@@ -69,8 +71,11 @@ const Filters = ({ handleFilterSearchChange }) => {
           <TextField
             label={'Buscar categoría'}
             variant={'outlined'}
-            onChange={handleFilterSearchChange}
+            onChange={(e) => {
+              setFilterSearch(e.target.value)
+            }}
             fullWidth
+            value={filterSearch}
             style={{ marginBottom: '16px' }}
           />
         </FormControl>

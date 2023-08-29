@@ -14,7 +14,6 @@ import useLibrary from '../../hooks/useLibrary'
 
 const Search = ({ handleSearchChange, handleOrderByChange }) => {
   const { search, setSearch } = useLibrary()
-  console.log(search)
   return (
     <Card>
       <CardContent>

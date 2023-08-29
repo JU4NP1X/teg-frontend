@@ -5,7 +5,6 @@ import Documents from '../components/library/Documents'
 import Filters from '../components/library/Filters'
 import Pagination from '../components/library/Pagination'
 import Search from '../components/library/Search'
-import useLibrary from '../hooks/useLibrary'
 
 const data = [
   {
@@ -101,22 +100,7 @@ const data = [
   // Agrega más datos aquí
 ]
 const Library = () => {
-  const { filters, setFilters } = useLibrary()
   const handleSearchChange = (event) => {}
-
-  const handleFilterSearchChange = (event) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      filterSearch: event.target.value,
-    }))
-  }
-
-  const handleOrderByChange = (event) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      orderBy: event.target.value,
-    }))
-  }
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 5
@@ -128,14 +112,10 @@ const Library = () => {
   return (
     <Grid container spacing={2}>
       <Grid item sx={{ display: { xs: 'none', md: 'block' } }} md={3}>
-        <Filters handleFilterSearchChange={handleFilterSearchChange} />
+        <Filters />
       </Grid>
       <Grid item xs={12} md={9}>
-        <Search
-          filters={filters}
-          handleSearchChange={handleSearchChange}
-          handleOrderByChange={handleOrderByChange}
-        />
+        <Search handleSearchChange={handleSearchChange} />
         <Card
           style={{
             marginTop: 10,

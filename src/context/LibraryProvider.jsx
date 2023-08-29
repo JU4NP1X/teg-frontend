@@ -5,6 +5,7 @@ const LibraryContext = createContext()
 const LibraryProvider = ({ children }) => {
   const [apiFilters, setApiFilters] = useState([])
   const [search, setSearch] = useState('')
+  const [filterSearch, setFilterSearch] = useState('')
   const [authorityList, setAuthorityList] = useState([])
   const [selectedAuthority, setSelectedAuthority] = useState(null)
   const [loadingFilters, setLoadingFilters] = useState(false)
@@ -18,7 +19,7 @@ const LibraryProvider = ({ children }) => {
       const api = ApiConnection()
       const data = await api.get('categories/translations/', {
         params: {
-          search: search,
+          search: filterSearch,
           language: 'es',
           ordering: 'name',
           authority: selectedAuthority?.id,
@@ -65,7 +66,7 @@ const LibraryProvider = ({ children }) => {
     return () => {
       abortController.abort()
     }
-  }, [filters.filterSearch, selectedAuthority])
+  }, [filterSearch, selectedAuthority])
 
   useEffect(() => {
     fetchAuthorityList()
@@ -73,6 +74,8 @@ const LibraryProvider = ({ children }) => {
   return (
     <LibraryContext.Provider
       value={{
+        filterSearch,
+        setFilterSearch,
         loadingAuthorities,
         setLoadingAuthorities,
         loadingFilters,
