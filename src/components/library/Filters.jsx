@@ -11,75 +11,19 @@ import {
   ListItem,
   TextField,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import SimpleBar from 'simplebar-react'
-import ApiConnection from '../../utils/apiConnection'
+import useLibrary from '../../hooks/useLibrary'
 
-const Filters = ({ filters, handleFilterSearchChange }) => {
-  const [apiFilters, setApiFilters] = useState([])
-  const [authorityList, setAuthorityList] = useState([])
-  const [selectedAuthority, setSelectedAuthority] = useState(null)
-  const [loadingFilters, setLoadingFilters] = useState(false)
-  const [loadingAuthorities, setLoadingAuthorities] = useState(false)
-
-  const fetchFilters = async (signal) => {
-    try {
-      setLoadingFilters(true)
-      const api = ApiConnection()
-      const data = await api.get('categories/translations/', {
-        params: {
-          search: filters.filterSearch,
-          language: 'es',
-          ordering: 'name',
-          authority: selectedAuthority?.id,
-        },
-        signal,
-      })
-      if (api.status === 200) {
-        setApiFilters(data.results)
-        setLoadingFilters(false)
-      }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        console.log('Búsqueda de filtros cancelada')
-      } else {
-        console.error('Error al obtener los filtros:', error)
-      }
-    }
-  }
-
-  const fetchAuthorityList = async () => {
-    try {
-      setLoadingAuthorities(true)
-      const api = ApiConnection()
-      const data = await api.get('categories/authorities/', {
-        params: {
-          ordering: 'id',
-          excludeCounts: true,
-        },
-      })
-      if (api.status === 200) {
-        setAuthorityList(data.results)
-        setLoadingAuthorities(false)
-      }
-    } catch (error) {
-      console.error('Error al obtener la lista de autoridad:', error)
-    }
-  }
-
-  useEffect(() => {
-    let abortController = new AbortController()
-
-    fetchFilters(abortController.signal)
-
-    return () => {
-      abortController.abort()
-    }
-  }, [filters.filterSearch, selectedAuthority])
-
-  useEffect(() => {
-    fetchAuthorityList()
-  }, [])
+const Filters = ({ handleFilterSearchChange }) => {
+  const {
+    loadingAuthorities,
+    loadingFilters,
+    selectedAuthority,
+    setSelectedAuthority,
+    authorityList,
+    apiFilters,
+  } = useLibrary()
   return (
     <Card>
       <CardHeader title={'Filtrar por categoría'} />
@@ -125,7 +69,6 @@ const Filters = ({ filters, handleFilterSearchChange }) => {
           <TextField
             label={'Buscar categoría'}
             variant={'outlined'}
-            value={filters.filterSearch}
             onChange={handleFilterSearchChange}
             fullWidth
             style={{ marginBottom: '16px' }}

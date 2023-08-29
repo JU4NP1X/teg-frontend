@@ -1,17 +1,19 @@
 import { Edit, FitnessCenter, Sync } from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
+import { blue, red } from '@mui/material/colors'
+import moment from 'moment/moment'
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import TrainStep from './TrainStep'
-import moment from 'moment/moment'
 const esMoment = moment.locale('es')
 
 const data = {
   datasets: [
     {
-      backgroundColor: ['#36A2EB', '#FF6384'],
-      hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+      borderWidth: 1,
+      backgroundColor: [blue[400], red[300]],
+      hoverBackgroundColor: [blue[400], red[300]],
     },
   ],
 }
@@ -19,7 +21,7 @@ const options = {
   plugins: {
     tooltip: {
       titleFont: {
-        size: 5,
+        size: 7,
       },
       bodyFont: {
         size: 10,
@@ -41,7 +43,7 @@ const AuthorityRow = ({
 }) => {
   return (
     <TableRow key={authority.id}>
-    <TableCell sx={{ textAlign: '-webkit-center' }}>
+      <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div
           style={{
             height: 20,
@@ -65,10 +67,7 @@ const AuthorityRow = ({
             options={options}
             data={{
               ...data,
-              labels: [
-                'Categorías con suficientes datos',
-                'Categorías sin datos suficientes',
-              ],
+              labels: ['Categorías con datos', 'Categorías sin datos'],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -82,9 +81,15 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell align={'center'}>{authority.resume.categoryTrainedCount}</TableCell>
-      <TableCell align={'center'}>{authority.resume.deprecatedCategoryTrainedCount}</TableCell>
-      <TableCell align={'center'}>{authority.resume.categoryNotTrainedCount}</TableCell>
+      <TableCell align={'center'}>
+        {authority.resume.categoryTrainedCount}
+      </TableCell>
+      <TableCell align={'center'}>
+        {authority.resume.deprecatedCategoryTrainedCount}
+      </TableCell>
+      <TableCell align={'center'}>
+        {authority.resume.categoryNotTrainedCount}
+      </TableCell>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
@@ -92,10 +97,7 @@ const AuthorityRow = ({
             options={options}
             data={{
               ...data,
-              labels: [
-                'Porcentaje de éxito teórico',
-                'Porcentaje de fracaso teórico',
-              ],
+              labels: ['Porcentaje de éxito', 'Porcentaje de fracaso'],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -116,10 +118,7 @@ const AuthorityRow = ({
             options={options}
             data={{
               ...data,
-              labels: [
-                'Porcentaje de éxito práctico',
-                'Porcentaje de fracaso práctico',
-              ],
+              labels: ['Porcentaje de éxito', 'Porcentaje de fracaso'],
               datasets: [
                 {
                   ...data.datasets[0],

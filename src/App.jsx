@@ -13,6 +13,7 @@ import Profile from './pages/Profile'
 import TagsFinder from './pages/TagsFinder'
 import history from './utils/history'
 import 'moment/locale/es'
+import { LibraryProvider } from './context/LibraryProvider'
 
 Chart.register([Tooltip])
 Chart.register(ArcElement)
@@ -25,7 +26,14 @@ function App() {
           <Routes>
             <Route element={<Layout />}>
               {/* Public Routes */}
-              <Route path={'/'} element={<Library />} />
+              <Route
+                path={'/'}
+                element={
+                  <LibraryProvider>
+                    <Library />
+                  </LibraryProvider>
+                }
+              />
 
               {/* Private Routes */}
               <Route

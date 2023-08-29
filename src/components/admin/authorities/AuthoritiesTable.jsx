@@ -18,7 +18,7 @@ const columns = [
   { label: 'Autoridad', align: 'center' },
   { label: 'Última Fecha de Entrenamiento', align: 'left' },
   { label: 'Datos de Entrenamiento Disponibles', align: 'center' },
-  { label: 'Representación de las categorías', align: 'center' },
+  { label: 'Suficiencia de datos para entrenar', align: 'center' },
   { label: 'Categorías Actualizadas', align: 'center' },
   { label: 'Categorías Obsoletas', align: 'center' },
   { label: 'Nuevas Categorías no Entrenadas', align: 'center' },
@@ -39,7 +39,7 @@ const AuthoritiesTable = ({
   handleUpdateAuthority,
   loading,
   handleSyncAuthority,
-  loadingAction
+  loadingAction,
 }) => {
   return (
     <>

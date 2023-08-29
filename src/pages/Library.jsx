@@ -5,6 +5,7 @@ import Documents from '../components/library/Documents'
 import Filters from '../components/library/Filters'
 import Pagination from '../components/library/Pagination'
 import Search from '../components/library/Search'
+import useLibrary from '../hooks/useLibrary'
 
 const data = [
   {
@@ -100,12 +101,8 @@ const data = [
   // Agrega más datos aquí
 ]
 const Library = () => {
-  const handleSearchChange = (event) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      search: event.target.value,
-    }))
-  }
+  const { filters, setFilters } = useLibrary()
+  const handleSearchChange = (event) => {}
 
   const handleFilterSearchChange = (event) => {
     setFilters((prevFilters) => ({
@@ -121,12 +118,6 @@ const Library = () => {
     }))
   }
 
-  const [filters, setFilters] = useState({
-    orderBy: '',
-    search: '',
-    filterSearch: '',
-  })
-
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 5
 
@@ -134,34 +125,10 @@ const Library = () => {
     setCurrentPage(page)
   }
 
-  const filteredData = data.filter((item) => {
-    return (
-      item.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-      item.description.toLowerCase().includes(filters.search.toLowerCase())
-    )
-  })
-
-  const sortedData = filteredData.sort((a, b) => {
-    if (filters.orderBy === 'title') {
-      return a.title.localeCompare(b.title)
-    } else if (filters.orderBy === 'description') {
-      return a.description.localeCompare(b.description)
-    }
-    return 0
-  })
-
-  const paginatedData = sortedData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
-
   return (
     <Grid container spacing={2}>
       <Grid item sx={{ display: { xs: 'none', md: 'block' } }} md={3}>
-        <Filters
-          filters={filters}
-          handleFilterSearchChange={handleFilterSearchChange}
-        />
+        <Filters handleFilterSearchChange={handleFilterSearchChange} />
       </Grid>
       <Grid item xs={12} md={9}>
         <Search
@@ -181,7 +148,7 @@ const Library = () => {
               }}
             >
               <Documents
-                paginatedData={paginatedData}
+                paginatedData={data}
                 style={{
                   height: 'calc( 100vh - 270px)',
                   backdropFilter: 'blur(5px)',
@@ -191,7 +158,6 @@ const Library = () => {
           </CardContent>
         </Card>
         <Pagination
-          sortedData={sortedData}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           handlePageChange={handlePageChange}

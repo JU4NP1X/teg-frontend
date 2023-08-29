@@ -10,8 +10,11 @@ import {
   TextField,
 } from '@mui/material'
 import React from 'react'
+import useLibrary from '../../hooks/useLibrary'
 
-const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
+const Search = ({ handleSearchChange, handleOrderByChange }) => {
+  const { search, setSearch } = useLibrary()
+  console.log(search)
   return (
     <Card>
       <CardContent>
@@ -21,8 +24,8 @@ const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
               <TextField
                 label={'Buscar'}
                 variant={'outlined'}
-                value={filters.search}
-                onChange={handleSearchChange}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -39,7 +42,7 @@ const Search = ({ filters, handleSearchChange, handleOrderByChange }) => {
                 <Select
                   label={'Ordenar por'}
                   labelId={'order-by-label'}
-                  value={filters.orderBy}
+                  value={'title'}
                   onChange={handleOrderByChange}
                 >
                   <MenuItem value={'title'}>Título</MenuItem>
