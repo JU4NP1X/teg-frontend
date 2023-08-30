@@ -41,12 +41,16 @@ const LoginDialog = ({ open, handleClose }) => {
   const responseGoogle = async (response) => {
     if (response && response.credential) {
       const api = ApiConnection()
-      const user = await api.post('/users/login/google/', {
-        token: response.credential,
+      const data = await api.post('/users/google-login/', {
+        idToken: response.credential,
       })
 
-      if (api.status === 200) setUser(user)
-      else setErrorMessage('Error al autenticar')
+      if (api.status === 200) {
+        setUser(data)
+        handleClose()
+        setSuccessMessage('Sesión iniciada exitosamente')
+      } else setErrorMessage('Credeciales inválidas')
+      setIsRequesting(false)
     }
   }
 
