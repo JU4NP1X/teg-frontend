@@ -38,6 +38,7 @@ const AuthoritiesTable = ({
   handleUpdateAuthority,
   loading,
   handleSyncAuthority,
+  handleTrainAuthority,
   loadingAction,
 }) => {
   return (
