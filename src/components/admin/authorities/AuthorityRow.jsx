@@ -36,7 +36,6 @@ const options = {
 const AuthorityRow = ({
   authority,
   handleDeleteAuthority,
-  handleReTrain,
   handleSyncAuthority,
   handleUpdateAuthority,
   loadingAction,
@@ -182,7 +181,7 @@ const AuthorityRow = ({
             <Button
               variant={'outlined'}
               color={'info'}
-              onClick={handleReTrain}
+              onClick={() => handleTrainAuthority(authority)}
               disabled={
                 authority.status === 'GETTING_DATA' ||
                 authority.status === 'TRAINING' ||

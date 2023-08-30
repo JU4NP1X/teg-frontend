@@ -57,7 +57,7 @@ const Documents = ({ paginatedData, style }) => {
                     WebkitBoxOrient: 'vertical',
                   }}
                 >
-                  {item.description}
+                  {item.summary}
                 </Typography>
                 <Grid
                   container
@@ -70,13 +70,14 @@ const Documents = ({ paginatedData, style }) => {
                     WebkitBoxOrient: 'vertical',
                   }}
                 >
-                  {item.categories.map((category) => (
-                    <Chip
-                      key={category}
-                      label={category}
-                      sx={{ marginRight: '5px' }}
-                    />
-                  ))}
+                  {item.category &&
+                    item.category.map((category) => (
+                      <Chip
+                        key={category.id}
+                        label={category.translation.name}
+                        sx={{ marginRight: '5px' }}
+                      />
+                    ))}
                 </Grid>
               </CardContent>
               <Box
@@ -90,7 +91,7 @@ const Documents = ({ paginatedData, style }) => {
                 <CardMedia
                   component={'img'}
                   height={'50'}
-                  image={item.imageUrl}
+                  src={`data:image/png;base64,${item.img}`}
                   alt={item.title}
                   sx={{ width: '140px', flexShrink: 0 }}
                 />

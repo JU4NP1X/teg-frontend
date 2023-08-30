@@ -35,7 +35,6 @@ const AuthoritiesTable = ({
   handleChangePage,
   handleChangeRowsPerPage,
   handleDeleteAuthority,
-  handleReTrain,
   handleUpdateAuthority,
   loading,
   handleSyncAuthority,
@@ -73,9 +72,9 @@ const AuthoritiesTable = ({
                       key={authority.name}
                       authority={authority}
                       handleDeleteAuthority={handleDeleteAuthority}
-                      handleReTrain={handleReTrain}
                       handleUpdateAuthority={handleUpdateAuthority}
                       handleSyncAuthority={handleSyncAuthority}
+                      handleTrainAuthority={handleTrainAuthority}
                       loadingAction={loadingAction}
                     />
                   ))

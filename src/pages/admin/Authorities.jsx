@@ -118,6 +118,26 @@ const Authorities = () => {
       setLoadingAction(false)
     }
   }
+
+  const handleTrainAuthority = async (authority) => {
+    setLoadingAction(true)
+    try {
+      const api = ApiConnection()
+      await api.post(`/datasets/train/`, { authorities: [authority.id] })
+      if (api.status === 200) {
+        setSuccessMessage('Autoridad sincronizando.')
+        getPageData(false)
+        setLoadingAction(false)
+      } else {
+        setErrorMessage('Error al sincronizar los datos de la autoridad.')
+        setLoadingAction(false)
+      }
+    } catch (error) {
+      console.error(error)
+      setLoadingAction(false)
+    }
+  }
+
   const updateAuthority = async () => {
     try {
       const api = ApiConnection()
@@ -163,10 +183,6 @@ const Authorities = () => {
   const handleUpdateAuthority = (authority) => {
     setAuthority(authority)
     setOpenAuthorityModal(true)
-  }
-
-  const handleReTrain = () => {
-    // Implementar lógica para activar/desactivar autoridad
   }
 
   const getPageData = (isRefresh = false) => {
@@ -231,10 +247,10 @@ const Authorities = () => {
             handleChangeRowsPerPage={handleChangeRowsPerPage}
             handleDeleteAuthority={handleDeleteAuthority}
             handleUpdateAuthority={handleUpdateAuthority}
-            handleReTrain={handleReTrain}
             loading={loading}
             loadingAction={loadingAction}
             handleSyncAuthority={handleSyncAuthority}
+            handleTrainAuthority={handleTrainAuthority}
           />
 
           <ConfirmationDialog

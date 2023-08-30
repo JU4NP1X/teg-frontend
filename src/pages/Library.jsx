@@ -1,5 +1,10 @@
-import { Card, CardContent, Grid, Pagination } from '@mui/material'
-import { useState } from 'react'
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Pagination,
+} from '@mui/material'
 import SimpleBar from 'simplebar-react/dist'
 import Documents from '../components/library/Documents'
 import Filters from '../components/library/Filters'
@@ -8,7 +13,8 @@ import useLibrary from '../hooks/useLibrary'
 
 const Library = () => {
   const handleSearchChange = (event) => {}
-  const {documents, currentPage, setCurrentPage} = useLibrary()
+  const { documents, currentPage, setCurrentPage, loadingDocuments } =
+    useLibrary()
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page)
@@ -21,33 +27,45 @@ const Library = () => {
       </Grid>
       <Grid item xs={12} md={9}>
         <Search handleSearchChange={handleSearchChange} />
-        <Card
-          style={{
-            marginTop: 10,
-          }}
-        >
+        <Card style={{ marginTop: 10 }}>
           <CardContent>
-            <SimpleBar
-              style={{
-                height: 'calc(100vh - 310px)',
-              }}
-            >
-              <Documents
-                paginatedData={documents.results}
-                style={{
-                  height: 'calc( 100vh - 270px)',
-                  backdropFilter: 'blur(5px)',
-                }}
-              />
-            </SimpleBar>
+            <div style={{ border: '1px solid #ccc', borderRadius: 4 }}>
+              {loadingDocuments ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 'calc(100vh - 312px)',
+                  }}
+                >
+                  <CircularProgress color={'primary'} />
+                </div>
+              ) : (
+                <SimpleBar
+                  style={{
+                    height: 'calc(100vh - 312px)',
+                  }}
+                >
+                  <Documents
+                    paginatedData={documents.results}
+                    loading={loadingDocuments}
+                  />
+                </SimpleBar>
+              )}
+            </div>
           </CardContent>
         </Card>
-        <Pagination
-          defaultPage={1}
-          page={currentPage}
-          count={Math.ceil(documents.count/20)}
-          handlePageChange={handlePageChange}
-        />
+        <div
+          style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}
+        >
+          <Pagination
+            defaultPage={1}
+            page={currentPage}
+            count={Math.ceil(documents.count / 20)}
+            onChange={handlePageChange}
+          />
+        </div>
       </Grid>
     </Grid>
   )

@@ -19,6 +19,7 @@ const LibraryProvider = ({ children }) => {
   const [authorityList, setAuthorityList] = useState([])
   const [selectedAuthority, setSelectedAuthority] = useState(null)
   const [loadingFilters, setLoadingFilters] = useState(false)
+  const [loadingDocuments, setLoadingDocuments] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
 
   const fetchFilters = async (signal) => {
@@ -31,13 +32,15 @@ const LibraryProvider = ({ children }) => {
           language: 'es',
           ordering: 'name',
           authority: selectedAuthority?.id,
+          exclude: selectedFilters.map(({ id }) => id).toString(),
+          limit: 100 - selectedFilters.length,
         },
         signal,
       })
       if (api.status === 200) {
         setApiFilters(data.results)
         setLoadingFilters(false)
-      }
+      } else setLoadingFilters(false)
     } catch (error) {
       if (error.name === 'AbortError') {
         console.log('Búsqueda de filtros cancelada')
@@ -49,18 +52,24 @@ const LibraryProvider = ({ children }) => {
 
   const fetchDocuments = async (signal) => {
     try {
-      setLoadingFilters(true)
+      setLoadingDocuments(true)
       const api = ApiConnection()
       const data = await api.get('documents/list/', {
         params: {
           search: search,
           limit: 20,
+          categories: selectedFilters
+            .map(({ category }) => category)
+            .toString(),
+          limit: 20,
+          offset: (currentPage - 1) * 20,
         },
         signal,
       })
       if (api.status === 200) {
+        if (!data.count) setCurrentPage(1)
         setDocuments(data)
-        setLoadingFilters(false)
+        setLoadingDocuments(false)
       }
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -103,6 +112,10 @@ const LibraryProvider = ({ children }) => {
   useEffect(() => {
     fetchAuthorityList()
   }, [])
+
+  useEffect(() => {
+    fetchDocuments()
+  }, [search, selectedFilters, currentPage])
   return (
     <LibraryContext.Provider
       value={{
@@ -126,6 +139,8 @@ const LibraryProvider = ({ children }) => {
         setDocuments,
         currentPage,
         setCurrentPage,
+        loadingDocuments,
+        setLoadingDocuments,
       }}
     >
       {children}

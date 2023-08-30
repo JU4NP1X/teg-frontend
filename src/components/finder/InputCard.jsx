@@ -55,7 +55,7 @@ const InputCard = () => {
                 return (
                   <TextValidator
                     {...params}
-                    label={'Lista de autoridad emisora'}
+                    label={'Lista de autoridad'}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
                     value={authority}

@@ -25,7 +25,16 @@ const Filters = () => {
     setSelectedAuthority,
     authorityList,
     apiFilters,
+    setApiFilters,
+    selectedFilters,
+    setSelectedFilters,
   } = useLibrary()
+  const handleFilterChange = (filter) => {
+    let index = selectedFilters.indexOf(filter)
+    if (index === -1) setSelectedFilters([...selectedFilters, filter])
+    else
+      setSelectedFilters(selectedFilters.filter(({ id }) => id !== filter.id))
+  }
   return (
     <Card>
       <CardHeader title={'Filtrar por categoría'} />
@@ -44,7 +53,7 @@ const Filters = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={'Lista de autoridad emisora'}
+                label={'Lista de autoridad'}
                 value={params.InputProps.value}
                 InputProps={{
                   ...params.InputProps,
@@ -76,7 +85,11 @@ const Filters = () => {
           />
         </FormControl>
         <SimpleBar
-          style={{ height: 'calc(100vh - 382px)', border: '1px solid #ccc' }}
+          style={{
+            height: 'calc(100vh - 382px)',
+            border: '1px solid #ccc',
+            borderRadius: 4,
+          }}
         >
           <List>
             {loadingFilters ? (
@@ -92,10 +105,20 @@ const Filters = () => {
                 <CircularProgress />
               </div>
             ) : (
-              apiFilters.map((filter) => (
+              [
+                ...selectedFilters,
+                ...apiFilters.filter(
+                  (filter) => !selectedFilters.includes(filter)
+                ),
+              ].map((filter) => (
                 <ListItem key={filter.id}>
                   <FormControlLabel
-                    control={<Checkbox />}
+                    control={
+                      <Checkbox
+                        checked={selectedFilters.includes(filter)}
+                        onChange={() => handleFilterChange(filter)}
+                      />
+                    }
                     label={filter.name}
                   />
                 </ListItem>
