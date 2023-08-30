@@ -84,7 +84,7 @@ const AuthorityDialog = ({
             type={'submit'}
             color={'primary'}
           >
-            Agregar
+            {!authority.id ? 'Agregar' : 'Guardar'}
           </Button>
         </DialogActions>
       </ValidatorForm>

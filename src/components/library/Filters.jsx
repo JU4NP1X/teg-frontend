@@ -37,10 +37,6 @@ const Filters = () => {
             options={authorityList}
             loading={loadingAuthorities}
             value={selectedAuthority}
-            onInputChange={(event, value) => {
-              console.log(value)
-              setSelectedAuthority(value)
-            }}
             onChange={(event, value) => {
               console.log(value)
               setSelectedAuthority(value)

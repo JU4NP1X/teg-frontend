@@ -1,8 +1,18 @@
 import React, { createContext, useEffect, useState } from 'react'
 import ApiConnection from '../utils/apiConnection'
 
+const documentsTemplate = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: [],
+}
+
 const LibraryContext = createContext()
 const LibraryProvider = ({ children }) => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [documents, setDocuments] = useState(documentsTemplate)
+  const [selectedFilters, setSelectedFilters] = useState([])
   const [apiFilters, setApiFilters] = useState([])
   const [search, setSearch] = useState('')
   const [filterSearch, setFilterSearch] = useState('')
@@ -10,8 +20,6 @@ const LibraryProvider = ({ children }) => {
   const [selectedAuthority, setSelectedAuthority] = useState(null)
   const [loadingFilters, setLoadingFilters] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
-
-  const [filters, setFilters] = useState([])
 
   const fetchFilters = async (signal) => {
     try {
@@ -28,6 +36,30 @@ const LibraryProvider = ({ children }) => {
       })
       if (api.status === 200) {
         setApiFilters(data.results)
+        setLoadingFilters(false)
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('Búsqueda de filtros cancelada')
+      } else {
+        console.error('Error al obtener los filtros:', error)
+      }
+    }
+  }
+
+  const fetchDocuments = async (signal) => {
+    try {
+      setLoadingFilters(true)
+      const api = ApiConnection()
+      const data = await api.get('documents/list/', {
+        params: {
+          search: search,
+          limit: 20,
+        },
+        signal,
+      })
+      if (api.status === 200) {
+        setDocuments(data)
         setLoadingFilters(false)
       }
     } catch (error) {
@@ -86,10 +118,14 @@ const LibraryProvider = ({ children }) => {
         setAuthorityList,
         apiFilters,
         setApiFilters,
-        filters,
-        setFilters,
+        selectedFilters,
+        setSelectedFilters,
         search,
         setSearch,
+        documents,
+        setDocuments,
+        currentPage,
+        setCurrentPage,
       }}
     >
       {children}

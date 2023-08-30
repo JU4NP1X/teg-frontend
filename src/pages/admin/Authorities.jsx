@@ -73,9 +73,7 @@ const Authorities = () => {
       await api.post('/categories/authorities/', authority)
       setAuthority(authorityTemplate)
       setOpenAuthorityModal(false)
-      if (refresh !== 'NONE') {
-        fetchAuthorities(abortController.signal)
-      }
+      getPageData(false)
     } catch (error) {
       console.error(error)
     }
@@ -88,7 +86,7 @@ const Authorities = () => {
       await api.delete(`/categories/authorities/${authorityToDelete.id}/`)
       setAuthorityToDelete(null)
       setOpenConfirmation(false)
-      setRefresh(true)
+      getPageData(false)
       if (api.status === 200) {
         setSuccessMessage('Autoridad eliminada.')
         setLoadingAction(false)
@@ -109,7 +107,7 @@ const Authorities = () => {
       await api.post(`/datasets/sync/`, { authorities: [authority.id] })
       if (api.status === 200) {
         setSuccessMessage('Autoridad sincronizando.')
-        setRefresh(true)
+        getPageData(false)
         setLoadingAction(false)
       } else {
         setErrorMessage('Error al sincronizar los datos de la autoridad.')
