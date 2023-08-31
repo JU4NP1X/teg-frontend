@@ -2,7 +2,13 @@ import { CheckCircleOutline } from '@mui/icons-material'
 import { CircularProgress } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 
-const FileUploader = ({ buttonText, fileTypes, onFileUpload, isLoading }) => {
+const FileUploader = ({
+  buttonText,
+  fileTypes,
+  onFileUpload,
+  isLoading,
+  loadingFile,
+}) => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState(null)
@@ -38,9 +44,9 @@ const FileUploader = ({ buttonText, fileTypes, onFileUpload, isLoading }) => {
   }
 
   useEffect(() => {
-    isLoading(loading)
+    if (isLoading) isLoading(loading)
   }, [loading])
-
+  console.log({ loadingFile })
   return (
     <div>
       <div
@@ -60,7 +66,7 @@ const FileUploader = ({ buttonText, fileTypes, onFileUpload, isLoading }) => {
           fileInputRef.current.click()
         }}
       >
-        {loading ? (
+        {loading || loadingFile ? (
           <CircularProgress />
         ) : uploadedFileName ? (
           <>

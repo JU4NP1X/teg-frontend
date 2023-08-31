@@ -1,19 +1,20 @@
 import { ArcElement, Chart, Tooltip } from 'chart.js'
+import 'moment/locale/es'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import CustomRouter from './components/common/CustomRouter'
 import Layout from './components/layout/Layout'
 import { AuthProvider } from './context/AuthProvider'
+import { AuthoritiesProvider } from './context/AuthoritiesProvider'
 import { ClassifierProvider } from './context/ClassifierProvider'
+import { LibraryProvider } from './context/LibraryProvider'
 import { NotificationProvider } from './context/NotificationProvider'
-import Authorities from './pages/admin/Authorities'
-import Users from './pages/admin/Users'
+import Classifier from './pages/Classifier'
 import Library from './pages/Library'
 import Profile from './pages/Profile'
-import TagsFinder from './pages/TagsFinder'
+import Authorities from './pages/admin/Authorities'
+import Users from './pages/admin/Users'
 import history from './utils/history'
-import 'moment/locale/es'
-import { LibraryProvider } from './context/LibraryProvider'
 
 Chart.register([Tooltip])
 Chart.register(ArcElement)
@@ -40,12 +41,19 @@ function App() {
                 path={'/classify'}
                 element={
                   <ClassifierProvider>
-                    <TagsFinder />
+                    <Classifier />
                   </ClassifierProvider>
                 }
               />
               <Route path={'/admin/profile'} element={<Profile />} />
-              <Route path={'/admin/authorities'} element={<Authorities />} />
+              <Route
+                path={'/admin/authorities'}
+                element={
+                  <AuthoritiesProvider>
+                    <Authorities />
+                  </AuthoritiesProvider>
+                }
+              />
               <Route path={'/admin/users'} element={<Users />} />
             </Route>
           </Routes>

@@ -5,8 +5,8 @@ import { blue, red } from '@mui/material/colors'
 import moment from 'moment/moment'
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
-import TrainStep from './TrainStep'
 import CountUp from 'react-countup'
+import TrainStep from './TrainStep'
 const esMoment = moment.locale('es')
 
 const data = {
@@ -38,10 +38,10 @@ const AuthorityRow = ({
   authority,
   handleDeleteAuthority,
   handleSyncAuthority,
+  handleTrainAuthority,
   handleUpdateAuthority,
   loadingAction,
 }) => {
-  console.log(authority.resume.datasetsCount)
   return (
     <TableRow key={authority.id}>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
@@ -61,7 +61,11 @@ const AuthorityRow = ({
         {moment(authority.lastTrainingDate).locale('ve').format('LL hh:mm A')}
       </TableCell>
       <TableCell align={'center'}>
-        <CountUp separator=" " end={authority.resume.datasetsCount} preserveValue={true}  />
+        <CountUp
+          separator=" "
+          end={authority.resume.datasetsCount}
+          preserveValue={true}
+        />
       </TableCell>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
@@ -85,13 +89,25 @@ const AuthorityRow = ({
         </div>
       </TableCell>
       <TableCell align={'center'}>
-        <CountUp separator=" " end={authority.resume.categoryTrainedCount} preserveValue={true} />
+        <CountUp
+          separator=" "
+          end={authority.resume.categoryTrainedCount}
+          preserveValue={true}
+        />
       </TableCell>
       <TableCell align={'center'}>
-        <CountUp separator=" " end={authority.resume.deprecatedCategoryTrainedCount} preserveValue={true} />
+        <CountUp
+          separator=" "
+          end={authority.resume.deprecatedCategoryTrainedCount}
+          preserveValue={true}
+        />
       </TableCell>
       <TableCell align={'center'}>
-        <CountUp separator=" " end={authority.resume.categoryNotTrainedCount}preserveValue={true}  />
+        <CountUp
+          separator=" "
+          end={authority.resume.categoryNotTrainedCount}
+          preserveValue={true}
+        />
       </TableCell>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>

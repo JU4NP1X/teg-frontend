@@ -11,7 +11,7 @@ const documentsTemplate = {
 const LibraryContext = createContext()
 const LibraryProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [documents, setDocuments] = useState(documentsTemplate)
+  const [documents, setDocs] = useState(documentsTemplate)
   const [selectedFilters, setSelectedFilters] = useState([])
   const [apiFilters, setApiFilters] = useState([])
   const [search, setSearch] = useState('')
@@ -67,7 +67,7 @@ const LibraryProvider = ({ children }) => {
       })
       if (api.status === 200) {
         if (!data.count) setCurrentPage(1)
-        setDocuments(data)
+        setDocs(data)
         setLoadingDocuments(false)
       }
     } catch (error) {
@@ -135,7 +135,7 @@ const LibraryProvider = ({ children }) => {
         search,
         setSearch,
         documents,
-        setDocuments,
+        setDocs,
         currentPage,
         setCurrentPage,
         loadingDocuments,

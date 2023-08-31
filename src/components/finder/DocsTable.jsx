@@ -31,6 +31,7 @@ const columns = [
 
 const AuthoritiesTable = ({}) => {
   const {
+    deleteAuthority,
     setAuthority,
     setOpenAuthorityModal,
     setAuthorityToDelete,
@@ -49,6 +50,15 @@ const AuthoritiesTable = ({}) => {
   const handleDeleteAuthority = (authority) => {
     setAuthorityToDelete(authority)
     setOpenConfirmation(true)
+  }
+
+  const handleConfirmDelete = () => {
+    deleteAuthority()
+  }
+
+  const handleCancelDelete = () => {
+    setAuthorityToDelete(null)
+    setOpenConfirmation(false)
   }
 
   const handleChangePage = (event, newPage) => {

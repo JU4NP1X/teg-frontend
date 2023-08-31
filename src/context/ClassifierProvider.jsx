@@ -3,15 +3,23 @@ import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
 
 const ClassifierContext = createContext()
+
+const documentTemplate = {
+  title: '',
+  summary: '',
+  categories: [],
+  pdf: '',
+  img: '',
+}
 const ClassifierProvider = ({ children }) => {
   const { setErrorMessage } = useNotification()
+  const [showTable, setShowTable] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
   const [authorities, setAuthorities] = useState([])
-  const [authority, setAuthority] = useState(null)
-  const [title, setTitle] = useState('')
-  const [summary, setSummary] = useState('')
   const [categories, setCategories] = useState([])
+  const [authority, setAuthority] = useState(null)
+  const [doc, setDoc] = useState(documentTemplate)
 
   const getAuthorityList = async () => {
     setLoadingAuthorities(true)
@@ -31,13 +39,16 @@ const ClassifierProvider = ({ children }) => {
     setLoadingCategories(true)
     const api = ApiConnection()
     const data = await api.post('/categories/classify/', {
-      title,
-      summary,
+      title: document.titleImg,
+      summary: document.summaryImg,
       authority: authority && authority.id ? authority.id : undefined,
     })
     if (api.status === 200) {
       addExpandNSelectedOptions(data.results, true)
-      setCategories(data.results)
+      setCategories([
+        ...categories,
+        ...data.filter((category) => !categories.includes(category)),
+      ])
     } else setErrorMessage('Error al clasificar el texto.')
     setLoadingCategories(false)
   }
@@ -59,16 +70,16 @@ const ClassifierProvider = ({ children }) => {
       value={{
         loadingAuthorities,
         authorities,
-        title,
-        setTitle,
-        summary,
-        setSummary,
-        categories,
-        setCategories,
         classify,
         loadingCategories,
         authority,
         setAuthority,
+        doc,
+        setDoc,
+        categories,
+        setCategories,
+        showTable,
+        setShowTable,
       }}
     >
       {children}

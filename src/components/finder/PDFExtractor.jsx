@@ -9,12 +9,13 @@ import Slide from '@mui/material/Slide'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { ValidatorForm } from 'react-material-ui-form-validator'
 import { pdfjs } from 'react-pdf'
 import SimpleBar from 'simplebar-react'
+import useClassifier from '../../hooks/useClassifier'
 import ApiConnection from '../../utils/apiConnection'
 import FileUploader from '../common/FileUploader'
 
@@ -29,12 +30,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction={'up'} ref={ref} {...props} />
 })
 
-const PDFExtractor = ({
-  open,
-  onClose,
-  handleFileExtracted,
-  handleTextExtracted,
-}) => {
+const PDFExtractor = ({ open, onClose }) => {
+  const { doc, setDoc } = useClassifier()
   const [base64PdfFile, setBase64PdfFile] = useState(null)
   const [selectedPages, setSelectedPages] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -117,7 +114,6 @@ const PDFExtractor = ({
     const scaleY = image.height / 100
     canvas.width = crop.width * scaleX
     canvas.height = crop.height * scaleY
-    console.log({ crop })
     const ctx = canvas.getContext('2d')
 
     ctx.drawImage(
@@ -156,11 +152,15 @@ const PDFExtractor = ({
   }
 
   const handleFinish = async () => {
-    const text = await extractText()
-    if (handleTextExtracted) handleTextExtracted(text)
-    if (handleFileExtracted) handleFileExtracted(base64PdfFile)
+    const { title, summary } = await extractText()
     closeDialog()
+    setDoc({ ...doc, title, summary, pdf: base64PdfFile })
   }
+
+  useEffect(() => {
+    if (open && doc.pdf) handleUpload(doc.pdf)
+    console.log(doc)
+  }, [open, doc.pdf])
 
   return (
     <Dialog
@@ -198,7 +198,7 @@ const PDFExtractor = ({
           {step === 0 && (
             <FileUploader
               buttonText={'Haz click o arrastra un .pdf a clasificar'}
-              isLoading={() => {}}
+              loadingFile={updatingFile}
               fileTypes={['.pdf']}
               onFileUpload={handleUpload}
             />

@@ -8,32 +8,50 @@ import {
 } from '@mui/material'
 import React from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import useAuthorities from '../../../hooks/useAuthorities'
 import FileUploader from '../../common/FileUploader'
 
-const AuthorityDialog = ({
-  open,
-  onClose,
-  onSubmit,
-  authority,
-  setAuthority,
-  authorityTemplate,
-  setLoadingFile,
-}) => {
+const authorityTemplate = {
+  name: '',
+  color: null,
+  active: true,
+}
+
+const AuthorityDialog = ({}) => {
+  const {
+    addAuthority,
+    authority,
+    setAuthority,
+    setOpenAuthorityModal,
+    setLoadingFile,
+    updateAuthority,
+    openAuthorityModal,
+  } = useAuthorities()
   const handleCancel = () => {
     setAuthority(authorityTemplate)
     onClose()
   }
-
+  const onClose = () => {
+    setAuthority({})
+    setOpenAuthorityModal(false)
+  }
+  const handleAddAuthority = () => {
+    if (authority.id) {
+      updateAuthority()
+    } else {
+      addAuthority()
+    }
+  }
   return (
     <Dialog
-      open={open}
+      open={openAuthorityModal}
       onClose={handleCancel}
       aria-labelledby={'form-dialog-title'}
     >
       <DialogTitle id={'form-dialog-title'}>
         {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
       </DialogTitle>
-      <ValidatorForm onSubmit={onSubmit}>
+      <ValidatorForm onSubmit={handleAddAuthority}>
         <DialogContent>
           <DialogContentText>
             Por favor, ingresa el nombre y las categorías de la nueva autoridad.
