@@ -61,7 +61,6 @@ const LibraryProvider = ({ children }) => {
           categories: selectedFilters
             .map(({ category }) => category)
             .toString(),
-          limit: 20,
           offset: (currentPage - 1) * 20,
         },
         signal,

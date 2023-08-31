@@ -26,7 +26,6 @@
     "http-proxy-middleware": "^2.0.6",
     "js-file-download": "^0.4.12",
     "moment": "^2.29.4",
-    "mui-file-dropzone": "^4.0.2",
     "node": "^19.7.0",
     "on-headers": "^1.0.2",
     "powerbi-client": "^2.22.2",
@@ -48,7 +47,6 @@
     "react-router-dom": "^6.8.1",
     "react-tailwindcss-datepicker": "^1.5.1",
     "simplebar-react": "^3.2.4",
-    "vite-plugin-pwa": "^0.15.1",
     "workbox-window": "^6.5.4"
   },
   "devDependencies": {

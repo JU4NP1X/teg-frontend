@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import CountUp from 'react-countup'
 
 const CircularProgressWithLabel = (props) => {
   return (
@@ -24,7 +25,7 @@ const CircularProgressWithLabel = (props) => {
           component={'div'}
           color={'text.secondary'}
         >
-          {props.label}
+          <CountUp separator=" " end={props.label} preserveValue={true} /> %
         </Typography>
       </Box>
     </Box>

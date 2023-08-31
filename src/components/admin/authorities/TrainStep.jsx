@@ -39,7 +39,7 @@ const TrainStep = ({ progress, status }) => {
         {(status === 'TRAINING' || status === 'GETTING_DATA') && (
           <CircularProgressWithLabel
             value={progress}
-            label={`${progress}`.slice(0, 3) + '%'}
+            label={progress}
             color={getStatusColor(status)}
           />
         )}

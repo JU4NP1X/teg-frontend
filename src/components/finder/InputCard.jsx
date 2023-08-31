@@ -41,7 +41,7 @@ const InputCard = () => {
           <FormControl
             size={'small'}
             fullWidth
-            style={{ height: 'calc(100vh - 250px)' }}
+            style={{ height: 'calc(100vh - 270px)' }}
           >
             <Autocomplete
               getOptionLabel={({ name }) => name}

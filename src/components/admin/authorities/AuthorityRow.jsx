@@ -6,6 +6,7 @@ import moment from 'moment/moment'
 import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import TrainStep from './TrainStep'
+import CountUp from 'react-countup'
 const esMoment = moment.locale('es')
 
 const data = {
@@ -40,6 +41,7 @@ const AuthorityRow = ({
   handleUpdateAuthority,
   loadingAction,
 }) => {
+  console.log(authority.resume.datasetsCount)
   return (
     <TableRow key={authority.id}>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
@@ -58,7 +60,9 @@ const AuthorityRow = ({
       <TableCell>
         {moment(authority.lastTrainingDate).locale('ve').format('LL hh:mm A')}
       </TableCell>
-      <TableCell align={'center'}>{authority.resume.datasetsCount}</TableCell>
+      <TableCell align={'center'}>
+        <CountUp separator=" " end={authority.resume.datasetsCount} preserveValue={true}  />
+      </TableCell>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
@@ -81,13 +85,13 @@ const AuthorityRow = ({
         </div>
       </TableCell>
       <TableCell align={'center'}>
-        {authority.resume.categoryTrainedCount}
+        <CountUp separator=" " end={authority.resume.categoryTrainedCount} preserveValue={true} />
       </TableCell>
       <TableCell align={'center'}>
-        {authority.resume.deprecatedCategoryTrainedCount}
+        <CountUp separator=" " end={authority.resume.deprecatedCategoryTrainedCount} preserveValue={true} />
       </TableCell>
       <TableCell align={'center'}>
-        {authority.resume.categoryNotTrainedCount}
+        <CountUp separator=" " end={authority.resume.categoryNotTrainedCount}preserveValue={true}  />
       </TableCell>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
