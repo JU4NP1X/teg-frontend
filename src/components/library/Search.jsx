@@ -4,18 +4,15 @@ import {
   CardContent,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
-  TextField,
 } from '@mui/material'
 import React, { useState } from 'react'
-import useLibrary from '../../hooks/useLibrary'
 import {
   SelectValidator,
   TextValidator,
   ValidatorForm,
 } from 'react-material-ui-form-validator'
+import useLibrary from '../../hooks/useLibrary'
 
 const Search = ({ handleSearchChange, handleOrderByChange }) => {
   const { setSearch } = useLibrary()
@@ -39,7 +36,7 @@ const Search = ({ handleSearchChange, handleOrderByChange }) => {
               <Grid item xs={3}>
                 <SelectValidator
                   label={'Ordenar por'}
-                  labelId={'order-by-label'}
+                  labelid={'order-by-label'}
                   value={'title'}
                   onChange={handleOrderByChange}
                   fullWidth

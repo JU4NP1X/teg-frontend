@@ -43,6 +43,17 @@ const Filters = () => {
           <Autocomplete
             id={'controllable-states-demo'}
             getOptionLabel={({ name }) => name}
+            renderOption={(props, { name, color }) => {
+              return (
+                <li {...props}>
+                  <span
+                    className={'dot'}
+                    style={{ backgroundColor: color, marginTop: -2 }}
+                  />
+                  {name}
+                </li>
+              )
+            }}
             options={authorityList}
             loading={loadingAuthorities}
             value={selectedAuthority}
@@ -119,7 +130,19 @@ const Filters = () => {
                         onChange={() => handleFilterChange(filter)}
                       />
                     }
-                    label={filter.name}
+                    label={
+                      <div
+                        style={{
+                          display: 'flex',
+                        }}
+                      >
+                        <span
+                          className={'dot'}
+                          style={{ backgroundColor: filter.authority.color }}
+                        />
+                        {filter.name}
+                      </div>
+                    }
                   />
                 </ListItem>
               ))

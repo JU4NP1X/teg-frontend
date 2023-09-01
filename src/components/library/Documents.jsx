@@ -74,7 +74,21 @@ const Documents = ({ paginatedData, style }) => {
                     item.category.map((category) => (
                       <Chip
                         key={category.id}
-                        label={category.translation.name}
+                        label={
+                          <div
+                            style={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            <span
+                              className={'dot'}
+                              style={{
+                                backgroundColor: category.authority.color,
+                                height: 2,
+                                marginTop: 0,
+                              }}
+                            />
+                            {category.translation.name}
+                          </div>
+                        }
                         sx={{ marginRight: '5px' }}
                       />
                     ))}

@@ -61,6 +61,14 @@ const ClassifierProvider = ({ children }) => {
     setLoadingDocs(false)
   }
 
+  const getDoc = async (doc) => {
+    const api = ApiConnection()
+    const data = await api.get(`/documents/list/${doc.id}/`)
+    if (api.status === 200) {
+      setDoc(data)
+    }
+  }
+
   const classify = async () => {
     setLoadingCategories(true)
     const api = ApiConnection()
@@ -117,6 +125,7 @@ const ClassifierProvider = ({ children }) => {
         setLoadingDocs,
         page,
         setPage,
+        getDoc,
       }}
     >
       {children}

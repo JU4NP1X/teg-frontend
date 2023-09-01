@@ -32,8 +32,8 @@ const AuthorityDialog = ({}) => {
     onClose()
   }
   const onClose = () => {
-    setAuthority({})
     setOpenAuthorityModal(false)
+    setAuthority({})
   }
   const handleAddAuthority = () => {
     if (authority.id) {
@@ -67,6 +67,7 @@ const AuthorityDialog = ({}) => {
             onChange={(e) =>
               setAuthority({ ...authority, name: e.target.value })
             }
+            disabled={authority.native}
             validators={['required']}
             errorMessages={['Este campo es requerido']}
           />
@@ -85,15 +86,16 @@ const AuthorityDialog = ({}) => {
             validators={['required']}
             errorMessages={['Este campo es requerido']}
           />
-
-          <FileUploader
-            buttonText={'Haz click o arrastra un .csv con las categorías'}
-            isLoading={setLoadingFile}
-            fileTypes={['.csv']}
-            onFileUpload={(file) =>
-              setAuthority({ ...authority, csvFile: file })
-            }
-          />
+          {!authority.native && (
+            <FileUploader
+              buttonText={'Haz click o arrastra un .csv con las categorías'}
+              isLoading={setLoadingFile}
+              fileTypes={['.csv']}
+              onFileUpload={(file) =>
+                setAuthority({ ...authority, csvFile: file })
+              }
+            />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancelar</Button>

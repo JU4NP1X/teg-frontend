@@ -1,22 +1,22 @@
-import React, { useContext } from 'react'
+import { Add, Delete, Edit } from '@mui/icons-material'
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Paper,
-  CircularProgress,
   TablePagination,
-  Button,
-  Card,
-  CardHeader,
-  CardContent,
+  TableRow,
 } from '@mui/material'
-import useClassifier from '../../hooks/useClassifier'
+import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
-import { Add, Delete, Edit } from '@mui/icons-material'
+import useClassifier from '../../hooks/useClassifier'
 
 const documentTemplate = {
   title: '',
@@ -35,9 +35,9 @@ const titles = [
 ]
 
 const DocsTable = () => {
-  const { docs, loadingDocs, page, setPage, setDoc, setShowTable } =
+  const { docs, loadingDocs, page, setPage, setDoc, setShowTable, getDoc } =
     useClassifier()
-
+  const [disableButtons, setDisableButtons] = useState(false)
   const getBase64Image = (base64String) => {
     return `data:image/png;base64,${base64String}`
   }
@@ -50,22 +50,25 @@ const DocsTable = () => {
         title={'Documentos'}
         action={
           <Button
+            disabled={disableButtons}
             variant={'outlined'}
             size={'small'}
             color={'primary'}
             onClick={() => {
+              setDisableButtons(true)
               setDoc(documentTemplate)
               setShowTable(false)
+              setDisableButtons(false)
             }}
           >
             <Add />
           </Button>
         }
       />
-      <CardContent>
+      <CardContent style={{ paddingBottom: 0 }}>
         <TableContainer component={Paper}>
           <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
-            <Table>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   {titles.map((title, index) => (
@@ -82,7 +85,11 @@ const DocsTable = () => {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} align={'center'}>
+                    <TableCell
+                      colSpan={titles.length}
+                      align={'center'}
+                      style={{ height: 'calc(100vh - 280px)' }}
+                    >
                       <CircularProgress />
                     </TableCell>
                   </TableRow>
@@ -101,6 +108,13 @@ const DocsTable = () => {
                       <TableCell>{item.authors}</TableCell>
                       <TableCell align={'right'}>
                         <Button
+                          disabled={disableButtons}
+                          onClick={async () => {
+                            setDisableButtons(true)
+                            await getDoc(item)
+                            setShowTable(false)
+                            setDisableButtons(false)
+                          }}
                           variant={'outlined'}
                           size={'small'}
                           color={'success'}
@@ -109,6 +123,7 @@ const DocsTable = () => {
                           <Edit />
                         </Button>
                         <Button
+                          disabled={disableButtons}
                           variant={'outlined'}
                           size={'small'}
                           color={'primary'}
@@ -123,15 +138,15 @@ const DocsTable = () => {
               </TableBody>
             </Table>
           </SimpleBar>
-          <TablePagination
-            component={'div'}
-            count={docs.count}
-            page={page}
-            onPageChange={(event, newPage) => setPage(newPage)}
-            rowsPerPage={20}
-            rowsPerPageOptions={[]}
-          />
         </TableContainer>
+        <TablePagination
+          component={'div'}
+          count={docs.count}
+          page={page}
+          onPageChange={(event, newPage) => setPage(newPage)}
+          rowsPerPage={20}
+          rowsPerPageOptions={[]}
+        />
       </CardContent>
     </Card>
   )

@@ -1,5 +1,4 @@
-import { Edit, FitnessCenter, Sync } from '@mui/icons-material'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Delete, Edit, FitnessCenter, Sync } from '@mui/icons-material'
 import { Button, TableCell, TableRow } from '@mui/material'
 import { blue, red } from '@mui/material/colors'
 import moment from 'moment/moment'
@@ -52,7 +51,7 @@ const AuthorityRow = ({
             backgroundColor: authority.color,
             borderRadius: 3,
           }}
-        ></div>
+        />
       </TableCell>
       <TableCell align={'center'}>
         <b>{authority.name}</b>
@@ -216,7 +215,7 @@ const AuthorityRow = ({
               onClick={() => handleDeleteAuthority(authority)}
               sx={{ ml: 1 }}
             >
-              <DeleteIcon />
+              <Delete />
             </Button>
           </div>
         </div>

@@ -23,7 +23,6 @@ const Authorities = () => {
     setAuthorityToDelete(null)
     setOpenConfirmation(false)
   }
-  console.log({ openConfirmation })
   return (
     <div>
       <Card sx={{ pb: 0 }}>

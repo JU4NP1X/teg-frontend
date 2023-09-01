@@ -46,38 +46,47 @@ const InputCard = () => {
             >
               <Autocomplete
                 getOptionLabel={({ name }) => name}
+                renderOption={(props, { name, color }) => {
+                  return (
+                    <li {...props}>
+                      <span
+                        className={'dot'}
+                        style={{ backgroundColor: color, marginTop: -2 }}
+                      />
+                      {name}
+                    </li>
+                  )
+                }}
                 options={authorities}
                 loading={loadingAuthorities}
                 value={authority}
                 onChange={(event, value) => {
                   setAuthority(value)
                 }}
-                renderInput={(params) => {
-                  return (
-                    <TextValidator
-                      {...params}
-                      label={'Lista de autoridad'}
-                      validators={['required']}
-                      errorMessages={['Este campo es requerido']}
-                      value={authority}
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {loadingAuthorities ? (
-                              <CircularProgress
-                                color={'inherit'}
-                                size={20}
-                                sx={{ mt: '-10px' }}
-                              />
-                            ) : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
-                      }}
-                    />
-                  )
-                }}
+                renderInput={(params) => (
+                  <TextValidator
+                    {...params}
+                    label={'Lista de autoridad'}
+                    validators={['required']}
+                    errorMessages={['Este campo es requerido']}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingAuthorities ? (
+                            <CircularProgress
+                              color={'inherit'}
+                              size={20}
+                              sx={{ mt: '-10px' }}
+                            />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                    value={authority ? authority.name : ''} // Mostrar solo el nombre del valor seleccionado
+                  />
+                )}
               />
               <TextValidator
                 label={'Título'}

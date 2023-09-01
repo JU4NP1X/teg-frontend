@@ -15,6 +15,22 @@ import {
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 
+const columns = [
+  { label: 'Email', align: 'left', width: '20%' },
+  { label: 'Usuario', align: 'left', width: '20%' },
+  { label: 'Nombre', align: 'left', width: '20%' },
+  {
+    label: 'Apellido',
+    align: 'left',
+    width: '20%',
+  },
+  {
+    label: 'Administrador',
+    align: 'center',
+    width: '10%',
+  },
+  { label: 'Acciones', align: 'right', width: '10%' },
+]
 const UsersTable = ({
   users,
   handleEditUser,
@@ -36,96 +52,96 @@ const UsersTable = ({
   }
 
   return (
-    <TableContainer component={Paper}>
-      <SimpleBar
-        onTouchStart={(e) => {
-          e.stopPropagation()
-        }}
-        style={{ height: 'calc(100vh - 270px)' }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ width: '20%' }}>
-                <b>Email</b>
-              </TableCell>
-              <TableCell style={{ width: '20%' }}>
-                <b>Usuario</b>
-              </TableCell>
-              <TableCell style={{ width: '20%' }}>
-                <b>Nombre</b>
-              </TableCell>
-              <TableCell style={{ width: '20%' }}>
-                <b>Apellido</b>
-              </TableCell>
-              <TableCell align={'center'} style={{ width: '10%' }}>
-                <b>Administrador</b>
-              </TableCell>
-              <TableCell align={'right'} style={{ width: '10%' }}>
-                <b>Acciones</b>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!loading ? (
-              users.results.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.firstName}</TableCell>
-                  <TableCell>{user.lastName}</TableCell>
-                  <TableCell align={'center'}>
-                    <Chip
-                      label={user.isAdmin ? 'Sí' : 'No'}
-                      color={user.isAdmin ? 'success' : 'error'}
-                    />
+    <>
+      <TableContainer component={Paper}>
+        <SimpleBar
+          onTouchStart={(e) => {
+            e.stopPropagation()
+          }}
+          style={{ height: 'calc(100vh - 230px)' }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.label}
+                    align={column.align}
+                    style={{
+                      fontWeight: 'bold',
+                      textAlign: column.align,
+                      width: column.width,
+                    }}
+                  >
+                    {column.label}
                   </TableCell>
-                  <TableCell align={'right'}>
-                    <Button
-                      variant={'outlined'}
-                      onClick={() => handleEditUser(user)}
-                      size={'small'}
-                      color={'success'}
-                      sx={{ m: 1 }}
-                    >
-                      <Edit />
-                    </Button>
-                    <Button
-                      variant={'outlined'}
-                      onClick={() => handleDeleteUser(user.id)}
-                      size={'small'}
-                      color={'primary'}
-                      sx={{ m: 1 }}
-                    >
-                      <Delete />
-                    </Button>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!loading ? (
+                users.results.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.firstName}</TableCell>
+                    <TableCell>{user.lastName}</TableCell>
+                    <TableCell align={'center'}>
+                      <Chip
+                        label={user.isAdmin ? 'Sí' : 'No'}
+                        color={user.isAdmin ? 'success' : 'error'}
+                      />
+                    </TableCell>
+                    <TableCell align={'right'}>
+                      <Button
+                        variant={'outlined'}
+                        onClick={() => handleEditUser(user)}
+                        size={'small'}
+                        color={'success'}
+                        sx={{ m: 1 }}
+                      >
+                        <Edit />
+                      </Button>
+                      <Button
+                        variant={'outlined'}
+                        onClick={() => handleDeleteUser(user.id)}
+                        size={'small'}
+                        color={'primary'}
+                        sx={{ m: 1 }}
+                      >
+                        <Delete />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    align={'center'}
+                    style={{
+                      height: 'calc(100vh - 280px)',
+                      marginBottom: -200,
+                    }}
+                  >
+                    <CircularProgress />
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  align={'center'}
-                  style={{ height: 'calc(100vh - 380px)' }}
-                >
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </SimpleBar>
+              )}
+            </TableBody>
+          </Table>
+        </SimpleBar>
+      </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25]}
+        rowsPerPageOptions={[rowsPerPage]}
         component={'div'}
-        count={users.count}
+        count={users.count || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </TableContainer>
+    </>
   )
 }
 

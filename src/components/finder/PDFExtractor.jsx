@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -12,7 +13,6 @@ import Stepper from '@mui/material/Stepper'
 import React, { useEffect, useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import { ValidatorForm } from 'react-material-ui-form-validator'
 import { pdfjs } from 'react-pdf'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
@@ -41,6 +41,7 @@ const PDFExtractor = ({ open, onClose }) => {
   const [titleImage, setTitleImage] = useState(null)
   const [summaryImage, setSummaryImage] = useState(null)
   const [updatingFile, setUpdatingFile] = useState(false)
+  const [loading, setLoading] = useState(false) // Estado para controlar la carga
 
   const base64ToFile = (base64String) => {
     try {
@@ -152,9 +153,11 @@ const PDFExtractor = ({ open, onClose }) => {
   }
 
   const handleFinish = async () => {
+    setLoading(true) // Activar el estado de carga
     const { title, summary } = await extractText()
     closeDialog()
     setDoc({ ...doc, title, summary, pdf: base64PdfFile })
+    setLoading(false) // Desactivar el estado de carga
   }
 
   useEffect(() => {
@@ -172,108 +175,110 @@ const PDFExtractor = ({ open, onClose }) => {
       maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
     >
       <DialogTitle>Subir y extraer datos del documento</DialogTitle>
-      <ValidatorForm>
-        <DialogContent>
-          <DialogContentText id={'alert-dialog-slide-description'}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
+      <DialogContent>
+        <DialogContentText id={'alert-dialog-slide-description'}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Stepper
+              activeStep={step}
+              alternativeStep={step + 1}
+              alternativeLabel
             >
-              <Stepper
-                activeStep={step}
-                alternativeStep={step + 1}
-                alternativeLabel
-              >
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            </div>
-          </DialogContentText>
-          {step === 0 && (
-            <FileUploader
-              buttonText={'Haz click o arrastra un .pdf a clasificar'}
-              loadingFile={updatingFile}
-              fileTypes={['.pdf']}
-              onFileUpload={handleUpload}
-            />
-          )}
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </div>
+        </DialogContentText>
+        {step === 0 && (
+          <FileUploader
+            buttonText={'Haz click o arrastra un .pdf a clasificar'}
+            loadingFile={updatingFile}
+            fileTypes={['.pdf']}
+            onFileUpload={handleUpload}
+          />
+        )}
 
-          {step !== 0 && selectedPages[currentPage] && (
-            <SimpleBar
-              onTouchStart={(e) => {
-                e.stopPropagation()
-              }}
-              style={{
-                maxHeight: '50vh',
-                width: 400,
-                textAlign: 'center',
-              }}
+        {step !== 0 && selectedPages[currentPage] && (
+          <SimpleBar
+            onTouchStart={(e) => {
+              e.stopPropagation()
+            }}
+            style={{
+              maxHeight: '50vh',
+              width: 400,
+              textAlign: 'center',
+            }}
+          >
+            <ReactCrop
+              crop={crop}
+              onChange={handleCropChange}
+              onComplete={handleCropComplete}
             >
-              <ReactCrop
-                crop={crop}
-                onChange={handleCropChange}
-                onComplete={handleCropComplete}
-              >
-                <img src={selectedPages[currentPage].image} alt={'Page'} />
-              </ReactCrop>
-            </SimpleBar>
-          )}
-        </DialogContent>
-        <DialogActions
-          style={{
-            justifyContent: 'center',
-            display: step !== 0 ? undefined : 'none',
+              <img src={selectedPages[currentPage].image} alt={'Page'} />
+            </ReactCrop>
+          </SimpleBar>
+        )}
+      </DialogContent>
+      <DialogActions
+        style={{
+          justifyContent: 'center',
+          display: step !== 0 ? undefined : 'none',
+        }}
+      >
+        <Button
+          disabled={step === 0}
+          onClick={() => {
+            setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
+            setSummaryImage(null)
+            setTitleImage(null)
+            setStep(step - 1)
           }}
+          size={'small'}
+          variant={'outlined'}
         >
+          Anterior
+        </Button>
+        <Pagination
+          count={numPages || 0}
+          page={currentPage + 1}
+          onChange={handlePageChange}
+          color={'primary'}
+          size={'small'}
+          style={{ margin: '20px auto' }}
+        />
+        {step === steps.length - 1 ? (
           <Button
-            disabled={step === 0}
+            disabled={(!summaryImage && step === 2) || loading}
+            onClick={handleFinish}
+            variant={'outlined'}
+            size={'small'}
+            style={{ width: 80 }}
+          >
+            {loading ? <CircularProgress size={20} /> : 'Finalizar'}
+          </Button>
+        ) : (
+          <Button
+            disabled={!titleImage && step === 1}
             onClick={() => {
               setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
-              setSummaryImage(null)
-              setTitleImage(null)
-              setStep(step - 1)
+              setStep(step + 1)
             }}
             size={'small'}
+            variant={'outlined'}
           >
-            Anterior
+            Siguiente
           </Button>
-          <Pagination
-            count={numPages}
-            page={currentPage + 1}
-            onChange={handlePageChange}
-            color={'primary'}
-            size={'small'}
-            style={{ margin: '20px auto' }}
-          />
-          {step === steps.length - 1 ? (
-            <Button
-              disabled={!summaryImage && step === 2}
-              onClick={handleFinish}
-            >
-              Finalizar
-            </Button>
-          ) : (
-            <Button
-              disabled={!titleImage && step === 1}
-              onClick={() => {
-                setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
-                setStep(step + 1)
-              }}
-              size={'small'}
-            >
-              Siguiente
-            </Button>
-          )}
-        </DialogActions>
-      </ValidatorForm>
+        )}
+      </DialogActions>
     </Dialog>
   )
 }
-
 export default PDFExtractor

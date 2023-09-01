@@ -26,6 +26,7 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [formValues, setFormValues] = useState(userTemplate)
   const [loading, setLoading] = useState(false)
+  const [loadingEdition, setLoadingEdition] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [page, setPage] = useState(0)
   const { setSuccessMessage, setErrorMessage } = useNotification()
@@ -42,10 +43,17 @@ const Users = () => {
 
   const handleConfirmDelete = async () => {
     try {
+      setLoadingEdition(true)
       const api = ApiConnection()
       await api.delete(`/users/list/${selectedUser}`)
-      fetchUsers()
+      if (api.status < 400) {
+        fetchUsers()
+        setLoadingEdition(false)
+        setDeleteDialogOpen(false)
+        setSuccessMessage('Usuario borrado exitosamente')
+      } else setErrorMessage('Error al realizar la acción')
     } catch (error) {
+      setLoadingEdition(false)
       console.error(error)
     }
   }
@@ -59,23 +67,27 @@ const Users = () => {
   }
 
   const handleSaveUser = async () => {
+    setLoadingEdition(true)
     const api = ApiConnection()
     if (formValues.id) {
       await api.patch(`/users/list/${formValues.id}/`, formValues)
     } else {
       await api.post('/users/list/', formValues)
     }
-    if (api.status === 200) {
+    if (api.status < 400) {
       setSuccessMessage(
         `Usuario ${formValues.id ? 'Modificado' : 'Guardado'} exitosamente`
       )
 
       setEditDialogOpen(false)
       fetchUsers()
-    } else
+      setLoadingEdition(false)
+    } else {
       setErrorMessage(
         `Error al modificar, asegúrese que el correo o el usuario no se encuentren ya en uso`
       )
+      setLoadingEdition(false)
+    }
   }
 
   const handleChange = (event) => {
@@ -124,7 +136,7 @@ const Users = () => {
             </Button>
           }
         />
-        <CardContent>
+        <CardContent style={{ paddingBottom: 0 }}>
           <UsersTable
             users={users}
             handleEditUser={handleEditUser}
@@ -142,6 +154,7 @@ const Users = () => {
         onClose={handleCloseDialog}
         onSave={handleSaveUser}
         formValues={formValues}
+        loadingEdition={loadingEdition}
         handleChange={handleChange}
       />
       <ConfirmationDialog
@@ -150,6 +163,7 @@ const Users = () => {
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
+        loadingEdition={loadingEdition}
         cancelButtonText={'Cancelar'}
         confirmButtonText={'Eliminar'}
       />

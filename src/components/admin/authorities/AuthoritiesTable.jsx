@@ -81,7 +81,7 @@ const AuthoritiesTable = ({}) => {
             e.stopPropagation()
           }}
         >
-          <Table>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
@@ -119,7 +119,7 @@ const AuthoritiesTable = ({}) => {
                   <TableCell
                     colSpan={columns.length}
                     align={'center'}
-                    style={{ height: 'calc(100vh - 310px)' }}
+                    style={{ height: 'calc(100vh - 357px)' }}
                   >
                     <CircularProgress />
                   </TableCell>
@@ -130,8 +130,8 @@ const AuthoritiesTable = ({}) => {
         </SimpleBar>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
         component={'div'}
+        rowsPerPageOptions={[rowsPerPage]}
         count={authorities.count}
         rowsPerPage={rowsPerPage}
         page={page}

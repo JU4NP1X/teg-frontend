@@ -36,7 +36,7 @@ const Library = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: 'calc(100vh - 312px)',
+                    height: 'calc(100vh - 317px)',
                   }}
                 >
                   <CircularProgress color={'primary'} />
@@ -44,7 +44,7 @@ const Library = () => {
               ) : (
                 <SimpleBar
                   style={{
-                    height: 'calc(100vh - 312px)',
+                    height: 'calc(100vh - 317px)',
                   }}
                 >
                   <Documents

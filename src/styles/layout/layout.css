@@ -105,3 +105,10 @@ input {
 .MuiAutocomplete-input {
   margin-top: -7px !important;
 }
+.dot {
+  height: 17px;
+  width: 2px;
+  display: inline-block;
+  margin-right: 5px;
+  margin-top: 3px;
+}

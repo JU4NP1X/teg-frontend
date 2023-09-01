@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,7 +15,14 @@ import {
   ValidatorForm,
 } from 'react-material-ui-form-validator'
 
-const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
+const UserDialog = ({
+  open,
+  onClose,
+  onSave,
+  formValues,
+  handleChange,
+  loadingEdition,
+}) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth={'md'}>
       <DialogTitle>
@@ -86,7 +94,9 @@ const UserDialog = ({ open, onClose, onSave, formValues, handleChange }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button type={'submit'}>Guardar</Button>
+          <Button type={'submit'} disabled={loadingEdition}>
+            {loadingEdition ? <CircularProgress size={20} /> : 'Guardar'}
+          </Button>
         </DialogActions>
       </ValidatorForm>
     </Dialog>

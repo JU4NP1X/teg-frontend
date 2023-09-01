@@ -9,7 +9,6 @@ const FileUploader = ({
   isLoading,
   loadingFile,
 }) => {
-  const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState(null)
   const fileInputRef = useRef(null)
@@ -20,9 +19,11 @@ const FileUploader = ({
   }
 
   const handleDrop = (event) => {
-    event.preventDefault()
-    const file = event.dataTransfer.files[0]
-    fileConvert(file)
+    if (!loading && !loadingFile) {
+      event.preventDefault()
+      const file = event.dataTransfer.files[0]
+      fileConvert(file)
+    }
   }
 
   const fileConvert = (file) => {
@@ -46,7 +47,6 @@ const FileUploader = ({
   useEffect(() => {
     if (isLoading) isLoading(loading)
   }, [loading])
-  console.log({ loadingFile })
   return (
     <div>
       <div
@@ -59,11 +59,10 @@ const FileUploader = ({
           display: 'flex',
           placeContent: 'center',
           placeItems: 'center',
-          cursor: 'pointer',
+          cursor: loading || loadingFile ? undefined : 'pointer',
         }}
         onClick={() => {
-          setOpen(true)
-          fileInputRef.current.click()
+          if (!loading && !loadingFile) fileInputRef.current.click()
         }}
       >
         {loading || loadingFile ? (
