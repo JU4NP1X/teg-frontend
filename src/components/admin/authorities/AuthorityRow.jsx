@@ -1,5 +1,5 @@
 import { Delete, Edit, FitnessCenter, Sync } from '@mui/icons-material'
-import { Button, TableCell, TableRow } from '@mui/material'
+import { IconButton, TableCell, TableRow, Tooltip } from '@mui/material'
 import { blue, red } from '@mui/material/colors'
 import moment from 'moment/moment'
 import React from 'react'
@@ -37,7 +37,6 @@ const AuthorityRow = ({
   authority,
   handleDeleteAuthority,
   handleSyncAuthority,
-  handleTrainAuthority,
   handleUpdateAuthority,
   loadingAction,
 }) => {
@@ -51,7 +50,7 @@ const AuthorityRow = ({
             backgroundColor: authority.color,
             borderRadius: 3,
           }}
-        />
+        ></div>
       </TableCell>
       <TableCell align={'center'}>
         <b>{authority.name}</b>
@@ -168,28 +167,31 @@ const AuthorityRow = ({
               marginBottom: 10,
             }}
           >
-            <Button
-              variant={'outlined'}
-              color={'secondary'}
-              onClick={() => handleSyncAuthority(authority)}
-              disabled={
-                authority.status === 'GETTING_DATA' ||
-                authority.status === 'TRAINING' ||
-                loadingAction
-              }
-            >
-              <Sync />
-            </Button>
-            <Button
-              variant={'outlined'}
-              color={'success'}
-              disabled={loadingAction}
-              onClick={() => handleUpdateAuthority(authority)}
-              sx={{ ml: 1 }}
-            >
-              <Edit />
-            </Button>
-          </div>
+            <Tooltip title="Buscar datos de entrenamiento">
+              <IconButton
+                variant={'outlined'}
+                color={'secondary'}
+                onClick={() => handleSyncAuthority(authority)}
+                disabled={
+                  authority.status === 'GETTING_DATA' ||
+                  authority.status === 'TRAINING' ||
+                  loadingAction
+                }
+              >
+                <Sync />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Editar autoridad">
+              <IconButton
+                variant={'outlined'}
+                color={'success'}
+                onClick={() => handleUpdateAuthority(authority)}
+                disabled={loadingAction}
+              >
+                <Edit />
+              </IconButton>
+            </Tooltip>
+          </div>{' '}
           <div
             style={{
               display: 'flex',
@@ -197,26 +199,29 @@ const AuthorityRow = ({
               justifyContent: 'center',
             }}
           >
-            <Button
-              variant={'outlined'}
-              color={'info'}
-              onClick={() => handleTrainAuthority(authority)}
-              disabled={
-                authority.status === 'GETTING_DATA' ||
-                authority.status === 'TRAINING' ||
-                loadingAction
-              }
-            >
-              <FitnessCenter />
-            </Button>
-            <Button
-              disabled={authority.native || loadingAction}
-              variant={'outlined'}
-              onClick={() => handleDeleteAuthority(authority)}
-              sx={{ ml: 1 }}
-            >
-              <Delete />
-            </Button>
+            <Tooltip title="Entrenar red neuronal">
+              <IconButton
+                variant={'outlined'}
+                color={'info'}
+                onClick={() => handleTrainAuthority(authority)}
+                disabled={
+                  authority.status === 'GETTING_DATA' ||
+                  authority.status === 'TRAINING' ||
+                  loadingAction
+                }
+              >
+                <FitnessCenter />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={'Eliminar autoridad'}>
+              <IconButton
+                disabled={authority.native || loadingAction}
+                variant={'outlined'}
+                onClick={() => handleDeleteAuthority(authority)}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
       </TableCell>

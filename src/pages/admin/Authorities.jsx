@@ -1,5 +1,11 @@
 import { Add } from '@mui/icons-material'
-import { Button, Card, CardContent, CardHeader } from '@mui/material'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Tooltip,
+} from '@mui/material'
 import React from 'react'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
 import AuthorityDialog from '../../components/admin/authorities/AuthorityDialog'
@@ -29,14 +35,16 @@ const Authorities = () => {
         <CardHeader
           title={'Listas de autoridad'}
           action={
-            <Button
-              variant={'outlined'}
-              color={'primary'}
-              size={'small'}
-              onClick={() => setOpenAuthorityModal(true)}
-            >
-              <Add />
-            </Button>
+            <Tooltip title={'Agregar lista de autoridad'}>
+              <IconButton
+                color={'primary'}
+                size={'small'}
+                onClick={() => setOpenAuthorityModal(true)}
+                sx={{ mr: 1 }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
           }
         />
         <CardContent style={{ paddingBottom: 0 }}>

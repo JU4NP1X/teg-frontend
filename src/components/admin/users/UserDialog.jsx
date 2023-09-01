@@ -95,7 +95,7 @@ const UserDialog = ({
         </DialogContent>
         <DialogActions>
           <Button type={'submit'} disabled={loadingEdition}>
-            {loadingEdition ? <CircularProgress size={20} /> : 'Guardar'}
+            {loadingEdition ? <CircularProgress size={24} /> : 'Guardar'}
           </Button>
         </DialogActions>
       </ValidatorForm>

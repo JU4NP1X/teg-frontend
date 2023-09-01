@@ -41,7 +41,7 @@ const ReportListPagination = ({
   const addOrRemoveFavoriteReport = async (repId) => {
     const Api = ApiConnection()
     await Api.put('/users/report/fav', { repId })
-    if (Api.status === 200) {
+    if (Api.status < 400) {
       setSuccessMessage(Api.message)
       setRefreshAll(true)
     } else setErrorMessage(Api.message)

@@ -50,7 +50,7 @@ const Profile = () => {
     })
     setUserInfo(userUpdated)
     setUser({ ...userUpdated, token: user.token })
-    if (api.status === 200) setSuccessMessage('Usuario modificado exitosamente')
+    if (api.status < 400) setSuccessMessage('Usuario modificado exitosamente')
     else setErrorMessage('Error al modificar usuario, intente más tarde.')
     setLoading(false)
   }
@@ -61,7 +61,7 @@ const Profile = () => {
     await api.patch(`/users/list/${userInfo.id}/`, {
       password,
     })
-    if (api.status === 200) {
+    if (api.status < 400) {
       setSuccessMessage('Contraseña cambiada exitosamente')
       setPassword('')
       setConfirmPassword('')
@@ -72,7 +72,7 @@ const Profile = () => {
   const handleGetUser = async () => {
     const api = ApiConnection()
     const currentUser = await api.get(`/users/list/${user.id}/`)
-    if (api.status === 200) {
+    if (api.status < 400) {
       setUser({ ...currentUser, token: user.token })
       setUserInfo(currentUser)
     } else setErrorMessage('Error al traer información del usuario.')
@@ -130,7 +130,6 @@ const Profile = () => {
                   />
                   <Button
                     type={'submit'}
-                    variant={'contained'}
                     disabled={loading}
                     style={{ float: 'right', marginBottom: 14, marginTop: 10 }}
                   >
@@ -173,7 +172,6 @@ const Profile = () => {
                   />
                   <Button
                     type={'submit'}
-                    variant={'contained'}
                     disabled={loading || password !== confirmPassword}
                     style={{ float: 'right', marginBottom: 14, marginTop: 10 }}
                   >

@@ -39,7 +39,7 @@ const ClassifierProvider = ({ children }) => {
         exclude_counts: true,
       },
     })
-    if (api.status === 200) {
+    if (api.status < 400) {
       setAuthorities(data.results)
     }
     setLoadingAuthorities(false)
@@ -55,7 +55,7 @@ const ClassifierProvider = ({ children }) => {
         offset: page * 20,
       },
     })
-    if (api.status === 200) {
+    if (api.status < 400) {
       setDocs(data)
     }
     setLoadingDocs(false)
@@ -64,7 +64,7 @@ const ClassifierProvider = ({ children }) => {
   const getDoc = async (doc) => {
     const api = ApiConnection()
     const data = await api.get(`/documents/list/${doc.id}/`)
-    if (api.status === 200) {
+    if (api.status < 400) {
       setDoc(data)
     }
   }
@@ -77,7 +77,7 @@ const ClassifierProvider = ({ children }) => {
       summary: document.summaryImg,
       authority: authority && authority.id ? authority.id : undefined,
     })
-    if (api.status === 200) {
+    if (api.status < 400) {
       addExpandNSelectedOptions(data.results, true)
       setCategories([
         ...categories,

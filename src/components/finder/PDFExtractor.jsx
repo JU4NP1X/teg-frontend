@@ -147,7 +147,7 @@ const PDFExtractor = ({ open, onClose }) => {
       title: titleImage,
       summary: summaryImage,
     })
-    if (api.status === 200) return data
+    if (api.status < 400) return data
 
     return { title: '', summary: '' }
   }
@@ -162,7 +162,6 @@ const PDFExtractor = ({ open, onClose }) => {
 
   useEffect(() => {
     if (open && doc.pdf) handleUpload(doc.pdf)
-    console.log(doc)
   }, [open, doc.pdf])
 
   return (
@@ -262,7 +261,7 @@ const PDFExtractor = ({ open, onClose }) => {
             size={'small'}
             style={{ width: 80 }}
           >
-            {loading ? <CircularProgress size={20} /> : 'Finalizar'}
+            {loading ? <CircularProgress size={24} /> : 'Finalizar'}
           </Button>
         ) : (
           <Button

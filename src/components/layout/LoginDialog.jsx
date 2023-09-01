@@ -26,7 +26,7 @@ const LoginDialog = ({ open, handleClose }) => {
     const api = ApiConnection()
 
     const data = await api.post('users/login/', { username, password })
-    if (api.status === 200) {
+    if (api.status < 400) {
       setUser(data)
       handleClose()
       setSuccessMessage('Sesión iniciada exitosamente')
@@ -45,7 +45,7 @@ const LoginDialog = ({ open, handleClose }) => {
         idToken: response.credential,
       })
 
-      if (api.status === 200) {
+      if (api.status < 400) {
         setUser(data)
         handleClose()
         setSuccessMessage('Sesión iniciada exitosamente')

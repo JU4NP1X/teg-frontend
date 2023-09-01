@@ -44,7 +44,7 @@ const AuthoritiesProvider = ({ children }) => {
         },
         signal,
       })
-      if (api.status === 200) {
+      if (api.status < 400) {
         if (false && isRefresh)
           setAuthorities({
             ...data,
@@ -66,7 +66,7 @@ const AuthoritiesProvider = ({ children }) => {
     try {
       const api = ApiConnection()
       await api.post('/categories/authorities/', authority)
-      if (api.status === 200) {
+      if (api.status < 400) {
         setAuthority(authorityTemplate)
         setSuccessMessage('Autoridad actualizada con éxito')
         getPageData(false)
@@ -85,7 +85,7 @@ const AuthoritiesProvider = ({ children }) => {
       setAuthorityToDelete(null)
       setOpenConfirmation(false)
       getPageData(false)
-      if (api.status === 200) {
+      if (api.status < 400) {
         setSuccessMessage('Autoridad eliminada.')
         setLoadingAction(false)
       } else {
@@ -103,7 +103,7 @@ const AuthoritiesProvider = ({ children }) => {
     try {
       const api = ApiConnection()
       await api.post(`/datasets/sync/`, { authorities: [authority.id] })
-      if (api.status === 200) {
+      if (api.status < 400) {
         setSuccessMessage('Autoridad sincronizando.')
         getPageData(false)
         setLoadingAction(false)
@@ -121,7 +121,7 @@ const AuthoritiesProvider = ({ children }) => {
     try {
       const api = ApiConnection()
       await api.post(`/datasets/train/`, { authorities: [authority.id] })
-      if (api.status === 200) {
+      if (api.status < 400) {
         setSuccessMessage('Autoridad sincronizando.')
         getPageData(false)
         setLoadingAction(false)
@@ -139,7 +139,7 @@ const AuthoritiesProvider = ({ children }) => {
     try {
       const api = ApiConnection()
       await api.patch(`/categories/authorities/${authority.id}/`, authority)
-      if (api.status === 200) {
+      if (api.status < 400) {
         setSuccessMessage('Autoridad actualizada con éxito')
         getPageData(false)
         setOpenAuthorityModal(false)

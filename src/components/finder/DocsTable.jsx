@@ -1,10 +1,10 @@
 import { Add, Delete, Edit } from '@mui/icons-material'
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from '@mui/material'
 import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
@@ -49,7 +50,7 @@ const DocsTable = () => {
       <CardHeader
         title={'Documentos'}
         action={
-          <Button
+          <IconButton
             disabled={disableButtons}
             variant={'outlined'}
             size={'small'}
@@ -60,9 +61,12 @@ const DocsTable = () => {
               setShowTable(false)
               setDisableButtons(false)
             }}
+            aria-label="Agregar"
           >
-            <Add />
-          </Button>
+            <Tooltip title="Agregar">
+              <Add />
+            </Tooltip>
+          </IconButton>
         }
       />
       <CardContent style={{ paddingBottom: 0 }}>
@@ -107,7 +111,7 @@ const DocsTable = () => {
                       <TableCell>{item.summary}</TableCell>
                       <TableCell>{item.authors}</TableCell>
                       <TableCell align={'right'}>
-                        <Button
+                        <IconButton
                           disabled={disableButtons}
                           onClick={async () => {
                             setDisableButtons(true)
@@ -119,18 +123,24 @@ const DocsTable = () => {
                           size={'small'}
                           color={'success'}
                           sx={{ m: 1 }}
+                          aria-label="Editar"
                         >
-                          <Edit />
-                        </Button>
-                        <Button
+                          <Tooltip title="Editar">
+                            <Edit />
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton
                           disabled={disableButtons}
                           variant={'outlined'}
                           size={'small'}
                           color={'primary'}
                           sx={{ m: 1 }}
+                          aria-label="Eliminar"
                         >
-                          <Delete />
-                        </Button>
+                          <Tooltip title="Eliminar">
+                            <Delete />
+                          </Tooltip>
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))

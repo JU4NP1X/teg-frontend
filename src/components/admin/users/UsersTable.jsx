@@ -1,8 +1,8 @@
 import { Delete, Edit } from '@mui/icons-material'
 import {
-  Button,
   Chip,
   CircularProgress,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,6 +11,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from '@mui/material'
 import React from 'react'
 import SimpleBar from 'simplebar-react'
@@ -93,24 +94,26 @@ const UsersTable = ({
                       />
                     </TableCell>
                     <TableCell align={'right'}>
-                      <Button
-                        variant={'outlined'}
-                        onClick={() => handleEditUser(user)}
-                        size={'small'}
-                        color={'success'}
-                        sx={{ m: 1 }}
-                      >
-                        <Edit />
-                      </Button>
-                      <Button
-                        variant={'outlined'}
-                        onClick={() => handleDeleteUser(user.id)}
-                        size={'small'}
-                        color={'primary'}
-                        sx={{ m: 1 }}
-                      >
-                        <Delete />
-                      </Button>
+                      <Tooltip title="Editar usuario">
+                        <IconButton
+                          onClick={() => handleEditUser(user)}
+                          size={'small'}
+                          color={'success'}
+                          sx={{ m: 1 }}
+                        >
+                          <Edit />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Eliminar usuario">
+                        <IconButton
+                          onClick={() => handleDeleteUser(user.id)}
+                          size={'small'}
+                          color={'primary'}
+                          sx={{ m: 1 }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))

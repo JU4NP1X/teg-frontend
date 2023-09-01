@@ -1,17 +1,24 @@
 import React, { createContext, useEffect, useState } from 'react'
 import ApiConnection from '../utils/apiConnection'
 
-const documentsTemplate = {
+const docsTemplate = {
   count: 0,
   next: null,
   previous: null,
   results: [],
 }
+const docTemplate = {
+  title: '',
+  summary: '',
+  categories: [],
+  pdf: '',
+  img: '',
+}
 
 const LibraryContext = createContext()
 const LibraryProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [documents, setDocs] = useState(documentsTemplate)
+  const [documents, setDocs] = useState(docsTemplate)
   const [selectedFilters, setSelectedFilters] = useState([])
   const [apiFilters, setApiFilters] = useState([])
   const [search, setSearch] = useState('')
@@ -21,6 +28,7 @@ const LibraryProvider = ({ children }) => {
   const [loadingFilters, setLoadingFilters] = useState(false)
   const [loadingDocuments, setLoadingDocuments] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
+  const [doc, setDoc] = useState(docTemplate)
 
   const fetchFilters = async (signal) => {
     try {
@@ -37,7 +45,7 @@ const LibraryProvider = ({ children }) => {
         },
         signal,
       })
-      if (api.status === 200) {
+      if (api.status < 400) {
         setApiFilters(data.results)
         setLoadingFilters(false)
       } else setLoadingFilters(false)
@@ -65,7 +73,7 @@ const LibraryProvider = ({ children }) => {
         },
         signal,
       })
-      if (api.status === 200) {
+      if (api.status < 400) {
         if (!data.count) setCurrentPage(1)
         setDocs(data)
         setLoadingDocuments(false)
@@ -89,12 +97,20 @@ const LibraryProvider = ({ children }) => {
           excludeCounts: true,
         },
       })
-      if (api.status === 200) {
+      if (api.status < 400) {
         setAuthorityList(data.results)
         setLoadingAuthorities(false)
       }
     } catch (error) {
       console.error('Error al obtener la lista de autoridad:', error)
+    }
+  }
+
+  const getDoc = async (doc) => {
+    const api = ApiConnection()
+    const data = await api.get(`/documents/list/${doc.id}/`)
+    if (api.status < 400) {
+      setDoc(data)
     }
   }
 
@@ -140,6 +156,9 @@ const LibraryProvider = ({ children }) => {
         setCurrentPage,
         loadingDocuments,
         setLoadingDocuments,
+        doc,
+        setDoc,
+        getDoc,
       }}
     >
       {children}

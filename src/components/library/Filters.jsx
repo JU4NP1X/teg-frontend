@@ -73,7 +73,7 @@ const Filters = () => {
                       {loadingAuthorities ? (
                         <CircularProgress
                           color={'inherit'}
-                          size={20}
+                          size={24}
                           sx={{ mt: '-10px' }}
                         />
                       ) : null}

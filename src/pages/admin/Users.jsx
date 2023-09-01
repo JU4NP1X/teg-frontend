@@ -1,5 +1,11 @@
 import { Add } from '@mui/icons-material'
-import { Button, Card, CardContent, CardHeader } from '@mui/material'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Tooltip,
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import UserDialog from '../../components/admin/users/UserDialog'
 import UsersTable from '../../components/admin/users/UsersTable'
@@ -126,14 +132,16 @@ const Users = () => {
         <CardHeader
           title={'Usuarios'}
           action={
-            <Button
-              variant={'outlined'}
-              color={'primary'}
-              size={'small'}
-              onClick={() => handleEditUser(userTemplate)}
-            >
-              <Add />
-            </Button>
+            <Tooltip title="Agregar usuario">
+              <IconButton
+                color={'primary'}
+                size={'small'}
+                onClick={() => handleEditUser(userTemplate)}
+                sx={{ mr: 1 }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
           }
         />
         <CardContent style={{ paddingBottom: 0 }}>

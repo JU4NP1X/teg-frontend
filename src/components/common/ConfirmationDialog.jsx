@@ -35,7 +35,7 @@ const ConfirmationDialog = ({
           color={'error'}
           disabled={loadingEdition}
         >
-          {loadingEdition ? <CircularProgress size={20} /> : confirmButtonText}
+          {loadingEdition ? <CircularProgress size={24} /> : confirmButtonText}
         </Button>
       </DialogActions>
     </Dialog>

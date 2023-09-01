@@ -107,8 +107,11 @@ input {
 }
 .dot {
   height: 17px;
-  width: 2px;
+  width: 3px;
   display: inline-block;
   margin-right: 5px;
   margin-top: 3px;
+}
+iframe {
+  border: none;
 }

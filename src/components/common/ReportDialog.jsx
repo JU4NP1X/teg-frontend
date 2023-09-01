@@ -103,7 +103,7 @@ export default function ReportDialog({ title, repType, repId, open, setOpen }) {
 
     const reponse = await Api.get('/reports/url', { params: { repId } })
 
-    if (Api.status === 200) {
+    if (Api.status < 400) {
       setRepUrl(reponse.url.ruaUrl)
       setLoading(false)
     } else setErrorMessage(Api.message)
@@ -114,7 +114,7 @@ export default function ReportDialog({ title, repType, repId, open, setOpen }) {
 
     const reponse = await Api.get('/reports/token', { params: { repId } })
 
-    if (Api.status === 200) {
+    if (Api.status < 400) {
       setEmbedConfig({
         ...embedConfig,
         embedUrl: reponse.embedUrl,

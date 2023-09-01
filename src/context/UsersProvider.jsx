@@ -65,7 +65,7 @@ const UsersProvider = ({ children }) => {
           orderByUsrStatus: order,
         },
       })
-      if (Api.status === 200) {
+      if (Api.status < 400) {
         const totalRows = result.totalRows
         const users = result.users
         setUsers(users)
