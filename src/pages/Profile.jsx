@@ -83,10 +83,10 @@ const Profile = () => {
   }, [])
 
   return (
-    <Grid container>
+    <Grid container sx={{ height: 'calc(100vh - 70px)' }}>
       <Grid item xs={0} md={4} />
-      <Grid item xs={12} md={4}>
-        <Grid container spacing={4}>
+      <Grid item xs={12} md={4} sx={{ display: 'flex' }}>
+        <Grid container spacing={4} sx={{ marginTop: 'auto' }}>
           <Grid item xs={12}>
             <Card>
               <CardHeader title={'Modificar datos'} />

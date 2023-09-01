@@ -3,7 +3,7 @@ import '../../styles/finder/finder.css'
 import InputCard from './InputCard'
 import TagsListCard from './TagsListCard'
 
-const TagsFinder = () => {
+const DocumentManager = () => {
   return (
     <Grid container>
       <Grid item xs={12} md={8} sx={{ p: 2 }}>
@@ -15,4 +15,4 @@ const TagsFinder = () => {
     </Grid>
   )
 }
-export default TagsFinder
+export default DocumentManager

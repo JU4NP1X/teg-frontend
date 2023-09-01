@@ -46,15 +46,23 @@ const UsersTable = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: '20%' }}>Email</TableCell>
-              <TableCell style={{ width: '20%' }}>Usuario</TableCell>
-              <TableCell style={{ width: '20%' }}>Nombre</TableCell>
-              <TableCell style={{ width: '20%' }}>Apellido</TableCell>
+              <TableCell style={{ width: '20%' }}>
+                <b>Email</b>
+              </TableCell>
+              <TableCell style={{ width: '20%' }}>
+                <b>Usuario</b>
+              </TableCell>
+              <TableCell style={{ width: '20%' }}>
+                <b>Nombre</b>
+              </TableCell>
+              <TableCell style={{ width: '20%' }}>
+                <b>Apellido</b>
+              </TableCell>
               <TableCell align={'center'} style={{ width: '10%' }}>
-                Administrador
+                <b>Administrador</b>
               </TableCell>
               <TableCell align={'right'} style={{ width: '10%' }}>
-                Acciones
+                <b>Acciones</b>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -77,14 +85,16 @@ const UsersTable = ({
                       variant={'outlined'}
                       onClick={() => handleEditUser(user)}
                       size={'small'}
+                      color={'success'}
                       sx={{ m: 1 }}
                     >
                       <Edit />
                     </Button>
                     <Button
-                      variant={'contained'}
+                      variant={'outlined'}
                       onClick={() => handleDeleteUser(user.id)}
                       size={'small'}
+                      color={'primary'}
                       sx={{ m: 1 }}
                     >
                       <Delete />

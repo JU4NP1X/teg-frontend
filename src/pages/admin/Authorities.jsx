@@ -28,23 +28,16 @@ const Authorities = () => {
     <div>
       <Card sx={{ pb: 0 }}>
         <CardHeader
-          title={
-            <span
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
+          title={'Listas de autoridad'}
+          action={
+            <Button
+              variant={'outlined'}
+              color={'primary'}
+              size={'small'}
+              onClick={() => setOpenAuthorityModal(true)}
             >
-              Listas de autoridad
-              <Button
-                variant={'outlined'}
-                color={'primary'}
-                size={'small'}
-                onClick={() => setOpenAuthorityModal(true)}
-              >
-                <Add />
-              </Button>
-            </span>
+              <Add />
+            </Button>
           }
         />
         <CardContent style={{ paddingBottom: 0 }}>

@@ -4,20 +4,21 @@ import React, { useEffect, useState } from 'react'
 const Slide = ({ changed = false, children, setChanged }) => {
   const [currentComponent, setCurrentComponent] = useState(children)
   const [isEntering, setIsEntering] = useState(false)
+  const [isFirstTime, setIsFirstTime] = useState(false)
 
   useEffect(() => {
-    if (changed) {
+    if (changed && !isFirstTime) {
       setChanged(false)
       setIsEntering(true)
 
-      const transitionTimeout = setTimeout(() => {
+      setTimeout(() => {
         setCurrentComponent(children)
         setIsEntering(false)
       }, 500)
-
-      return () => clearTimeout(transitionTimeout)
+    } else {
+      setIsFirstTime(false)
     }
-  }, [changed])
+  }, [children.key])
 
   return <Collapse in={!isEntering}>{currentComponent}</Collapse>
 }

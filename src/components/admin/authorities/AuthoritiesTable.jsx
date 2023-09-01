@@ -15,18 +15,26 @@ import useAuthorities from '../../../hooks/useAuthorities'
 import AuthorityRow from './AuthorityRow'
 
 const columns = [
-  { label: 'Color', align: 'center' },
-  { label: 'Autoridad', align: 'center' },
-  { label: 'Última Fecha de Entrenamiento', align: 'left' },
-  { label: 'Datos de Entrenamiento Disponibles', align: 'center' },
-  { label: 'Suficiencia de datos para entrenar', align: 'center' },
-  { label: 'Categorías Actualizadas', align: 'center' },
-  { label: 'Categorías Obsoletas', align: 'center' },
-  { label: 'Nuevas Categorías no Entrenadas', align: 'center' },
-  { label: 'Precisión teórica del modelo', align: 'center' },
-  { label: 'Precisión práctica del modelo', align: 'center' },
-  { label: 'Estado', align: 'center' },
-  { label: 'Acciones', align: 'center' },
+  { label: 'Color', align: 'center', width: '2%' },
+  { label: 'Autoridad', align: 'center', width: '4%' },
+  { label: 'Última Fecha de Entrenamiento', align: 'left', width: '4%' },
+  {
+    label: 'Datos de Entrenamiento Disponibles',
+    align: 'center',
+    width: '10%',
+  },
+  {
+    label: 'Suficiencia de datos para entrenar',
+    align: 'center',
+    width: '10%',
+  },
+  { label: 'Categorías Actualizadas', align: 'center', width: '4%' },
+  { label: 'Categorías Obsoletas', align: 'center', width: '4%' },
+  { label: 'Nuevas Categorías no Entrenadas', align: 'center', width: '5%' },
+  { label: 'Precisión teórica del modelo', align: 'center', width: '10%' },
+  { label: 'Precisión práctica del modelo', align: 'center', width: '10%' },
+  { label: 'Estado', align: 'center', width: '8%' },
+  { label: 'Acciones', align: 'center', width: '10%' },
 ]
 
 const AuthoritiesTable = ({}) => {
@@ -80,7 +88,11 @@ const AuthoritiesTable = ({}) => {
                   <TableCell
                     key={column.label}
                     align={column.align}
-                    style={{ fontWeight: 'bold', textAlign: column.align }}
+                    style={{
+                      fontWeight: 'bold',
+                      textAlign: column.align,
+                      width: column.width,
+                    }}
                   >
                     {column.label}
                   </TableCell>

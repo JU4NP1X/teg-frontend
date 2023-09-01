@@ -11,56 +11,58 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import useLibrary from '../../hooks/useLibrary'
+import {
+  SelectValidator,
+  TextValidator,
+  ValidatorForm,
+} from 'react-material-ui-form-validator'
 
 const Search = ({ handleSearchChange, handleOrderByChange }) => {
   const { setSearch } = useLibrary()
   const [searchDocument, setSearchDocument] = useState('')
   return (
     <Card>
-      <CardContent>
+      <CardContent style={{ paddingBottom: 0 }}>
         <FormControl fullWidth sx={{ marginTop: '10px' }}>
-          <Grid container alignItems={'center'} spacing={1}>
-            <Grid item xs={9}>
-              <TextField
-                label={'Buscar'}
-                variant={'outlined'}
-                value={searchDocument}
-                onChange={(e) => setSearchDocument(e.target.value)}
-                fullWidth
-              />
-            </Grid>
+          <ValidatorForm onSubmit={() => setSearch(searchDocument)}>
+            <Grid container alignItems={'center'} spacing={1}>
+              <Grid item xs={9}>
+                <TextValidator
+                  label={'Buscar'}
+                  variant={'outlined'}
+                  value={searchDocument}
+                  onChange={(e) => setSearchDocument(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
 
-            <Grid item xs={3}>
-              <FormControl
-                fullWidth
-                size={'small'}
-                style={{ marginTop: '15px' }}
-              >
-                <InputLabel id={'order-by-label'} style={{ top: '-5px' }}>
-                  Ordenar por
-                </InputLabel>
-                <Select
+              <Grid item xs={3}>
+                <SelectValidator
                   label={'Ordenar por'}
                   labelId={'order-by-label'}
                   value={'title'}
                   onChange={handleOrderByChange}
+                  fullWidth
                 >
                   <MenuItem value={'title'}>Título</MenuItem>
                   <MenuItem value={'description'}>Descripción</MenuItem>
-                </Select>
-              </FormControl>
+                </SelectValidator>
+              </Grid>
             </Grid>
-          </Grid>
+            <Button
+              variant={'contained'}
+              type={'submit'}
+              color={'primary'}
+              size={'small'}
+              style={{
+                marginTop: '10px',
+                float: 'right',
+              }}
+            >
+              Buscar
+            </Button>
+          </ValidatorForm>
         </FormControl>
-        <Button
-          variant={'contained'}
-          color={'primary'}
-          size={'small'}
-          onClick={() => setSearch(searchDocument)}
-          style={{ marginTop: '10px', float: 'right', marginBottom: '10px' }}
-        >
-          Buscar
-        </Button>
       </CardContent>
     </Card>
   )

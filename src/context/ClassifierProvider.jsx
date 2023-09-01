@@ -4,6 +4,12 @@ import ApiConnection from '../utils/apiConnection'
 
 const ClassifierContext = createContext()
 
+const docsTemplate = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: [],
+}
 const documentTemplate = {
   title: '',
   summary: '',
@@ -13,13 +19,16 @@ const documentTemplate = {
 }
 const ClassifierProvider = ({ children }) => {
   const { setErrorMessage } = useNotification()
-  const [showTable, setShowTable] = useState(false)
+  const [showTable, setShowTable] = useState(true)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
+  const [loadingDocs, setLoadingDocs] = useState(false)
+  const [page, setPage] = useState(0)
   const [authorities, setAuthorities] = useState([])
   const [categories, setCategories] = useState([])
   const [authority, setAuthority] = useState(null)
   const [doc, setDoc] = useState(documentTemplate)
+  const [docs, setDocs] = useState(docsTemplate)
 
   const getAuthorityList = async () => {
     setLoadingAuthorities(true)
@@ -35,6 +44,23 @@ const ClassifierProvider = ({ children }) => {
     }
     setLoadingAuthorities(false)
   }
+
+  const getDocList = async () => {
+    setLoadingDocs(true)
+    const api = ApiConnection()
+    const data = await api.get('/documents/list/', {
+      params: {
+        ordering: 'id',
+        limit: 20,
+        offset: page * 20,
+      },
+    })
+    if (api.status === 200) {
+      setDocs(data)
+    }
+    setLoadingDocs(false)
+  }
+
   const classify = async () => {
     setLoadingCategories(true)
     const api = ApiConnection()
@@ -63,7 +89,12 @@ const ClassifierProvider = ({ children }) => {
 
   useEffect(() => {
     getAuthorityList()
+    getDocList()
   }, [])
+
+  useEffect(() => {
+    getDocList()
+  }, [page])
 
   return (
     <ClassifierContext.Provider
@@ -80,6 +111,12 @@ const ClassifierProvider = ({ children }) => {
         setCategories,
         showTable,
         setShowTable,
+        docs,
+        setDocs,
+        loadingDocs,
+        setLoadingDocs,
+        page,
+        setPage,
       }}
     >
       {children}

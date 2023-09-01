@@ -9,10 +9,11 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Slide from '../components/common/Slide'
-import TagsFinder from '../components/finder/TagsFinder'
+import DocumentManager from '../components/finder/DocumentManager'
 import useClassifier from '../hooks/useClassifier'
+import DocsTable from '../components/finder/DocsTable'
 
 const Classifier = () => {
   const { showTable } = useClassifier()
@@ -24,28 +25,7 @@ const Classifier = () => {
   return (
     <Box component={'main'}>
       <Slide changed={changed} setChanged={setChanged}>
-        {showTable ? (
-          <Card>
-            <CardContent>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Documento</TableCell>
-                      <TableCell>Fecha</TableCell>
-                      <TableCell>Tags</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {/* Aquí puedes agregar las filas de la tabla */}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        ) : (
-          <TagsFinder />
-        )}
+        {showTable ? <DocsTable /> : <DocumentManager key={'manager'} />}
       </Slide>
     </Box>
   )

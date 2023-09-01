@@ -112,23 +112,16 @@ const Users = () => {
     <>
       <Card>
         <CardHeader
-          title={
-            <span
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
+          title={'Usuarios'}
+          action={
+            <Button
+              variant={'outlined'}
+              color={'primary'}
+              size={'small'}
+              onClick={() => handleEditUser(userTemplate)}
             >
-              Usuarios
-              <Button
-                variant={'outlined'}
-                color={'primary'}
-                size={'small'}
-                onClick={() => handleEditUser(userTemplate)}
-              >
-                <Add />
-              </Button>
-            </span>
+              <Add />
+            </Button>
           }
         />
         <CardContent>

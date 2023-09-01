@@ -1,143 +1,140 @@
+import React, { useContext } from 'react'
 import {
-  CircularProgress,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
+  Paper,
+  CircularProgress,
+  TablePagination,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
 } from '@mui/material'
-import React from 'react'
+import useClassifier from '../../hooks/useClassifier'
 import SimpleBar from 'simplebar-react'
-import useAuthorities from '../../../hooks/useAuthorities'
-import AuthorityRow from './AuthorityRow'
+import { Add, Delete, Edit } from '@mui/icons-material'
 
-const columns = [
-  { label: 'Color', align: 'center' },
-  { label: 'Autoridad', align: 'center' },
-  { label: 'Última Fecha de Entrenamiento', align: 'left' },
-  { label: 'Datos de Entrenamiento Disponibles', align: 'center' },
-  { label: 'Suficiencia de datos para entrenar', align: 'center' },
-  { label: 'Categorías Actualizadas', align: 'center' },
-  { label: 'Categorías Obsoletas', align: 'center' },
-  { label: 'Nuevas Categorías no Entrenadas', align: 'center' },
-  { label: 'Precisión teórica del modelo', align: 'center' },
-  { label: 'Precisión práctica del modelo', align: 'center' },
-  { label: 'Estado', align: 'center' },
-  { label: 'Acciones', align: 'center' },
+const documentTemplate = {
+  title: '',
+  summary: '',
+  categories: [],
+  pdf: '',
+  img: '',
+}
+
+const titles = [
+  { nombre: 'Imagen', align: 'left', width: '20%' },
+  { nombre: 'Título', align: 'left', width: '20%' },
+  { nombre: 'Resumen', align: 'left', width: '40%' },
+  { nombre: 'Autores', align: 'left', width: '10%' },
+  { nombre: 'Acciones', align: 'right', width: '10%' },
 ]
 
-const AuthoritiesTable = ({}) => {
-  const {
-    deleteAuthority,
-    setAuthority,
-    setOpenAuthorityModal,
-    setAuthorityToDelete,
-    setOpenConfirmation,
-    loadingAction,
-    loading,
-    rowsPerPage,
-    setRowsPerPage,
-    page,
-    setPage,
-    authorities,
-    handleTrainAuthority,
-    handleSyncAuthority,
-  } = useAuthorities()
+const DocsTable = () => {
+  const { docs, loadingDocs, page, setPage, setDoc, setShowTable } =
+    useClassifier()
 
-  const handleDeleteAuthority = (authority) => {
-    setAuthorityToDelete(authority)
-    setOpenConfirmation(true)
+  const getBase64Image = (base64String) => {
+    return `data:image/png;base64,${base64String}`
   }
 
-  const handleConfirmDelete = () => {
-    deleteAuthority()
-  }
+  const isLoading = loadingDocs
 
-  const handleCancelDelete = () => {
-    setAuthorityToDelete(null)
-    setOpenConfirmation(false)
-  }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  const handleUpdateAuthority = (authority) => {
-    setAuthority(authority)
-    setOpenAuthorityModal(true)
-  }
   return (
-    <>
-      <TableContainer component={Paper}>
-        <SimpleBar
-          style={{ height: 'calc(100vh - 230px)' }}
-          onTouchStart={(e) => {
-            e.stopPropagation()
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.label}
-                    align={column.align}
-                    style={{ fontWeight: 'bold', textAlign: column.align }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {!loading ? (
-                authorities.results
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((authority) => (
-                    <AuthorityRow
-                      key={authority.name}
-                      authority={authority}
-                      handleDeleteAuthority={handleDeleteAuthority}
-                      handleUpdateAuthority={handleUpdateAuthority}
-                      handleSyncAuthority={handleSyncAuthority}
-                      handleTrainAuthority={handleTrainAuthority}
-                      loadingAction={loadingAction}
-                    />
-                  ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    align={'center'}
-                    style={{ height: 'calc(100vh - 310px)' }}
-                  >
-                    <CircularProgress />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </SimpleBar>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component={'div'}
-        count={authorities.count}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+    <Card>
+      <CardHeader
+        title={'Documentos'}
+        action={
+          <Button
+            variant={'outlined'}
+            size={'small'}
+            color={'primary'}
+            onClick={() => {
+              setDoc(documentTemplate)
+              setShowTable(false)
+            }}
+          >
+            <Add />
+          </Button>
+        }
       />
-    </>
+      <CardContent>
+        <TableContainer component={Paper}>
+          <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {titles.map((title, index) => (
+                    <TableCell
+                      key={index}
+                      align={title.align}
+                      style={{ width: title.width }}
+                    >
+                      <b>{title.nombre}</b>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align={'center'}>
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  docs.results.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <img
+                          src={getBase64Image(item.img)}
+                          alt={'Imagen'}
+                          style={{ height: 100, width: 'auto' }}
+                        />
+                      </TableCell>
+                      <TableCell>{item.title}</TableCell>
+                      <TableCell>{item.summary}</TableCell>
+                      <TableCell>{item.authors}</TableCell>
+                      <TableCell align={'right'}>
+                        <Button
+                          variant={'outlined'}
+                          size={'small'}
+                          color={'success'}
+                          sx={{ m: 1 }}
+                        >
+                          <Edit />
+                        </Button>
+                        <Button
+                          variant={'outlined'}
+                          size={'small'}
+                          color={'primary'}
+                          sx={{ m: 1 }}
+                        >
+                          <Delete />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </SimpleBar>
+          <TablePagination
+            component={'div'}
+            count={docs.count}
+            page={page}
+            onPageChange={(event, newPage) => setPage(newPage)}
+            rowsPerPage={20}
+            rowsPerPageOptions={[]}
+          />
+        </TableContainer>
+      </CardContent>
+    </Card>
   )
 }
 
-export default AuthoritiesTable
+export default DocsTable

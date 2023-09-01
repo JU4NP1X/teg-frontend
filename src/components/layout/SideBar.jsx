@@ -119,7 +119,7 @@ export const SideBar = ({ isOpen, loginHandler, setOpen }) => {
                 paddingLeft: '16px',
                 display: 'flex',
                 flexDirection: 'column',
-                height: '30vh',
+                height: '20vh',
               }}
             >
               <ListItemButton
@@ -151,21 +151,6 @@ export const SideBar = ({ isOpen, loginHandler, setOpen }) => {
                   <ListAlt />
                 </ListItemIcon>
                 <ListItemText primary={'Listas de autoridad'} />
-              </ListItemButton>
-              <ListItemButton
-                onClick={() => {
-                  if (isMobile()) {
-                    setOpenAdministration(false)
-                    setOpen(false)
-                  }
-                  Navigate('/admin/documents')
-                }}
-                selected={window.location.pathname === '/admin/documents'}
-              >
-                <ListItemIcon sx={{ color: 'white' }}>
-                  <Description />
-                </ListItemIcon>
-                <ListItemText primary={'Documentos'} />
               </ListItemButton>
             </List>
 
