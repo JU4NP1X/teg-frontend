@@ -41,8 +41,7 @@ const ApiConnection = () => {
       Api.status = response.status
       Api.data = transformToCamelCase(data)
 
-      if (Api.status === 401) {
-        Session.unset()
+      if (Api.status === 401 || Api.status === 403) {
         history.replace(`/?errorMessage=${message}&unsetUser=true`)
       }
       return Api.data
