@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material'
+import { Chip, Grid } from '@mui/material'
 import React from 'react'
 import CircularProgressWithLabel from '../../common/CircularProgressWithLabel'
 
@@ -34,8 +34,8 @@ const TrainStep = ({ progress, status }) => {
   }
 
   return (
-    <>
-      <>
+    <Grid container>
+      <Grid item xs={12}>
         {(status === 'TRAINING' || status === 'GETTING_DATA') && (
           <CircularProgressWithLabel
             value={progress - 0}
@@ -43,8 +43,8 @@ const TrainStep = ({ progress, status }) => {
             color={getStatusColor(status)}
           />
         )}
-      </>
-      <>
+      </Grid>
+      <Grid item xs={12}>
         <Chip
           label={getStatusText(status)}
           color={getStatusColor(status)}
@@ -53,8 +53,8 @@ const TrainStep = ({ progress, status }) => {
             minWidth: '100px',
           }}
         />
-      </>
-    </>
+      </Grid>
+    </Grid>
   )
 }
 

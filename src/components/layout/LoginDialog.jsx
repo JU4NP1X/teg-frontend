@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Dialog,
   DialogActions,
@@ -30,11 +31,11 @@ const LoginDialog = ({ open, handleClose }) => {
       setUser(data)
       handleClose()
       setSuccessMessage('Sesión iniciada exitosamente')
-    } else setErrorMessage('Credeciales inválidas')
+    } else setErrorMessage('Credenciales inválidas')
     setIsRequesting(false)
   }
 
-  const closeValidarte = () => {
+  const closeValidate = () => {
     if (!isRequesting) handleClose()
   }
 
@@ -49,16 +50,22 @@ const LoginDialog = ({ open, handleClose }) => {
         setUser(data)
         handleClose()
         setSuccessMessage('Sesión iniciada exitosamente')
-      } else setErrorMessage('Credeciales inválidas')
+      } else setErrorMessage('Credenciales inválidas')
       setIsRequesting(false)
     }
   }
 
   return (
-    <Dialog open={open} onClose={closeValidarte}>
-      <DialogTitle>Iniciar sesión</DialogTitle>
+    <Dialog open={open} onClose={closeValidate}>
       <ValidatorForm onSubmit={handleLogin}>
+        <DialogTitle style={{ textAlign: '-webkit-center' }}>
+          <Avatar style={{ marginRight: '0.5rem' }} />
+          Iniciar sesión
+        </DialogTitle>
         <DialogContent>
+          <Grid container justifyContent="center">
+            <LoginWithGoogle responseGoogle={responseGoogle} />
+          </Grid>
           <TextValidator
             fullWidth
             label={'Nombre de usuario'}
@@ -79,17 +86,15 @@ const LoginDialog = ({ open, handleClose }) => {
             errorMessages={['La contraseña es requerida']}
           />
         </DialogContent>
-
-        <Grid container style={{ placeContent: 'center' }}>
-          <LoginWithGoogle responseGoogle={responseGoogle} />
-        </Grid>
         <DialogActions>
-          <Button onClick={closeValidarte} disabled={isRequesting}>
-            Cancelar
-          </Button>
-          <Button type={'submit'} disabled={isRequesting}>
-            Iniciar sesión
-          </Button>
+          <Grid container justifyContent="space-between">
+            <Button onClick={closeValidate} disabled={isRequesting}>
+              Cancelar
+            </Button>
+            <Button type={'submit'} disabled={isRequesting}>
+              Iniciar sesión
+            </Button>
+          </Grid>
         </DialogActions>
       </ValidatorForm>
     </Dialog>

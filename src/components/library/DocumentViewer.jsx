@@ -38,7 +38,7 @@ const DocumentViewer = ({ open, onClose, pdfBase64, title }) => {
       <DialogContent style={{ height: '80vh' }}>
         <FullScreen handle={screen} onChange={fullScreenChange}>
           <Iframe
-            src={`data:application/pdf;base64,${pdfBase64}`}
+            src={`data:application/pdf;headers=filename%3D${title};base64,${pdfBase64}`}
             width={'100%'}
             height={'100%'}
           />

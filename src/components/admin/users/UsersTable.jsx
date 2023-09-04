@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import React from 'react'
 import SimpleBar from 'simplebar-react'
+import useAuth from '../../../hooks/useAuth'
 
 const columns = [
   { label: 'Email', align: 'left', width: '20%' },
@@ -42,6 +43,7 @@ const UsersTable = ({
   rowsPerPage,
   setRowsPerPage,
 }) => {
+  const { user } = useAuth()
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -81,22 +83,22 @@ const UsersTable = ({
             </TableHead>
             <TableBody>
               {!loading ? (
-                users.results.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.username}</TableCell>
-                    <TableCell>{user.firstName}</TableCell>
-                    <TableCell>{user.lastName}</TableCell>
+                users.results.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.email}</TableCell>
+                    <TableCell>{item.username}</TableCell>
+                    <TableCell>{item.firstName}</TableCell>
+                    <TableCell>{item.lastName}</TableCell>
                     <TableCell align={'center'}>
                       <Chip
-                        label={user.isAdmin ? 'Sí' : 'No'}
-                        color={user.isAdmin ? 'success' : 'error'}
+                        label={item.isAdmin ? 'Sí' : 'No'}
+                        color={item.isAdmin ? 'success' : 'error'}
                       />
                     </TableCell>
                     <TableCell align={'right'}>
                       <Tooltip title="Editar usuario">
                         <IconButton
-                          onClick={() => handleEditUser(user)}
+                          onClick={() => handleEditUser(item)}
                           size={'small'}
                           color={'success'}
                           sx={{ m: 1 }}
@@ -106,10 +108,11 @@ const UsersTable = ({
                       </Tooltip>
                       <Tooltip title="Eliminar usuario">
                         <IconButton
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => handleDeleteUser(item.id)}
                           size={'small'}
                           color={'primary'}
                           sx={{ m: 1 }}
+                          disabled={item.id === user.id}
                         >
                           <Delete />
                         </IconButton>

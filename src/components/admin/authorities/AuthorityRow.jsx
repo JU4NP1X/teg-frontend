@@ -43,17 +43,13 @@ const AuthorityRow = ({
   return (
     <TableRow key={authority.id}>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
-        <div
-          style={{
-            height: 20,
-            width: 20,
-            backgroundColor: authority.color,
-            borderRadius: 3,
-          }}
-        ></div>
-      </TableCell>
-      <TableCell align={'center'}>
-        <b>{authority.name}</b>
+        <div style={{ display: 'flex', placeContent: 'center' }}>
+          <span
+            className={'dot'}
+            style={{ backgroundColor: authority.color, marginTop: 1 }}
+          />
+          <b>{authority.name}</b>
+        </div>
       </TableCell>
       <TableCell>
         {moment(authority.lastTrainingDate).locale('ve').format('LL hh:mm A')}

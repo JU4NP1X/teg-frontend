@@ -91,8 +91,9 @@ const Documents = ({ paginatedData, style }) => {
                               className={'dot'}
                               style={{
                                 backgroundColor: category.authority.color,
-                                height: 2,
+                                height: 4,
                                 marginTop: 0,
+                                borderRadius: '50%',
                               }}
                             />
                             {category.translation.name}

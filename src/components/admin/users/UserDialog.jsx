@@ -14,6 +14,7 @@ import {
   TextValidator,
   ValidatorForm,
 } from 'react-material-ui-form-validator'
+import useAuth from '../../../hooks/useAuth'
 
 const UserDialog = ({
   open,
@@ -23,6 +24,7 @@ const UserDialog = ({
   handleChange,
   loadingEdition,
 }) => {
+  const { user } = useAuth()
   return (
     <Dialog open={open} onClose={onClose} maxWidth={'md'}>
       <DialogTitle>
@@ -87,6 +89,7 @@ const UserDialog = ({
               value={formValues.isAdmin}
               onChange={handleChange}
               fullWidth
+              disabled={formValues.id === user.id}
             >
               <MenuItem value={true}>Sí</MenuItem>
               <MenuItem value={false}>No</MenuItem>

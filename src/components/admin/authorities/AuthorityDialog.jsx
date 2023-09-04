@@ -47,15 +47,13 @@ const AuthorityDialog = ({}) => {
       open={openAuthorityModal}
       onClose={handleCancel}
       aria-labelledby={'form-dialog-title'}
+      fullWidth
     >
       <DialogTitle id={'form-dialog-title'}>
         {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
       </DialogTitle>
       <ValidatorForm onSubmit={handleAddAuthority}>
         <DialogContent>
-          <DialogContentText>
-            Por favor, ingresa el nombre y las categorías de la nueva autoridad.
-          </DialogContentText>
           <TextValidator
             autoFocus
             margin={'dense'}
@@ -98,7 +96,6 @@ const AuthorityDialog = ({}) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel}>Cancelar</Button>
           <Button
             disabled={!authority.csvFile && !authority.id}
             type={'submit'}

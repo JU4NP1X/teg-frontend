@@ -15,8 +15,7 @@ import useAuthorities from '../../../hooks/useAuthorities'
 import AuthorityRow from './AuthorityRow'
 
 const columns = [
-  { label: 'Color', align: 'center', width: '2%' },
-  { label: 'Autoridad', align: 'center', width: '4%' },
+  { label: 'Autoridad', align: 'center', width: '6%' },
   { label: 'Última Fecha de Entrenamiento', align: 'left', width: '4%' },
   {
     label: 'Datos de Entrenamiento Disponibles',
