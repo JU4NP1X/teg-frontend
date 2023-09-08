@@ -37,6 +37,7 @@ const AuthorityRow = ({
   authority,
   handleDeleteAuthority,
   handleSyncAuthority,
+  handleTrainAuthority,
   handleUpdateAuthority,
   loadingAction,
 }) => {

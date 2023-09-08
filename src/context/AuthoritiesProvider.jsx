@@ -89,7 +89,7 @@ const AuthoritiesProvider = ({ children }) => {
         setSuccessMessage('Autoridad eliminada.')
         setLoadingAction(false)
       } else {
-        setErrorMessage('Error al sincronizar los datos de la autoridad.')
+        setErrorMessage('Error al eliminar la autoridad.')
         setLoadingAction(false)
       }
     } catch (error) {
@@ -120,13 +120,13 @@ const AuthoritiesProvider = ({ children }) => {
   const handleTrainAuthority = async (authority) => {
     try {
       const api = ApiConnection()
-      await api.post(`/datasets/train/`, { authorities: [authority.id] })
+      await api.post(`/categories/train/`, { authorities: [authority.id] })
       if (api.status < 400) {
-        setSuccessMessage('Autoridad sincronizando.')
+        setSuccessMessage('Autoridad entrenando.')
         getPageData(false)
         setLoadingAction(false)
       } else {
-        setErrorMessage('Error al sincronizar los datos de la autoridad.')
+        setErrorMessage('Error al entrenar la autoridad.')
         setLoadingAction(false)
       }
     } catch (error) {
