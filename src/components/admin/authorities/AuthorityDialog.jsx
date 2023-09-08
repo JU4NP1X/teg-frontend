@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from '@mui/material'
 import React from 'react'
@@ -90,14 +89,14 @@ const AuthorityDialog = ({}) => {
               isLoading={setLoadingFile}
               fileTypes={['.csv']}
               onFileUpload={(file) =>
-                setAuthority({ ...authority, csvFile: file })
+                setAuthority({ ...authority, csvBase64: file })
               }
             />
           )}
         </DialogContent>
         <DialogActions>
           <Button
-            disabled={!authority.csvFile && !authority.id}
+            disabled={!authority.csvBase64 && !authority.id}
             type={'submit'}
             color={'primary'}
           >

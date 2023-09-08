@@ -157,6 +157,7 @@ const Profile = () => {
                     onChange={handlePasswordChange}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
+                    autoComplete={'new-password'}
                   />
                   <TextValidator
                     label={'Confirmar contraseña'}
@@ -169,6 +170,7 @@ const Profile = () => {
                       'Este campo es requerido',
                       'Las contraseñas no coinciden',
                     ]}
+                    autoComplete={'new-password'}
                   />
                   <Button
                     type={'submit'}
