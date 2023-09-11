@@ -96,7 +96,9 @@ const Documents = ({ paginatedData, style }) => {
                                 borderRadius: '50%',
                               }}
                             />
-                            {category.translation.name}
+                            {category.translation
+                              ? category.translation.name
+                              : category.name}
                           </div>
                         }
                         sx={{ marginRight: '5px' }}

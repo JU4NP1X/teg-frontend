@@ -25,7 +25,6 @@ const Filters = () => {
     setSelectedAuthority,
     authorityList,
     apiFilters,
-    setApiFilters,
     selectedFilters,
     setSelectedFilters,
   } = useLibrary()

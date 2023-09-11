@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   TextField,
+  Typography,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
@@ -25,11 +26,13 @@ const TagsListCard = (save) => {
     setSearch,
     loadingCategoriesOptions,
     categoriesOptions,
+    categoriesSelected,
+    setCategoriesSelected,
+    setCategoryToAdd,
   } = useClassifier()
   const [categoriesList, setCategoriesList] = useState(categories)
   const [open, setOpen] = useState(false)
   const [categoriesExpanded, setCategoriesExpanded] = useState([])
-  const [categoriesSelected, setCategoriesSelected] = useState([])
 
   useEffect(() => {
     setCategories(categoriesList)
@@ -114,7 +117,30 @@ const TagsListCard = (save) => {
                 }}
               />
             </ListItemIcon>
-            <ListItemText primary={category.translation.name} />
+            <ListItemText
+              primary={
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span
+                    className={'dot'}
+                    style={{
+                      backgroundColor: category.authority.color,
+                      marginRight: 10,
+                      marginLeft: -20,
+                    }}
+                  />
+                  <div style={{ marginTop: 2 }}>
+                    {category.translation
+                      ? category.translation.name
+                      : category.name}
+                  </div>
+                </div>
+              }
+            />
             {category.children && category.children.length > 0 && (
               <ListItemIcon>
                 {categoriesExpanded.includes(category.id) ? (
@@ -158,7 +184,9 @@ const TagsListCard = (save) => {
             <List disablePadding>{renderCategories(categoriesList)}</List>
           </SimpleBar>
         </div>
-
+        <Typography variant={'h6'} sx={{ fontWeight: 'light', mt: 2 }}>
+          Agregar categoría faltante
+        </Typography>
         <Autocomplete
           id={'asynchronous-demo'}
           open={open}
@@ -169,8 +197,19 @@ const TagsListCard = (save) => {
             setOpen(false)
             setSearch('')
           }}
-          onChange={() => {
-            console.log("hla")
+          onChange={(a, value) => {
+            setCategoryToAdd(value)
+          }}
+          renderOption={(props, { name, authority }) => {
+            return (
+              <li {...props}>
+                <span
+                  className={'dot'}
+                  style={{ backgroundColor: authority.color, marginTop: -2 }}
+                />
+                {name}
+              </li>
+            )
           }}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={({ name }) => name}
@@ -180,7 +219,7 @@ const TagsListCard = (save) => {
             <TextField
               fullWidth
               {...params}
-              label={'Buscar categoría faltante'}
+              label={'Buscar'}
               onKeyDown={(event) => {
                 setSearch(event.target.value)
               }}

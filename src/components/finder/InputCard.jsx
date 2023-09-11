@@ -36,7 +36,9 @@ const InputCard = () => {
   return (
     <>
       <Card sx={{ minHeight: '100%' }}>
-        <CardHeader title={'Agregar documento'} />
+        <CardHeader
+          title={doc.id ? 'Modificar documento' : 'Agregar documento'}
+        />
         <ValidatorForm onSubmit={handleSubmit}>
           <CardContent>
             <FormControl

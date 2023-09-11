@@ -24,8 +24,10 @@ const sortCategories = (newCategories) => {
   })
 
   newCategories.sort((a, b) => {
-    const nameA = a.translation.name.toUpperCase()
-    const nameB = b.translation.name.toUpperCase()
+    let nameA = ''
+    let nameB = ''
+    if (a.translation) nameA = a.translation.name.toUpperCase()
+    if (b.translation) nameB = b.translation.name.toUpperCase()
 
     if (nameA < nameB) {
       return -1
@@ -45,7 +47,7 @@ const ClassifierProvider = ({ children }) => {
   const [loadingCategoriesOptions, setLoadingCategoriesOptions] =
     useState(false)
   const [categoriesOptions, setCategoriesOptions] = useState([])
-
+  const [categoriesSelected, setCategoriesSelected] = useState([])
   const [loadingDocs, setLoadingDocs] = useState(false)
   const [page, setPage] = useState(0)
   const [authorities, setAuthorities] = useState([])
@@ -53,6 +55,7 @@ const ClassifierProvider = ({ children }) => {
   const [authority, setAuthority] = useState(null)
   const [doc, setDoc] = useState(documentTemplate)
   const [docs, setDocs] = useState(docsTemplate)
+  const [categoryToAdd, setCategoryToAdd] = useState(null)
 
   const getAuthorityList = async () => {
     setLoadingAuthorities(true)
@@ -136,6 +139,28 @@ const ClassifierProvider = ({ children }) => {
     setLoadingCategories(false)
   }
 
+  const getCategory = async () => {
+    const api = ApiConnection()
+    const data = await api.get(`/categories/list/`, {
+      params: {
+        treeId: categoryToAdd.category.treeId,
+        deprecated: false,
+      },
+    })
+    if (api.status < 400) {
+      let newCategories = [
+        ...categories,
+        ...data.results.filter(
+          (category) => !categories.map(({ id }) => id).includes(category.id)
+        ),
+      ]
+      sortCategories(newCategories)
+      setCategories(newCategories)
+      setCategoriesSelected([...categoriesSelected, categoryToAdd.category.id])
+      setCategoryToAdd(null)
+    }
+  }
+
   useEffect(() => {
     getAuthorityList()
     getDocList()
@@ -144,6 +169,10 @@ const ClassifierProvider = ({ children }) => {
   useEffect(() => {
     getDocList()
   }, [page])
+
+  useEffect(() => {
+    if (categoryToAdd && categoryToAdd.id) getCategory()
+  }, [categoryToAdd])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -179,6 +208,9 @@ const ClassifierProvider = ({ children }) => {
         loadingCategoriesOptions,
         categoriesOptions,
         setSearch,
+        setCategoryToAdd,
+        categoriesSelected,
+        setCategoriesSelected,
       }}
     >
       {children}
