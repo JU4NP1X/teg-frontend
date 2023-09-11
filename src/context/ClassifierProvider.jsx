@@ -56,6 +56,7 @@ const ClassifierProvider = ({ children }) => {
   const [doc, setDoc] = useState(documentTemplate)
   const [docs, setDocs] = useState(docsTemplate)
   const [categoryToAdd, setCategoryToAdd] = useState(null)
+  const [categoryAdded, setCategoryAdded] = useState(false)
 
   const getAuthorityList = async () => {
     setLoadingAuthorities(true)
@@ -156,8 +157,7 @@ const ClassifierProvider = ({ children }) => {
       ]
       sortCategories(newCategories)
       setCategories(newCategories)
-      setCategoriesSelected([...categoriesSelected, categoryToAdd.category.id])
-      setCategoryToAdd(null)
+      setCategoryAdded(true)
     }
   }
 
@@ -173,6 +173,14 @@ const ClassifierProvider = ({ children }) => {
   useEffect(() => {
     if (categoryToAdd && categoryToAdd.id) getCategory()
   }, [categoryToAdd])
+
+  useEffect(() => {
+    if (categoryAdded) {
+      setCategoryAdded(false)
+      setCategoriesSelected([...categoriesSelected, categoryToAdd.category.id])
+      setCategoryToAdd(null)
+    }
+  }, [categories])
 
   useEffect(() => {
     const controller = new AbortController()

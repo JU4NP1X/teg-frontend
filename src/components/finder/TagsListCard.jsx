@@ -1,8 +1,11 @@
+import { Save } from '@mui/icons-material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Autocomplete,
+  Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Checkbox,
@@ -21,6 +24,7 @@ import useClassifier from '../../hooks/useClassifier'
 
 const TagsListCard = (save) => {
   const {
+    doc,
     categories,
     setCategories,
     setSearch,
@@ -173,7 +177,7 @@ const TagsListCard = (save) => {
   return (
     <Card sx={{ w: '100%', h: '100%' }}>
       <CardHeader title={'Categorías'} />
-      <CardContent sx={{ height: '100%' }}>
+      <CardContent>
         <div style={{ border: '1px solid #ccc', borderRadius: 4 }}>
           <SimpleBar
             onTouchStart={(e) => {
@@ -238,6 +242,20 @@ const TagsListCard = (save) => {
           )}
         />
       </CardContent>
+
+      <CardActions disableSpacing sx={{ pb: 0 }}>
+        <Button
+          fullWidth
+          variant={'contained'}
+          startIcon={<Save />}
+          onClick={() => {
+            setShowTable(!showTable)
+          }}
+          disabled={!(doc.pdf && categoriesSelected.length === 0)}
+        >
+          Guardar
+        </Button>
+      </CardActions>
     </Card>
   )
 }
