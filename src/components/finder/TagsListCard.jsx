@@ -1,129 +1,143 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
+  Autocomplete,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
+  CircularProgress,
   Divider,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  TextField,
 } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
 
-const TagsListCard = () => {
-  const { categories, setCategories } = useClassifier()
+const TagsListCard = (save) => {
+  const {
+    categories,
+    setCategories,
+    setSearch,
+    loadingCategoriesOptions,
+    categoriesOptions,
+  } = useClassifier()
+  const [categoriesList, setCategoriesList] = useState(categories)
+  const [open, setOpen] = useState(false)
+  const [categoriesExpanded, setCategoriesExpanded] = useState([])
+  const [categoriesSelected, setCategoriesSelected] = useState([])
 
-  const handleToggle = (
-    categoryId,
-    checked,
-    categoriesBranch = [],
-    root = true
-  ) => {
-    if (!categoriesBranch.length) categoriesBranch = [...categories]
+  useEffect(() => {
+    setCategories(categoriesList)
+  }, [save])
 
-    const categoriesUpdated = categoriesBranch.map((category) => {
-      if (category.id === categoryId) category.selected = checked
-
-      if (category.child && category.child.length > 0) {
-        category.child = handleToggle(
-          categoryId,
-          checked,
-          category.child,
-          false
-        )
-        if (!category.selected && checked)
-          category.selected = category.child.some((child) => child.selected)
-        if (!category.selected && !checked)
-          category.child = category.child.map((child) => {
-            child.selected = false
-            return child
-          })
-        category.child = handleToggle(
-          categoryId,
-          checked,
-          category.child,
-          false
-        )
-      }
-      return category
-    })
-
-    if (!root) return categoriesUpdated
-
-    setCategories(categoriesUpdated)
-  }
+  useEffect(() => {
+    setCategoriesList([...categories])
+  }, [categories])
 
   const handleExpand = (categoryId) => {
-    setCategories((prevCategories) => {
-      const updatedCategories = prevCategories.map((category) => {
-        if (category.id === categoryId) {
-          category.expanded = !category.expanded
-        } else if (
-          category.child &&
-          category.child.some((child) => child.id === categoryId)
-        ) {
-          category.child = category.child.map((child) => {
-            if (child.id === categoryId) {
-              child.expanded = !child.expanded
-            }
-            return child
-          })
-        }
-        return category
-      })
-
-      return [...updatedCategories]
-    })
+    if (categoriesExpanded.includes(categoryId))
+      setCategoriesExpanded(
+        categoriesExpanded.filter((id) => id !== categoryId)
+      )
+    else setCategoriesExpanded([...categoriesExpanded, categoryId])
   }
 
+  const handleSelected = (category) => {
+    if (categoriesSelected.includes(category.id)) {
+      let newSelectedCategoriesList = categoriesSelected
+      if (category.children && category.children.length)
+        newSelectedCategoriesList = selectedWithoutChildren(category.children, [
+          ...categoriesSelected,
+        ])
+      setCategoriesSelected(
+        newSelectedCategoriesList.filter((id) => id !== category.id)
+      )
+    } else setCategoriesSelected([...categoriesSelected, category.id])
+  }
+  const selectedWithoutChildren = (categories, selectedCategories) => {
+    categories.forEach(({ id, children }) => {
+      if (children && children.length)
+        selectedCategories = selectedWithoutChildren(
+          children,
+          selectedCategories
+        )
+
+      selectedCategories = selectedCategories.filter(
+        (selectedId) => selectedId !== id
+      )
+    })
+    return selectedCategories
+  }
+  const checkSelectionTree = (categoriesList) => {
+    categoriesList.forEach((category) => {
+      if (
+        !categoriesSelected.includes(category.id) &&
+        category.children &&
+        category.children.filter(({ id }) => categoriesSelected.includes(id))
+          .length
+      )
+        setCategoriesSelected([...categoriesSelected, category.id])
+      else if (category.children) {
+        checkSelectionTree(category.children)
+      }
+    })
+  }
+  useEffect(() => {
+    checkSelectionTree(categoriesList)
+  }, [categoriesSelected])
   const renderCategories = (categories) =>
     categories.map((category) => (
       <>
         <List key={category.id} disablePadding sx={{ width: '100%' }}>
           <ListItemButton
             onClick={() =>
-              category.child && category.child.length
+              category.children && category.children.length
                 ? handleExpand(category.id)
-                : handleToggle(category.id, !category.selected)
+                : handleSelected(category)
             }
             sx={{ height: 50 }}
           >
             <ListItemIcon>
               <Checkbox
                 edge={'start'}
-                checked={category.selected}
+                checked={categoriesSelected.includes(category.id)}
                 tabIndex={-1}
                 disableRipple
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleToggle(category.id, !category.selected)
+                  handleSelected(category)
                 }}
               />
             </ListItemIcon>
-            <ListItemText primary={category.name} />
-            {category.child && category.child.length > 0 && (
+            <ListItemText primary={category.translation.name} />
+            {category.children && category.children.length > 0 && (
               <ListItemIcon>
-                {category.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                {categoriesExpanded.includes(category.id) ? (
+                  <ExpandLessIcon />
+                ) : (
+                  <ExpandMoreIcon />
+                )}
               </ListItemIcon>
             )}
           </ListItemButton>
           <Divider sx={{ ml: 0 }} />
-          {category.child && category.child.length > 0 && (
+          {category.children && category.children.length > 0 && (
             <List
               sx={{
                 pl: 4,
-                maxHeight: category.expanded ? 200 : 0,
+                maxHeight: categoriesExpanded.includes(category.id) ? 1000 : 0,
                 overflow: 'hidden',
-                transition: 'max-height 0.3s',
+                transition: 'max-height 1s',
               }}
               disablePadding
             >
-              {renderCategories(category.child)}
+              {categoriesExpanded.includes(category.id) &&
+                renderCategories(category.children)}
             </List>
           )}
         </List>
@@ -134,14 +148,56 @@ const TagsListCard = () => {
     <Card sx={{ w: '100%', h: '100%' }}>
       <CardHeader title={'Categorías'} />
       <CardContent sx={{ height: '100%' }}>
-        <SimpleBar
-          onTouchStart={(e) => {
-            e.stopPropagation()
+        <div style={{ border: '1px solid #ccc', borderRadius: 4 }}>
+          <SimpleBar
+            onTouchStart={(e) => {
+              e.stopPropagation()
+            }}
+            style={{ height: 'calc(100vh - 367px)' }}
+          >
+            <List disablePadding>{renderCategories(categoriesList)}</List>
+          </SimpleBar>
+        </div>
+
+        <Autocomplete
+          id={'asynchronous-demo'}
+          open={open}
+          onOpen={() => {
+            setOpen(true)
           }}
-          style={{ height: 'calc(100vh - 225px)' }}
-        >
-          <List disablePadding>{renderCategories(categories)}</List>
-        </SimpleBar>
+          onClose={() => {
+            setOpen(false)
+            setSearch('')
+          }}
+          onChange={() => {
+            console.log("hla")
+          }}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          getOptionLabel={({ name }) => name}
+          options={categoriesOptions}
+          loading={loadingCategoriesOptions}
+          renderInput={(params) => (
+            <TextField
+              fullWidth
+              {...params}
+              label={'Buscar categoría faltante'}
+              onKeyDown={(event) => {
+                setSearch(event.target.value)
+              }}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loadingCategoriesOptions ? (
+                      <CircularProgress color={'inherit'} size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+          )}
+        />
       </CardContent>
     </Card>
   )

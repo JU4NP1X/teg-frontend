@@ -17,11 +17,35 @@ const documentTemplate = {
   pdf: '',
   img: '',
 }
+
+const sortCategories = (newCategories) => {
+  newCategories.forEach(({ children }) => {
+    if (children && children.length) sortCategories(children)
+  })
+
+  newCategories.sort((a, b) => {
+    const nameA = a.translation.name.toUpperCase()
+    const nameB = b.translation.name.toUpperCase()
+
+    if (nameA < nameB) {
+      return -1
+    }
+    if (nameA > nameB) {
+      return 1
+    }
+    return 0
+  })
+}
 const ClassifierProvider = ({ children }) => {
   const { setErrorMessage } = useNotification()
   const [showTable, setShowTable] = useState(true)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
+  const [search, setSearch] = useState('')
+  const [loadingCategoriesOptions, setLoadingCategoriesOptions] =
+    useState(false)
+  const [categoriesOptions, setCategoriesOptions] = useState([])
+
   const [loadingDocs, setLoadingDocs] = useState(false)
   const [page, setPage] = useState(0)
   const [authorities, setAuthorities] = useState([])
@@ -43,6 +67,27 @@ const ClassifierProvider = ({ children }) => {
       setAuthorities(data.results)
     }
     setLoadingAuthorities(false)
+  }
+
+  const getCategoriesOptions = async (signal) => {
+    setLoadingCategoriesOptions(true)
+    const api = ApiConnection()
+
+    const data = await api.get('/categories/translations/', {
+      params: {
+        search,
+        language: 'es',
+        ordering: 'name',
+      },
+      signal, // Pasamos la señal del AbortController a la petición
+    })
+    if (api.status < 400) {
+      setCategoriesOptions(data.results)
+      setLoadingCategoriesOptions(false)
+    } else if (!signal.aborted) {
+      setErrorMessage('Error al obtener las opciones de categorías.')
+      setLoadingCategoriesOptions(false)
+    }
   }
 
   const getDocList = async () => {
@@ -75,24 +120,20 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.post('/categories/classify/', {
       title: document.titleImg,
       summary: document.summaryImg,
-      authority: authority && authority.id ? authority.id : undefined,
+      authorityId: authority && authority.id ? authority.id : undefined,
     })
     if (api.status < 400) {
-      addExpandNSelectedOptions(data.results, true)
-      setCategories([
+      let newCategories = [
         ...categories,
-        ...data.filter((category) => !categories.includes(category)),
-      ])
+        ...data.filter(
+          (category) => !categories.map(({ id }) => id).includes(category.id)
+        ),
+      ]
+      sortCategories(newCategories)
+
+      setCategories(newCategories)
     } else setErrorMessage('Error al clasificar el texto.')
     setLoadingCategories(false)
-  }
-
-  const addExpandNSelectedOptions = (categories, root = false) => {
-    categories.map((cat) => {
-      cat.expanded = root
-      cat.selected = root
-      addExpandNSelectedOptions(cat.childs)
-    })
   }
 
   useEffect(() => {
@@ -103,6 +144,15 @@ const ClassifierProvider = ({ children }) => {
   useEffect(() => {
     getDocList()
   }, [page])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    getCategoriesOptions(controller.signal) // Guardamos la función de limpieza
+
+    return () => {
+      controller.abort()
+    }
+  }, [search])
 
   return (
     <ClassifierContext.Provider
@@ -126,6 +176,9 @@ const ClassifierProvider = ({ children }) => {
         page,
         setPage,
         getDoc,
+        loadingCategoriesOptions,
+        categoriesOptions,
+        setSearch,
       }}
     >
       {children}
