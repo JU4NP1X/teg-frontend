@@ -90,7 +90,9 @@ const Users = () => {
       setLoadingEdition(false)
     } else {
       setErrorMessage(
-        `Error al modificar, asegúrese que el correo o el usuario no se encuentren ya en uso`
+        `Error al ${
+          formValues.id ? 'modificar' : 'crear'
+        } el usuario, asegúrese que el correo o el nombre de usuario no se encuentren ya en uso`
       )
       setLoadingEdition(false)
     }

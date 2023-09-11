@@ -43,8 +43,8 @@ const AuthorityRow = ({
 }) => {
   return (
     <TableRow key={authority.id}>
-      <TableCell sx={{ textAlign: '-webkit-center' }}>
-        <div style={{ display: 'flex', placeContent: 'center' }}>
+      <TableCell>
+        <div style={{ display: 'flex' }}>
           <span
             className={'dot'}
             style={{ backgroundColor: authority.color, marginTop: 1 }}
