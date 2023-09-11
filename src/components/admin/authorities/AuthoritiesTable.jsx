@@ -1,6 +1,5 @@
 import {
   CircularProgress,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +11,7 @@ import {
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 import useAuthorities from '../../../hooks/useAuthorities'
+import Border from '../../common/Border'
 import AuthorityRow from './AuthorityRow'
 
 const columns = [
@@ -73,60 +73,62 @@ const AuthoritiesTable = ({}) => {
   }
   return (
     <>
-      <TableContainer component={Paper}>
-        <SimpleBar
-          style={{ height: 'calc(100vh - 230px)' }}
-          onTouchStart={(e) => {
-            e.stopPropagation()
-          }}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.label}
-                    align={column.align}
-                    style={{
-                      fontWeight: 'bold',
-                      textAlign: column.align,
-                      width: column.width,
-                    }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {!loading ? (
-                authorities.results
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((authority) => (
-                    <AuthorityRow
-                      key={authority.name}
-                      authority={authority}
-                      handleDeleteAuthority={handleDeleteAuthority}
-                      handleUpdateAuthority={handleUpdateAuthority}
-                      handleSyncAuthority={handleSyncAuthority}
-                      handleTrainAuthority={handleTrainAuthority}
-                      loadingAction={loadingAction}
-                    />
-                  ))
-              ) : (
+      <TableContainer>
+        <Border>
+          <SimpleBar
+            style={{ height: 'calc(100vh - 230px)' }}
+            onTouchStart={(e) => {
+              e.stopPropagation()
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead>
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    align={'center'}
-                    style={{ height: 'calc(100vh - 357px)' }}
-                  >
-                    <CircularProgress />
-                  </TableCell>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.label}
+                      align={column.align}
+                      style={{
+                        fontWeight: 'bold',
+                        textAlign: column.align,
+                        width: column.width,
+                      }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </SimpleBar>
+              </TableHead>
+              <TableBody>
+                {!loading ? (
+                  authorities.results
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((authority) => (
+                      <AuthorityRow
+                        key={authority.name}
+                        authority={authority}
+                        handleDeleteAuthority={handleDeleteAuthority}
+                        handleUpdateAuthority={handleUpdateAuthority}
+                        handleSyncAuthority={handleSyncAuthority}
+                        handleTrainAuthority={handleTrainAuthority}
+                        loadingAction={loadingAction}
+                      />
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      align={'center'}
+                      style={{ height: 'calc(100vh - 357px)' }}
+                    >
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </SimpleBar>
+        </Border>
       </TableContainer>
       <TablePagination
         component={'div'}

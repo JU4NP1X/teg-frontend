@@ -21,6 +21,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
+import Border from '../common/Border'
 
 const TagsListCard = (save) => {
   const {
@@ -178,7 +179,7 @@ const TagsListCard = (save) => {
     <Card sx={{ w: '100%', h: '100%' }}>
       <CardHeader title={'Categorías'} />
       <CardContent>
-        <div style={{ border: '1px solid #ccc', borderRadius: 4 }}>
+        <Border>
           <SimpleBar
             onTouchStart={(e) => {
               e.stopPropagation()
@@ -187,7 +188,7 @@ const TagsListCard = (save) => {
           >
             <List disablePadding>{renderCategories(categoriesList)}</List>
           </SimpleBar>
-        </div>
+        </Border>
         <Typography variant={'h6'} sx={{ fontWeight: 'light', mt: 2 }}>
           Agregar categoría faltante
         </Typography>
@@ -251,7 +252,7 @@ const TagsListCard = (save) => {
           onClick={() => {
             setShowTable(!showTable)
           }}
-          disabled={!(doc.pdf && categoriesSelected.length === 0)}
+          disabled={!doc.pdf || categoriesSelected.length === 0}
         >
           Guardar
         </Button>

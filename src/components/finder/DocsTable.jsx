@@ -5,7 +5,6 @@ import {
   CardHeader,
   CircularProgress,
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +17,7 @@ import {
 import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
+import Border from '../common/Border'
 
 const documentTemplate = {
   title: '',
@@ -36,8 +36,17 @@ const titles = [
 ]
 
 const DocsTable = () => {
-  const { docs, loadingDocs, page, setPage, setDoc, setShowTable, getDoc } =
-    useClassifier()
+  const {
+    docs,
+    loadingDocs,
+    page,
+    setPage,
+    setDoc,
+    setShowTable,
+    getDoc,
+    setCategories,
+    setCategoriesSelected,
+  } = useClassifier()
   const [disableButtons, setDisableButtons] = useState(false)
   const getBase64Image = (base64String) => {
     return `data:image/png;base64,${base64String}`
@@ -58,6 +67,8 @@ const DocsTable = () => {
             onClick={() => {
               setDisableButtons(true)
               setDoc(documentTemplate)
+              setCategories([])
+              setCategoriesSelected([])
               setShowTable(false)
               setDisableButtons(false)
             }}
@@ -70,85 +81,87 @@ const DocsTable = () => {
         }
       />
       <CardContent style={{ paddingBottom: 0 }}>
-        <TableContainer component={Paper}>
-          <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  {titles.map((title, index) => (
-                    <TableCell
-                      key={index}
-                      align={title.align}
-                      style={{ width: title.width }}
-                    >
-                      <b>{title.nombre}</b>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {isLoading ? (
+        <Border>
+          <TableContainer>
+            <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
+              <Table stickyHeader>
+                <TableHead>
                   <TableRow>
-                    <TableCell
-                      colSpan={titles.length}
-                      align={'center'}
-                      style={{ height: 'calc(100vh - 280px)' }}
-                    >
-                      <CircularProgress />
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  docs.results.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <img
-                          src={getBase64Image(item.img)}
-                          alt={'Imagen'}
-                          style={{ height: 100, width: 'auto' }}
-                        />
+                    {titles.map((title, index) => (
+                      <TableCell
+                        key={index}
+                        align={title.align}
+                        style={{ width: title.width }}
+                      >
+                        <b>{title.nombre}</b>
                       </TableCell>
-                      <TableCell>{item.title}</TableCell>
-                      <TableCell>{item.summary}</TableCell>
-                      <TableCell>{item.authors}</TableCell>
-                      <TableCell align={'right'}>
-                        <IconButton
-                          disabled={disableButtons}
-                          onClick={async () => {
-                            setDisableButtons(true)
-                            await getDoc(item)
-                            setShowTable(false)
-                            setDisableButtons(false)
-                          }}
-                          variant={'outlined'}
-                          size={'small'}
-                          color={'success'}
-                          sx={{ m: 1 }}
-                          aria-label="Editar"
-                        >
-                          <Tooltip title="Editar">
-                            <Edit />
-                          </Tooltip>
-                        </IconButton>
-                        <IconButton
-                          disabled={disableButtons}
-                          variant={'outlined'}
-                          size={'small'}
-                          color={'primary'}
-                          sx={{ m: 1 }}
-                          aria-label="Eliminar"
-                        >
-                          <Tooltip title="Eliminar">
-                            <Delete />
-                          </Tooltip>
-                        </IconButton>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={titles.length}
+                        align={'center'}
+                        style={{ height: 'calc(100vh - 280px)' }}
+                      >
+                        <CircularProgress />
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </SimpleBar>
-        </TableContainer>
+                  ) : (
+                    docs.results.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>
+                          <img
+                            src={getBase64Image(item.img)}
+                            alt={'Imagen'}
+                            style={{ height: 100, width: 'auto' }}
+                          />
+                        </TableCell>
+                        <TableCell>{item.title}</TableCell>
+                        <TableCell>{item.summary}</TableCell>
+                        <TableCell>{item.authors}</TableCell>
+                        <TableCell align={'right'}>
+                          <IconButton
+                            disabled={disableButtons}
+                            onClick={async () => {
+                              setDisableButtons(true)
+                              await getDoc(item)
+                              setShowTable(false)
+                              setDisableButtons(false)
+                            }}
+                            variant={'outlined'}
+                            size={'small'}
+                            color={'success'}
+                            sx={{ m: 1 }}
+                            aria-label="Editar"
+                          >
+                            <Tooltip title="Editar">
+                              <Edit />
+                            </Tooltip>
+                          </IconButton>
+                          <IconButton
+                            disabled={disableButtons}
+                            variant={'outlined'}
+                            size={'small'}
+                            color={'primary'}
+                            sx={{ m: 1 }}
+                            aria-label="Eliminar"
+                          >
+                            <Tooltip title="Eliminar">
+                              <Delete />
+                            </Tooltip>
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </SimpleBar>
+          </TableContainer>
+        </Border>
         <TablePagination
           component={'div'}
           count={docs.count}

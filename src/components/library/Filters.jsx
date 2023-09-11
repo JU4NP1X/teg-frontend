@@ -14,6 +14,7 @@ import {
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 import useLibrary from '../../hooks/useLibrary'
+import Border from '../common/Border'
 
 const Filters = () => {
   const {
@@ -94,60 +95,60 @@ const Filters = () => {
             style={{ marginBottom: '16px' }}
           />
         </FormControl>
-        <SimpleBar
-          style={{
-            height: 'calc(100vh - 382px)',
-            border: '1px solid #ccc',
-            borderRadius: 4,
-          }}
-        >
-          <List>
-            {loadingFilters ? (
-              <div
-                style={{
-                  height: '50vh',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <CircularProgress />
-              </div>
-            ) : (
-              [
-                ...selectedFilters,
-                ...apiFilters.filter(
-                  (filter) => !selectedFilters.includes(filter)
-                ),
-              ].map((filter) => (
-                <ListItem key={filter.id}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={selectedFilters.includes(filter)}
-                        onChange={() => handleFilterChange(filter)}
-                      />
-                    }
-                    label={
-                      <div
-                        style={{
-                          display: 'flex',
-                        }}
-                      >
-                        <span
-                          className={'dot'}
-                          style={{ backgroundColor: filter.authority.color }}
+        <Border>
+          <SimpleBar
+            style={{
+              height: 'calc(100vh - 382px)',
+            }}
+          >
+            <List>
+              {loadingFilters ? (
+                <div
+                  style={{
+                    height: '50vh',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <CircularProgress />
+                </div>
+              ) : (
+                [
+                  ...selectedFilters,
+                  ...apiFilters.filter(
+                    (filter) => !selectedFilters.includes(filter)
+                  ),
+                ].map((filter) => (
+                  <ListItem key={filter.id}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedFilters.includes(filter)}
+                          onChange={() => handleFilterChange(filter)}
                         />
-                        {filter.name}
-                      </div>
-                    }
-                  />
-                </ListItem>
-              ))
-            )}
-          </List>
-        </SimpleBar>
+                      }
+                      label={
+                        <div
+                          style={{
+                            display: 'flex',
+                          }}
+                        >
+                          <span
+                            className={'dot'}
+                            style={{ backgroundColor: filter.authority.color }}
+                          />
+                          {filter.name}
+                        </div>
+                      }
+                    />
+                  </ListItem>
+                ))
+              )}
+            </List>
+          </SimpleBar>
+        </Border>
       </CardContent>
     </Card>
   )

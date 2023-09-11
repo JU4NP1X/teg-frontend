@@ -160,7 +160,7 @@ const InputCard = () => {
               startIcon={<Category />}
               sx={{ ml: 'auto' }}
             >
-              Clasificar
+              Buscar categorías
             </Button>
           </CardActions>
         </ValidatorForm>

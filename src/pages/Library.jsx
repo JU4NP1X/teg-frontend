@@ -6,6 +6,7 @@ import {
   Pagination,
 } from '@mui/material'
 import SimpleBar from 'simplebar-react/dist'
+import Border from '../components/common/Border'
 import Documents from '../components/library/Documents'
 import Filters from '../components/library/Filters'
 import Search from '../components/library/Search'
@@ -29,7 +30,7 @@ const Library = () => {
         <Search handleSearchChange={handleSearchChange} />
         <Card style={{ marginTop: 10 }}>
           <CardContent>
-            <div style={{ border: '1px solid #ccc', borderRadius: 4 }}>
+            <Border>
               {loadingDocuments ? (
                 <div
                   style={{
@@ -53,7 +54,7 @@ const Library = () => {
                   />
                 </SimpleBar>
               )}
-            </div>
+            </Border>
           </CardContent>
         </Card>
         <div
