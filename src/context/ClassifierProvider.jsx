@@ -192,11 +192,6 @@ const ClassifierProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    getAuthorityList()
-    getDocList()
-  }, [])
-
-  useEffect(() => {
     getDocList()
   }, [page])
 
@@ -247,10 +242,11 @@ const ClassifierProvider = ({ children }) => {
 
   useEffect(() => {
     if (showTable) {
+      getDocList()
       setDoc(documentTemplate)
       setCategories([])
       setCategoriesSelected([])
-    }
+    } else getAuthorityList()
   }, [showTable])
 
   useEffect(() => {
