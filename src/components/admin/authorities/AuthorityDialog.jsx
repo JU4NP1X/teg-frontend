@@ -4,9 +4,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
 } from '@mui/material'
 import React from 'react'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+import {
+  SelectValidator,
+  TextValidator,
+  ValidatorForm,
+} from 'react-material-ui-form-validator'
 import useAuthorities from '../../../hooks/useAuthorities'
 import FileUploader from '../../common/FileUploader'
 
@@ -93,6 +98,23 @@ const AuthorityDialog = ({}) => {
               }
             />
           )}
+
+          <SelectValidator
+            id={'active'}
+            label={'¿Está activo?'}
+            labelid={'admin-label'}
+            name={'active'}
+            value={authority.active}
+            validators={['required']}
+            errorMessages={['Este campo es requerido']}
+            onChange={(e) =>
+              setAuthority({ ...authority, active: e.target.value })
+            }
+            fullWidth
+          >
+            <MenuItem value={true}>Sí</MenuItem>
+            <MenuItem value={false}>No</MenuItem>
+          </SelectValidator>
         </DialogContent>
         <DialogActions>
           <Button

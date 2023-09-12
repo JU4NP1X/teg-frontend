@@ -147,7 +147,11 @@ const AuthorityRow = ({
         </div>
       </TableCell>
       <TableCell align={'center'}>
-        <TrainStep progress={authority.percentage} status={authority.status} />
+        <TrainStep
+          progress={authority.percentage}
+          status={authority.status}
+          active={authority.active}
+        />
       </TableCell>
       <TableCell>
         <div
