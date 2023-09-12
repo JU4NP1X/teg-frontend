@@ -28,6 +28,8 @@ const InputCard = () => {
     classify,
     authority,
     setAuthority,
+    loadingCategories,
+    loadingSaveDocument,
   } = useClassifier()
 
   const handleSubmit = (event) => {
@@ -69,6 +71,9 @@ const InputCard = () => {
                   <TextValidator
                     {...params}
                     label={'Lista de autoridad'}
+                    placeholder={
+                      'Selecciona una autoridad de dónde buscar categorías'
+                    }
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
                     InputProps={{
@@ -142,6 +147,7 @@ const InputCard = () => {
               onClick={() => {
                 setShowTable(!showTable)
               }}
+              disabled={loadingCategories || loadingSaveDocument}
             >
               Cancelar
             </Button>
@@ -151,6 +157,7 @@ const InputCard = () => {
               onClick={() => {
                 setOpenPDFExtractor(true)
               }}
+              disabled={loadingCategories || loadingSaveDocument}
             >
               {doc.pdf ? 'Modificar' : 'Subir'} PDF
             </Button>
@@ -158,9 +165,13 @@ const InputCard = () => {
               type={'submit'}
               variant={'contained'}
               startIcon={<Category />}
-              sx={{ ml: 'auto' }}
+              sx={{ ml: 'auto', width: '250px' }}
+              disabled={loadingCategories || loadingSaveDocument}
             >
               Buscar categorías
+              {loadingCategories && (
+                <CircularProgress color={'inherit'} size={24} sx={{ ml: 2 }} />
+              )}
             </Button>
           </CardActions>
         </ValidatorForm>

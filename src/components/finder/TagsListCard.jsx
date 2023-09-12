@@ -34,6 +34,11 @@ const TagsListCard = (save) => {
     categoriesSelected,
     setCategoriesSelected,
     setCategoryToAdd,
+    loadingCategories,
+    saveDocument,
+    loadingSaveDocument,
+    setShowTable,
+    showTable,
   } = useClassifier()
   const [categoriesList, setCategoriesList] = useState(categories)
   const [open, setOpen] = useState(false)
@@ -106,13 +111,14 @@ const TagsListCard = (save) => {
             onClick={() =>
               category.children && category.children.length
                 ? handleExpand(category.id)
-                : handleSelected(category)
+                : !loadingCategories && handleSelected(category)
             }
             sx={{ height: 50 }}
           >
             <ListItemIcon>
               <Checkbox
                 edge={'start'}
+                disabled={loadingCategories}
                 checked={categoriesSelected.includes(category.id)}
                 tabIndex={-1}
                 disableRipple
@@ -219,6 +225,7 @@ const TagsListCard = (save) => {
           isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={({ name }) => name}
           options={categoriesOptions}
+          disabled={loadingCategories}
           loading={loadingCategoriesOptions}
           renderInput={(params) => (
             <TextField
@@ -233,7 +240,11 @@ const TagsListCard = (save) => {
                 endAdornment: (
                   <React.Fragment>
                     {loadingCategoriesOptions ? (
-                      <CircularProgress color={'inherit'} size={20} />
+                      <CircularProgress
+                        color={'primary'}
+                        size={20}
+                        sx={{ mt: -1 }}
+                      />
                     ) : null}
                     {params.InputProps.endAdornment}
                   </React.Fragment>
@@ -249,12 +260,18 @@ const TagsListCard = (save) => {
           fullWidth
           variant={'contained'}
           startIcon={<Save />}
-          onClick={() => {
+          onClick={async () => {
+            await saveDocument()
             setShowTable(!showTable)
           }}
-          disabled={!doc.pdf || categoriesSelected.length === 0}
+          disabled={
+            !doc.pdf || categoriesSelected.length === 0 || loadingSaveDocument
+          }
         >
           Guardar
+          {loadingSaveDocument && (
+            <CircularProgress color={'inherit'} size={24} />
+          )}
         </Button>
       </CardActions>
     </Card>

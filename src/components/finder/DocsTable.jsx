@@ -19,14 +19,6 @@ import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
 import Border from '../common/Border'
 
-const documentTemplate = {
-  title: '',
-  summary: '',
-  categories: [],
-  pdf: '',
-  img: '',
-}
-
 const titles = [
   { nombre: 'Imagen', align: 'left', width: '20%' },
   { nombre: 'Título', align: 'left', width: '20%' },
@@ -66,9 +58,6 @@ const DocsTable = () => {
             color={'primary'}
             onClick={() => {
               setDisableButtons(true)
-              setDoc(documentTemplate)
-              setCategories([])
-              setCategoriesSelected([])
               setShowTable(false)
               setDisableButtons(false)
             }}
@@ -116,7 +105,12 @@ const DocsTable = () => {
                           <img
                             src={getBase64Image(item.img)}
                             alt={'Imagen'}
-                            style={{ height: 100, width: 'auto' }}
+                            style={{
+                              maxHeight: 100,
+                              width: 'auto',
+                              maxWidth: 200,
+                              height: 'auto',
+                            }}
                           />
                         </TableCell>
                         <TableCell>{item.title}</TableCell>
@@ -135,9 +129,9 @@ const DocsTable = () => {
                             size={'small'}
                             color={'success'}
                             sx={{ m: 1 }}
-                            aria-label="Editar"
+                            aria-label={'Editar'}
                           >
-                            <Tooltip title="Editar">
+                            <Tooltip title={'Editar'}>
                               <Edit />
                             </Tooltip>
                           </IconButton>

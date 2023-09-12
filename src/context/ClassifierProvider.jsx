@@ -39,10 +39,12 @@ const sortCategories = (newCategories) => {
   })
 }
 const ClassifierProvider = ({ children }) => {
-  const { setErrorMessage } = useNotification()
+  const { setErrorMessage, setSuccessMessage } = useNotification()
   const [showTable, setShowTable] = useState(true)
+  const [loadingSaveDocument, setLoadingSaveDocument] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
+  const [initialCategoriesAdded, setInitalCategoriesAdded] = useState(false)
   const [search, setSearch] = useState('')
   const [loadingCategoriesOptions, setLoadingCategoriesOptions] =
     useState(false)
@@ -141,6 +143,7 @@ const ClassifierProvider = ({ children }) => {
   }
 
   const getCategory = async () => {
+    setLoadingCategories(true)
     const api = ApiConnection()
     const data = await api.get(`/categories/list/`, {
       params: {
@@ -158,7 +161,34 @@ const ClassifierProvider = ({ children }) => {
       sortCategories(newCategories)
       setCategories(newCategories)
       setCategoryAdded(true)
-    }
+      setLoadingCategories(false)
+    } else setLoadingCategories(false)
+  }
+
+  const saveDocument = async () => {
+    setLoadingSaveDocument(true)
+    const api = ApiConnection()
+    if (doc.id)
+      await api.put(`/documents/list/${doc.id}/`, {
+        ...doc,
+        categories: categoriesSelected,
+      })
+    else
+      await api.post(`/documents/list/`, {
+        ...doc,
+        categories: categoriesSelected,
+      })
+
+    if (api.status < 400) {
+      setSuccessMessage(
+        `Documento ${doc.id ? 'modificado' : 'añadido'} exitosamente.`
+      )
+      setLoadingSaveDocument(false)
+    } else
+      setErrorMessage(
+        `Error al ${doc.id ? 'modificar' : 'crear'} el documento.`
+      )
+    setLoadingSaveDocument(false)
   }
 
   useEffect(() => {
@@ -191,6 +221,45 @@ const ClassifierProvider = ({ children }) => {
     }
   }, [search])
 
+  const getInitialCategories = async (categories) => {
+    setLoadingCategories(true)
+    const api = ApiConnection()
+    const data = await api.get(`/categories/list/`, {
+      params: {
+        treeId: categories.map(({ treeId }) => treeId).join(','),
+        deprecated: false,
+      },
+    })
+    if (api.status < 400) {
+      let categories = data.results
+      sortCategories(categories)
+      setCategories(categories)
+      setInitalCategoriesAdded(true)
+      setLoadingCategories(false)
+    } else setLoadingCategories(false)
+  }
+
+  useEffect(() => {
+    if (doc.id) {
+      getInitialCategories(doc.category)
+    }
+  }, [doc.id])
+
+  useEffect(() => {
+    if (showTable) {
+      setDoc(documentTemplate)
+      setCategories([])
+      setCategoriesSelected([])
+    }
+  }, [showTable])
+
+  useEffect(() => {
+    if (initialCategoriesAdded) {
+      setCategoriesSelected(doc.categories)
+      setInitalCategoriesAdded(false)
+    }
+  }, [initialCategoriesAdded])
+
   return (
     <ClassifierContext.Provider
       value={{
@@ -219,6 +288,8 @@ const ClassifierProvider = ({ children }) => {
         setCategoryToAdd,
         categoriesSelected,
         setCategoriesSelected,
+        saveDocument,
+        loadingSaveDocument,
       }}
     >
       {children}

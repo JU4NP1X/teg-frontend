@@ -19,7 +19,12 @@ import useClassifier from '../../hooks/useClassifier'
 import ApiConnection from '../../utils/apiConnection'
 import FileUploader from '../common/FileUploader'
 
-const steps = ['Subir PDF', 'Seleccionar Título', 'Seleccionar Resumen']
+const steps = [
+  'Subir PDF',
+  'Seleccionar Portada',
+  'Seleccionar Título',
+  'Seleccionar Resumen',
+]
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -39,6 +44,7 @@ const PDFExtractor = ({ open, onClose }) => {
   const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 16 / 9 })
   const [step, setStep] = useState(0)
   const [titleImage, setTitleImage] = useState(null)
+  const [img, setImg] = useState(null)
   const [summaryImage, setSummaryImage] = useState(null)
   const [updatingFile, setUpdatingFile] = useState(false)
   const [loading, setLoading] = useState(false) // Estado para controlar la carga
@@ -65,7 +71,7 @@ const PDFExtractor = ({ open, onClose }) => {
       const arrayBuffer = e.target.result
       const pdfjsLib = await import('pdfjs-dist')
       const pdf = await pdfjsLib.getDocument(arrayBuffer).promise
-      const pages = Math.min(pdf.numPages, 10)
+      const pages = pdf.numPages
       const extractedPages = []
 
       for (let i = 0; i < pages; i++) {
@@ -91,11 +97,17 @@ const PDFExtractor = ({ open, onClose }) => {
     fileReader.readAsArrayBuffer(base64ToFile(base64))
   }
 
-  const handleTextSelection = (selectedText) => {
-    if (step === 1) {
-      setTitleImage(selectedText)
-    } else if (step === 2) {
-      setSummaryImage(selectedText)
+  const handleTextSelection = (selectedImg) => {
+    switch (step) {
+      case 1:
+        setImg(selectedImg.split('data:image/png;base64,')[1])
+        break
+      case 2:
+        setTitleImage(selectedImg)
+        break
+      case 3:
+        setSummaryImage(selectedImg)
+        break
     }
   }
 
@@ -136,6 +148,7 @@ const PDFExtractor = ({ open, onClose }) => {
     if (!updatingFile) {
       setStep(0)
       setBase64PdfFile(null)
+      setImg(null)
       setTitleImage(null)
       setSummaryImage(null)
       onClose()
@@ -156,7 +169,7 @@ const PDFExtractor = ({ open, onClose }) => {
     setLoading(true) // Activar el estado de carga
     const { title, summary } = await extractText()
     closeDialog()
-    setDoc({ ...doc, title, summary, pdf: base64PdfFile })
+    setDoc({ ...doc, title, summary, pdf: base64PdfFile, img })
     setLoading(false) // Desactivar el estado de carga
   }
 
@@ -212,7 +225,7 @@ const PDFExtractor = ({ open, onClose }) => {
             }}
             style={{
               maxHeight: '50vh',
-              width: 400,
+              width: 500,
               textAlign: 'center',
             }}
           >
@@ -255,7 +268,7 @@ const PDFExtractor = ({ open, onClose }) => {
         />
         {step === steps.length - 1 ? (
           <Button
-            disabled={(!summaryImage && step === 2) || loading}
+            disabled={(!summaryImage && step === 3) || loading}
             onClick={handleFinish}
             variant={'outlined'}
             size={'small'}
@@ -265,7 +278,7 @@ const PDFExtractor = ({ open, onClose }) => {
           </Button>
         ) : (
           <Button
-            disabled={!titleImage && step === 1}
+            disabled={(!img && step === 1) || (!titleImage && step === 2)}
             onClick={() => {
               setCrop({ ...crop, unit: 'px', width: 0, height: 0 }) // Restablecer la posición del recorte
               setStep(step + 1)
