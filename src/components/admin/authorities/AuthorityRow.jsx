@@ -147,7 +147,11 @@ const AuthorityRow = ({
         </div>
       </TableCell>
       <TableCell align={'center'}>
-        <TrainStep progress={authority.percentage} status={authority.status} />
+        <TrainStep
+          progress={authority.percentage}
+          status={authority.status}
+          active={authority.active}
+        />
       </TableCell>
       <TableCell>
         <div
@@ -212,7 +216,12 @@ const AuthorityRow = ({
             </Tooltip>
             <Tooltip title={'Eliminar autoridad'}>
               <IconButton
-                disabled={authority.native || loadingAction}
+                disabled={
+                  authority.native ||
+                  authority.status === 'GETTING_DATA' ||
+                  authority.status === 'TRAINING' ||
+                  loadingAction
+                }
                 variant={'outlined'}
                 onClick={() => handleDeleteAuthority(authority)}
               >

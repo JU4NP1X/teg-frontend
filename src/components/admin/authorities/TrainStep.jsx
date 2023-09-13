@@ -2,8 +2,9 @@ import { Chip, Grid } from '@mui/material'
 import React from 'react'
 import CircularProgressWithLabel from '../../common/CircularProgressWithLabel'
 
-const TrainStep = ({ progress, status }) => {
+const TrainStep = ({ progress, status, active }) => {
   const getStatusColor = (status) => {
+    if (!active) return 'warning'
     switch (status) {
       case 'NOT_TRAINED':
         return 'primary'
@@ -19,6 +20,7 @@ const TrainStep = ({ progress, status }) => {
   }
 
   const getStatusText = (status) => {
+    if (!active) return 'Inactivo'
     switch (status) {
       case 'NOT_TRAINED':
         return 'No entrenado'
