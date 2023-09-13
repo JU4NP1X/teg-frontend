@@ -65,6 +65,7 @@ const AuthoritiesProvider = ({ children }) => {
   const addAuthority = async () => {
     try {
       const api = ApiConnection()
+      console.log(authority)
       await api.post('/categories/authorities/', authority)
       if (api.status < 400) {
         setAuthority(authorityTemplate)

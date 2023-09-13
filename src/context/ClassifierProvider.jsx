@@ -66,7 +66,8 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.get('/categories/authorities/', {
       params: {
         ordering: 'id',
-        exclude_counts: true,
+        excludeCounts: true,
+        active: true,
       },
     })
     if (api.status < 400) {

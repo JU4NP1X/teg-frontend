@@ -1,18 +1,21 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   MenuItem,
 } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   SelectValidator,
   TextValidator,
   ValidatorForm,
 } from 'react-material-ui-form-validator'
 import useAuthorities from '../../../hooks/useAuthorities'
+import ApiConnection from '../../../utils/apiConnection'
 import FileUploader from '../../common/FileUploader'
 
 const authorityTemplate = {
@@ -31,13 +34,17 @@ const AuthorityDialog = ({}) => {
     updateAuthority,
     openAuthorityModal,
   } = useAuthorities()
+
+  const [downloadingAuthorities, setDownloadingAuthorities] = useState(false)
   const handleCancel = () => {
     setAuthority(authorityTemplate)
     onClose()
   }
   const onClose = () => {
-    setOpenAuthorityModal(false)
-    setAuthority({})
+    if (!downloadingAuthorities) {
+      setOpenAuthorityModal(false)
+      setAuthority({})
+    }
   }
   const handleAddAuthority = () => {
     if (authority.id) {
@@ -45,6 +52,34 @@ const AuthorityDialog = ({}) => {
     } else {
       addAuthority()
     }
+  }
+
+  const getAuthorityCategories = async () => {
+    setDownloadingAuthorities(true)
+    const api = ApiConnection()
+    const data = await api.get('categories/csv/', {
+      params: { authorities: authority.id },
+    })
+
+    if (api.status === 200) {
+      const { csvData } = data
+      downloadCsv(csvData)
+      setDownloadingAuthorities(false)
+    } else setDownloadingAuthorities(false)
+  }
+
+  const downloadCsv = (csvBase64) => {
+    const link = document.createElement('a')
+    link.href = `data:text/csv;base64,${csvBase64}`
+    link.download = 'categories.csv'
+    link.click()
+  }
+
+  const downloadExample = (csvBase64) => {
+    const link = document.createElement('a')
+    link.href = `/file/example.csv`
+    link.download = 'categories.csv'
+    link.click()
   }
   return (
     <Dialog
@@ -56,7 +91,10 @@ const AuthorityDialog = ({}) => {
       <DialogTitle id={'form-dialog-title'}>
         {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
       </DialogTitle>
-      <ValidatorForm onSubmit={handleAddAuthority}>
+      <ValidatorForm
+        onSubmit={handleAddAuthority}
+        style={{ marginBottom: 0, paddingBottom: 0 }}
+      >
         <DialogContent>
           <TextValidator
             autoFocus
@@ -117,13 +155,34 @@ const AuthorityDialog = ({}) => {
           </SelectValidator>
         </DialogContent>
         <DialogActions>
-          <Button
-            disabled={!authority.csvBase64 && !authority.id}
-            type={'submit'}
-            color={'primary'}
-          >
-            {!authority.id ? 'Agregar' : 'Guardar'}
-          </Button>
+          <Grid container sx={{ m: 0, p: 0 }}>
+            <Button
+              disabled={downloadingAuthorities}
+              color={'primary'}
+              sx={{ width: 200 }}
+              onClick={() => {
+                if (authority.id) getAuthorityCategories()
+                else downloadExample()
+              }}
+            >
+              {!downloadingAuthorities &&
+                `Descargar ${authority.id ? 'categorías' : 'csv de ejemplo'}`}
+              {downloadingAuthorities && (
+                <CircularProgress color={'inherit'} size={24} />
+              )}
+            </Button>
+            <Button
+              disabled={
+                downloadingAuthorities ||
+                (!authority.csvBase64 && !authority.id)
+              }
+              type={'submit'}
+              color={'primary'}
+              sx={{ ml: 'auto' }}
+            >
+              {!authority.id ? 'Agregar' : 'Guardar'}
+            </Button>
+          </Grid>
         </DialogActions>
       </ValidatorForm>
     </Dialog>

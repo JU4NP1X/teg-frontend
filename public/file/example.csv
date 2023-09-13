@@ -1,0 +1,32 @@
+id,name,translation,parent_id
+1,Electronics,Electrónica,
+2,Computers,Computadoras,
+3,Home Appliances,Electrodomésticos,
+4,Mobile Phones,Teléfonos móviles,1
+5,Televisions,Televisores,1
+6,Laptops,Portátiles,2
+7,Desktops,Computadoras de escritorio,2
+8,Kitchen Appliances,Electrodomésticos de cocina,3
+9,Washing Machines,Lavadoras,3
+10,Refrigerators,Refrigeradores,3
+11,Smartphones,Smartphones,4
+12,Tablets,Tabletas,4
+13,LED TVs,TVs LED,5
+14,OLED TVs,TVs OLED,5
+15,Gaming Laptops,Portátiles para juegos,6
+16,Ultrabooks,Ultrabooks,6
+17,All-in-One PCs,PCs todo en uno,7
+18,Gaming Desktops,Computadoras de escritorio para juegos,7
+19,Microwaves,Microondas,8
+20,Blenders,Licuadoras,8
+21,Coffee Makers,Cafeteras,8
+22,Top Load Washers,Lavadoras de carga superior,9
+23,Front Load Washers,Lavadoras de carga frontal,9
+24,French Door Refrigerators,Refrigeradores de puertas francesas,10
+25,Side-by-Side Refrigerators,Refrigeradores de lado a lado,10
+26,iPhones,iPhones,11
+27,Samsung Galaxy Phones,Teléfonos Samsung Galaxy,11
+28,iPads,iPads,12
+29,Samsung Galaxy Tabs,Tabs Samsung Galaxy,12
+30,4K TVs,TVs 4K,13
+31,8K TVs,TVs 8K,13
