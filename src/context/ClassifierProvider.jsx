@@ -240,7 +240,7 @@ const ClassifierProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (doc.id) {
+    if (doc.id && doc.categories.length ) {
       getInitialCategories(doc.category)
     }
   }, [doc.id])

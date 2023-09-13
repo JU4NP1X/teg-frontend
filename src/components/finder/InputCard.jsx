@@ -168,7 +168,7 @@ const InputCard = () => {
               sx={{ ml: 'auto', width: '250px' }}
               disabled={loadingCategories || loadingSaveDocument}
             >
-              Buscar categorías
+              Predecir categorías
               {loadingCategories && (
                 <CircularProgress color={'inherit'} size={24} sx={{ ml: 2 }} />
               )}
