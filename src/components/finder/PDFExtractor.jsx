@@ -76,7 +76,7 @@ const PDFExtractor = ({ open, onClose }) => {
 
       for (let i = 0; i < pages; i++) {
         const page = await pdf.getPage(i + 1)
-        const viewport = page.getViewport({ scale: 1 })
+        const viewport = page.getViewport({ scale: 1.5 })
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d')
         canvas.width = viewport.width

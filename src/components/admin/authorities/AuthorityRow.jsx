@@ -223,6 +223,7 @@ const AuthorityRow = ({
                   loadingAction
                 }
                 variant={'outlined'}
+                color={'error'}
                 onClick={() => handleDeleteAuthority(authority)}
               >
                 <Delete />

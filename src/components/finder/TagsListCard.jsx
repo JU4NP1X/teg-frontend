@@ -1,4 +1,4 @@
-import { Save } from '@mui/icons-material'
+import { FileCopy, Save } from '@mui/icons-material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -11,19 +11,24 @@ import {
   Checkbox,
   CircularProgress,
   Divider,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
+import useNotification from '../../hooks/useNotification'
 import Border from '../common/Border'
+import SeparadorInput from './Separator'
 
 const TagsListCard = (save) => {
+  const { setInfoMessage } = useNotification()
   const {
     doc,
     categories,
@@ -43,6 +48,7 @@ const TagsListCard = (save) => {
   const [categoriesList, setCategoriesList] = useState(categories)
   const [open, setOpen] = useState(false)
   const [categoriesExpanded, setCategoriesExpanded] = useState([])
+  const [separator, setSeparator] = useState(',')
 
   useEffect(() => {
     setCategories(categoriesList)
@@ -139,7 +145,7 @@ const TagsListCard = (save) => {
                   <span
                     className={'dot'}
                     style={{
-                      backgroundColor: category.authority.color,
+                      backgroundColor: category.translation.authority.color,
                       marginRight: 10,
                       marginLeft: -20,
                     }}
@@ -152,14 +158,31 @@ const TagsListCard = (save) => {
                 </div>
               }
             />
+            <Tooltip title="Copiar nombre">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigator.clipboard.writeText(
+                    category.translation
+                      ? category.translation.name
+                      : category.name
+                  )
+
+                  setInfoMessage('Categoría copiada al pisapapeles')
+                }}
+                size={'small'}
+              >
+                <FileCopy />
+              </IconButton>
+            </Tooltip>
             {category.children && category.children.length > 0 && (
-              <ListItemIcon>
+              <IconButton sx={{ ml: 'auto' }}>
                 {categoriesExpanded.includes(category.id) ? (
                   <ExpandLessIcon />
                 ) : (
                   <ExpandMoreIcon />
                 )}
-              </ListItemIcon>
+              </IconButton>
             )}
           </ListItemButton>
           <Divider sx={{ ml: 0 }} />
@@ -183,14 +206,14 @@ const TagsListCard = (save) => {
 
   return (
     <Card sx={{ w: '100%', h: '100%' }}>
-      <CardHeader title={'Categorías'} />
+      <CardHeader title={<>Categorías</>} />
       <CardContent>
         <Border>
           <SimpleBar
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
-            style={{ height: 'calc(100vh - 367px)' }}
+            style={{ height: 'calc(100vh - 467px)' }}
           >
             <List disablePadding>{renderCategories(categoriesList)}</List>
           </SimpleBar>
@@ -253,6 +276,12 @@ const TagsListCard = (save) => {
             />
           )}
         />
+
+        <Typography variant={'h6'} sx={{ fontWeight: 'light', mt: 2 }}>
+          Copiar cateogrías seleccionadas
+        </Typography>
+
+        <SeparadorInput categoriesList={categoriesList} />
       </CardContent>
 
       <CardActions disableSpacing sx={{ pb: 0 }}>

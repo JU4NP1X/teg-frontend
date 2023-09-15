@@ -165,7 +165,7 @@ const InputCard = () => {
               type={'submit'}
               variant={'contained'}
               startIcon={<Category />}
-              sx={{ ml: 'auto', width: '250px' }}
+              sx={{ ml: 'auto', width: '270px' }}
               disabled={loadingCategories || loadingSaveDocument}
             >
               Predecir categorías

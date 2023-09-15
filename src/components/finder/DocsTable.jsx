@@ -114,7 +114,11 @@ const DocsTable = () => {
                           />
                         </TableCell>
                         <TableCell>{item.title}</TableCell>
-                        <TableCell>{item.summary}</TableCell>
+                        <TableCell>
+                          {item.summary.length > 50
+                            ? `${item.summary.slice(0, 600)}...`
+                            : item.summary}
+                        </TableCell>
                         <TableCell>{item.authors}</TableCell>
                         <TableCell align={'right'}>
                           <IconButton
@@ -139,7 +143,7 @@ const DocsTable = () => {
                             disabled={disableButtons}
                             variant={'outlined'}
                             size={'small'}
-                            color={'primary'}
+                            color={'error'}
                             sx={{ m: 1 }}
                             aria-label="Eliminar"
                           >
