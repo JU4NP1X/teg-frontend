@@ -111,7 +111,7 @@ const UsersTable = ({
                           <IconButton
                             onClick={() => handleDeleteUser(item.id)}
                             size={'small'}
-                            color={'primary'}
+                            color={'error'}
                             sx={{ m: 1 }}
                             disabled={item.id === user.id}
                           >
