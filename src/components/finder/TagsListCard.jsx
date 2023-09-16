@@ -139,7 +139,7 @@ const TagsListCard = (save) => {
                   <span
                     className={'dot'}
                     style={{
-                      backgroundColor: category.authority.color,
+                      backgroundColor: category.translation.authority.color,
                       marginRight: 10,
                       marginLeft: -20,
                     }}

@@ -41,7 +41,7 @@ const ApiConnection = () => {
       Api.status = response.status
       Api.data = transformToCamelCase(data)
 
-      if (Api.status === 401 || Api.status === 403) {
+      if (Api.status === 401) {
         history.replace(`/?errorMessage=${message}&unsetUser=true`)
       }
       return Api.data

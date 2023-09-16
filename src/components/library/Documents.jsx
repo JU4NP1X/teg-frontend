@@ -90,7 +90,7 @@ const Documents = ({ paginatedData, style }) => {
                             <span
                               className={'dot'}
                               style={{
-                                backgroundColor: category.authority.color,
+                                backgroundColor: category.translation.authority.color,
                                 height: 4,
                                 marginTop: 0,
                                 borderRadius: '50%',
