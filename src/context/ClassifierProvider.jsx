@@ -67,6 +67,7 @@ const ClassifierProvider = ({ children }) => {
       params: {
         ordering: 'id',
         excludeCounts: true,
+        disabled: false,
         active: true,
       },
     })
@@ -125,8 +126,8 @@ const ClassifierProvider = ({ children }) => {
     setLoadingCategories(true)
     const api = ApiConnection()
     const data = await api.post('/categories/classify/', {
-      title: document.titleImg,
-      summary: document.summaryImg,
+      title: doc.title,
+      summary: doc.summary,
       authorityId: authority && authority.id ? authority.id : undefined,
     })
     if (api.status < 400) {

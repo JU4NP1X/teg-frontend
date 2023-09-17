@@ -5,7 +5,8 @@ import ApiConnection from '../utils/apiConnection'
 const authorityTemplate = {
   name: '',
   color: null,
-  active: true,
+  active: false,
+  disabled: false
 }
 
 const authoritiesTemplate = {
@@ -14,10 +15,29 @@ const authoritiesTemplate = {
   previous: null,
   results: [],
 }
+const systemInfoTemplate = {
+  platform: 'Linux',
+  ram: {
+    total: 0,
+    percent: 0,
+  },
+  cpu: {
+    name: 'x86_64',
+    percent: 0,
+  },
+  gpu: {
+    name: 'N/A',
+    memoryTotal: 0,
+    memoryUsed: 0,
+    percent: 0,
+  },
+}
 const AuthoritiesContext = createContext()
 const AuthoritiesProvider = ({ children }) => {
   const { setSuccessMessage, setErrorMessage } = useNotification()
   const [authority, setAuthority] = useState(authorityTemplate)
+  const [systemInfo, setSystemInfo] = useState(systemInfoTemplate)
+  const [refreshSys, setRefreshSys] = useState(false)
   const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -62,10 +82,18 @@ const AuthoritiesProvider = ({ children }) => {
     }
   }
 
+  const getSysInfo = async (signal) => {
+    const api = ApiConnection()
+    const data = await api.get(`/utils/system-info/`, {
+      signal,
+    })
+    if (api.status < 400) setSystemInfo(data)
+    setRefreshSys(false)
+  }
+
   const addAuthority = async () => {
     try {
       const api = ApiConnection()
-      console.log(authority)
       await api.post('/categories/authorities/', authority)
       if (api.status < 400) {
         setAuthority(authorityTemplate)
@@ -159,6 +187,19 @@ const AuthoritiesProvider = ({ children }) => {
       controller.abort()
     }
   }
+  const sysInfoSync = () => {
+    const controller = new AbortController()
+    setAbortController(controller)
+    getSysInfo(controller.signal)
+
+    return () => {
+      controller.abort()
+    }
+  }
+
+  useEffect(() => {
+    if (refreshSys) return sysInfoSync()
+  }, [refreshSys])
 
   useEffect(() => {
     return getPageData(false)
@@ -175,6 +216,16 @@ const AuthoritiesProvider = ({ children }) => {
       setRefresh(true)
     }, 10000)
 
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setRefreshSys(true)
+    }, 10000)
+    setRefreshSys(true)
     return () => {
       clearInterval(intervalId)
     }
@@ -212,6 +263,7 @@ const AuthoritiesProvider = ({ children }) => {
         handleTrainAuthority,
         handleSyncAuthority,
         updateAuthority,
+        systemInfo,
       }}
     >
       {children}

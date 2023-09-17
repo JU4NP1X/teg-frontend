@@ -3,14 +3,23 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Tooltip,
+  Typography,
 } from '@mui/material'
 import React from 'react'
 import AuthoritiesTable from '../../components/admin/authorities/AuthoritiesTable'
 import AuthorityDialog from '../../components/admin/authorities/AuthorityDialog'
 import ConfirmationDialog from '../../components/common/ConfirmationDialog'
 import useAuthorities from '../../hooks/useAuthorities'
+import Border from '../../components/common/Border'
 
 const Authorities = () => {
   const {
@@ -19,6 +28,7 @@ const Authorities = () => {
     setAuthorityToDelete,
     deleteAuthority,
     setOpenConfirmation,
+    systemInfo,
   } = useAuthorities()
 
   const handleConfirmDelete = () => {
@@ -33,7 +43,108 @@ const Authorities = () => {
     <div>
       <Card sx={{ pb: 0 }}>
         <CardHeader
-          title={'Listas de autoridad'}
+          title={
+            <div style={{ display: 'flex' }}>
+              Listas de autoridad
+              <Border style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                <Table>
+                  <TableRow>
+                    <TableCell>
+                      <b>MONITOR</b>
+                    </TableCell>
+                    <TableCell>
+                      <div
+                        style={{
+                          width: 1.3,
+                          height: 15,
+                          backgroundColor: 'black',
+                        }} />
+                    </TableCell>
+                    <TableCell>
+                      CPU:{' '}
+                      {systemInfo.cpu.percent.toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      %
+                    </TableCell>
+                    <TableCell>
+                      GPU:{' '}
+                      {systemInfo.gpu.percent.toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      %
+                    </TableCell>
+                    <TableCell>
+                      
+                      <div
+                        style={{
+                          width: 1.3,
+                          height: 15,
+                          backgroundColor: 'black',
+                        }} />
+                    </TableCell>
+                    <TableCell>
+                      RAM:{' '}
+                      {Math.round(
+                        systemInfo.ram.total / Math.pow(2, 30)
+                      ).toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      GB
+                    </TableCell>
+                    <TableCell>
+                      VRAM:{' '}
+                      {Math.round(
+                        systemInfo.gpu.memoryTotal / Math.pow(2, 30)
+                      ).toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      GB
+                    </TableCell>
+                    <TableCell>
+                      
+                      <div
+                        style={{
+                          width: 1.3,
+                          height: 15,
+                          backgroundColor: 'black',
+                        }} />
+                    </TableCell>
+                    <TableCell>
+                      Uso de RAM:{' '}
+                      {systemInfo.ram.percent.toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      %
+                    </TableCell>
+                    <TableCell>
+                      Uso de VRAM:{' '}
+                      {Math.round(
+                        (systemInfo.gpu.memoryUsed /
+                          systemInfo.gpu.memoryTotal) *
+                          100
+                      ).toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      %
+                    </TableCell>
+                  </TableRow>
+                </Table>
+              </Border>
+            </div>
+          }
           action={
             <Tooltip title={'Agregar lista de autoridad'}>
               <IconButton
@@ -46,7 +157,7 @@ const Authorities = () => {
               </IconButton>
             </Tooltip>
           }
-        />
+        ></CardHeader>
         <CardContent style={{ paddingBottom: 0 }}>
           <AuthoritiesTable />
 

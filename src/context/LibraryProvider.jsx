@@ -95,7 +95,7 @@ const LibraryProvider = ({ children }) => {
         params: {
           ordering: 'id',
           excludeCounts: true,
-          active: true,
+          disabled: false,
         },
       })
       if (api.status < 400) {

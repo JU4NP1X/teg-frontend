@@ -8,7 +8,7 @@ import {
   Grid,
   MenuItem,
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   SelectValidator,
   TextValidator,
@@ -21,7 +21,8 @@ import FileUploader from '../../common/FileUploader'
 const authorityTemplate = {
   name: '',
   color: null,
-  active: true,
+  active: false,
+  disabled: false,
 }
 
 const AuthorityDialog = ({}) => {
@@ -33,9 +34,13 @@ const AuthorityDialog = ({}) => {
     setLoadingFile,
     updateAuthority,
     openAuthorityModal,
+    systemInfo,
   } = useAuthorities()
 
   const [downloadingAuthorities, setDownloadingAuthorities] = useState(false)
+  const [ramAvailable, setRamAvailable] = useState(0)
+  const [authorityIsActive, setAuhorityIsActive] = useState(authority.active)
+
   const handleCancel = () => {
     setAuthority(authorityTemplate)
     onClose()
@@ -43,7 +48,7 @@ const AuthorityDialog = ({}) => {
   const onClose = () => {
     if (!downloadingAuthorities) {
       setOpenAuthorityModal(false)
-      setAuthority({})
+      setAuthority(authorityTemplate)
     }
   }
   const handleAddAuthority = () => {
@@ -81,6 +86,20 @@ const AuthorityDialog = ({}) => {
     link.download = 'categories.csv'
     link.click()
   }
+
+  useEffect(() => {
+    const calculateRamAvailable = () => {
+      const available =
+        systemInfo.ram.total -
+        (systemInfo.ram.percent * systemInfo.ram.total) / 100
+      setRamAvailable(available)
+    }
+
+    calculateRamAvailable()
+  }, [systemInfo])
+  useEffect(() => {
+    setAuhorityIsActive(authority.active)
+  }, [authority.id])
   return (
     <Dialog
       open={openAuthorityModal}
@@ -139,7 +158,7 @@ const AuthorityDialog = ({}) => {
 
           <SelectValidator
             id={'active'}
-            label={'¿Está activo?'}
+            label={'¿Modelo predictivo activo?'}
             labelid={'admin-label'}
             name={'active'}
             value={authority.active}
@@ -147,6 +166,38 @@ const AuthorityDialog = ({}) => {
             errorMessages={['Este campo es requerido']}
             onChange={(e) =>
               setAuthority({ ...authority, active: e.target.value })
+            }
+            fullWidth
+            disabled={authority.disabled || !authority.lastTrainingDate}
+          >
+            <MenuItem
+              value={true}
+              disabled={
+                ramAvailable < 2.1 * 1024 * 1024 * 1024 && !authorityIsActive
+              }
+            >
+              Sí{' '}
+              {ramAvailable < 2.1 * 1024 * 1024 * 1024 &&
+                !authorityIsActive &&
+                `- Requiere: 2 GB de RAM. Se tiene: 
+              ${Math.floor(
+                ramAvailable / (1024 * 1024 * 1024) - 0.1
+              )} GB disponible`}
+            </MenuItem>
+            <MenuItem value={false}>No</MenuItem>
+          </SelectValidator>
+
+          <SelectValidator
+            id={'disabled'}
+            label={'¿Está deshabilitado?'}
+            labelid={'admin-label'}
+            name={'disabled'}
+            value={authority.disabled}
+            disabled={authority.active}
+            validators={['required']}
+            errorMessages={['Este campo es requerido']}
+            onChange={(e) =>
+              setAuthority({ ...authority, disabled: e.target.value })
             }
             fullWidth
           >

@@ -56,6 +56,7 @@ const FileUploader = ({
           width: 'calc(100% - 2px)',
           height: '200px',
           border: '1px dashed gray',
+          borderRadius: 4,
           display: 'flex',
           placeContent: 'center',
           placeItems: 'center',

@@ -2,11 +2,11 @@ import { Delete, Edit, FitnessCenter, Sync } from '@mui/icons-material'
 import { IconButton, TableCell, TableRow, Tooltip } from '@mui/material'
 import { blue, red } from '@mui/material/colors'
 import moment from 'moment/moment'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import CountUp from 'react-countup'
 import TrainStep from './TrainStep'
-const esMoment = moment.locale('es')
+import useAuthorities from '../../../hooks/useAuthorities'
 
 const data = {
   datasets: [
@@ -41,6 +41,46 @@ const AuthorityRow = ({
   handleUpdateAuthority,
   loadingAction,
 }) => {
+  const { systemInfo } = useAuthorities()
+  const [ramAvailable, setRamAvailable] = useState(0)
+  const [vramAvailable, setVramAvailable] = useState(0)
+
+  useEffect(() => {
+    const calculateRamAvailable = () => {
+      const available =
+        systemInfo.ram.total - systemInfo.ram.percent * systemInfo.ram.total /100
+      setRamAvailable(available)
+    }
+
+    const calculateVramAvailable = () => {
+      const available = systemInfo.gpu.memoryTotal - systemInfo.gpu.memoryUsed
+      setVramAvailable(available)
+    }
+
+    calculateRamAvailable()
+    calculateVramAvailable()
+  }, [systemInfo])
+
+  const isTrainingEnabled =
+    ramAvailable >= 8 * 1024 * 1024 * 1024  &&
+    vramAvailable >= 8 * 1024 * 1024 * 1024
+
+  let trainingDisabledReason = ''
+  if (!isTrainingEnabled) {
+    if (ramAvailable < 8 * 1024 * 1024 * 1024 ) {
+      const ramAvailableGB = ramAvailable / (1024 * 1024 * 1024 )
+      trainingDisabledReason += ` No hay suficiente RAM disponible. Disponible: ${ramAvailableGB.toFixed(
+        2
+      )} GB, Necesario: 8 GB.`
+    }
+    if (vramAvailable < 8 * 1024 * 1024 * 1024 ) {
+      const vramAvailableGB = vramAvailable / (1024 * 1024 * 1024 )
+      trainingDisabledReason += ` No hay suficiente VRAM disponible. Disponible: ${vramAvailableGB.toFixed(
+        2
+      )}GB, Necesario: 8 GB.`
+    }
+  }
+
   return (
     <TableRow key={authority.id}>
       <TableCell>
@@ -151,6 +191,7 @@ const AuthorityRow = ({
           progress={authority.percentage}
           status={authority.status}
           active={authority.active}
+          disabled={authority.disabled}
         />
       </TableCell>
       <TableCell>
@@ -200,19 +241,22 @@ const AuthorityRow = ({
               justifyContent: 'center',
             }}
           >
-            <Tooltip title="Entrenar red neuronal">
-              <IconButton
-                variant={'outlined'}
-                color={'info'}
-                onClick={() => handleTrainAuthority(authority)}
-                disabled={
-                  authority.status === 'GETTING_DATA' ||
-                  authority.status === 'TRAINING' ||
-                  loadingAction
-                }
-              >
-                <FitnessCenter />
-              </IconButton>
+            <Tooltip title={trainingDisabledReason || 'Entrenar red neuronal'}>
+              <span>
+                <IconButton
+                  variant={'outlined'}
+                  color={'info'}
+                  onClick={() => handleTrainAuthority(authority)}
+                  disabled={
+                    !isTrainingEnabled ||
+                    authority.status === 'GETTING_DATA' ||
+                    authority.status === 'TRAINING' ||
+                    loadingAction
+                  }
+                >
+                  <FitnessCenter />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title={'Eliminar autoridad'}>
               <IconButton
