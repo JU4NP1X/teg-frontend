@@ -69,7 +69,12 @@ const DocsTable = () => {
         title={
           <div style={{ display: 'flex' }}>
             Documentos
-            <Box sx={{ display: { lg: 'none', xl: 'flex' }, width: '100%' }}>
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'none', lg: 'none', xl: 'flex' },
+                width: '100%',
+              }}
+            >
               <FormGroup sx={{ ml: 'auto' }}>
                 <FormControlLabel
                   control={

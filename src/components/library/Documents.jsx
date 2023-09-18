@@ -58,6 +58,7 @@ const Documents = ({ paginatedData, style }) => {
               sx={{
                 marginBottom: '10px',
                 display: 'flex',
+                minWidth: 400,
                 height: 120,
                 boxShadow: 'none',
               }}

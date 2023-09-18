@@ -22,7 +22,13 @@ const Library = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item sx={{ display: { md: 'none', lg: 'block' } }} md={3}>
+      <Grid
+        item
+        sx={{
+          display: { xs: 'none', md: 'none', lg: 'none', xl: 'block' },
+        }}
+        xl={3}
+      >
         <Filters />
       </Grid>
       <Grid item md={12} lg={9}>

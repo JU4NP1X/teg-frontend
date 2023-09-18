@@ -42,7 +42,12 @@ const Authorities = () => {
           title={
             <div style={{ display: 'flex' }}>
               Listas de autoridad
-              <Box sx={{ display: { lg: 'none', xl: 'flex' }, mx: 'auto' }}>
+              <Box
+                sx={{
+                  display: { xs: 'none', md: 'none', lg: 'none', xl: 'flex' },
+                  mx: 'auto',
+                }}
+              >
                 <Border
                   style={{
                     marginLeft: 'auto',
