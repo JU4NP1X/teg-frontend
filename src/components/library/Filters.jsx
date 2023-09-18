@@ -97,6 +97,9 @@ const Filters = () => {
         </FormControl>
         <Border>
           <SimpleBar
+            onTouchStart={(e) => {
+              e.stopPropagation()
+            }}
             style={{
               height: 'calc(100vh - 382px)',
             }}

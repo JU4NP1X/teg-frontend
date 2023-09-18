@@ -13,7 +13,6 @@ import Search from '../components/library/Search'
 import useLibrary from '../hooks/useLibrary'
 
 const Library = () => {
-  const handleSearchChange = (event) => {}
   const { documents, currentPage, setCurrentPage, loadingDocuments } =
     useLibrary()
 
@@ -23,11 +22,11 @@ const Library = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item sx={{ display: { xs: 'none', md: 'block' } }} md={3}>
+      <Grid item sx={{ display: { md: 'none', lg: 'block' } }} md={3}>
         <Filters />
       </Grid>
-      <Grid item xs={12} md={9}>
-        <Search handleSearchChange={handleSearchChange} />
+      <Grid item md={12} lg={9}>
+        <Search />
         <Card style={{ marginTop: 10 }}>
           <CardContent>
             <Border>
@@ -44,6 +43,9 @@ const Library = () => {
                 </div>
               ) : (
                 <SimpleBar
+                  onTouchStart={(e) => {
+                    e.stopPropagation()
+                  }}
                   style={{
                     height: 'calc(100vh - 317px)',
                   }}

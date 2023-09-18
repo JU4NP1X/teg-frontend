@@ -115,3 +115,8 @@ input {
 iframe {
   border: none;
 }
+
+span .MuiFormControlLabel-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+  font-size: 0.75rem;
+}

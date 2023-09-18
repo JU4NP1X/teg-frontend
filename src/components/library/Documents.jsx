@@ -21,7 +21,34 @@ const Documents = ({ paginatedData, style }) => {
   const [open, setOpen] = useState(false)
   const [loadingDownload, setLoadingDownload] = useState(false)
   const [loadingView, setLoadingView] = useState(false)
+  const [loadingDocument, setLoadingDocument] = useState(0)
+  const handleDownload = async (item) => {
+    setLoadingDownload(true)
+    setLoadingDocument(item.id)
+    const { pdf } = await getDoc(item)
+    // Decodificar el string base64 a un blob
+    const byteCharacters = atob(pdf)
+    const byteArrays = []
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512)
+      const byteNumbers = new Array(slice.length)
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push(byteArray)
+    }
+    const blob = new Blob(byteArrays, { type: 'application/pdf' })
 
+    // Crear el enlace de descarga
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(blob)
+    downloadLink.download = `${item.title}.pdf`
+    downloadLink.click()
+
+    setLoadingDownload(false)
+    setLoadingDocument(0)
+  }
   return (
     <Box style={style}>
       <Grid container spacing={0}>
@@ -134,13 +161,9 @@ const Documents = ({ paginatedData, style }) => {
                         alignItems: 'center',
                         marginRight: '10px',
                       }}
-                      onClick={async () => {
-                        setLoadingDownload(true)
-                        // Lógica para descargar el documento
-                        setLoadingDownload(false)
-                      }}
+                      onClick={() => handleDownload(item)}
                     >
-                      {loadingDownload ? (
+                      {loadingDownload && loadingDocument === item.id ? (
                         <CircularProgress size={24} />
                       ) : (
                         <GetApp />
@@ -153,9 +176,11 @@ const Documents = ({ paginatedData, style }) => {
                       disabled={loadingView || loadingDownload}
                       onClick={async () => {
                         setLoadingView(true)
+                        setLoadingDocument(item.id)
                         await getDoc(item)
                         setLoadingView(false)
                         setOpen(true)
+                        setLoadingDocument(0)
                       }}
                       sx={{
                         display: 'flex',
@@ -163,7 +188,7 @@ const Documents = ({ paginatedData, style }) => {
                         alignItems: 'center',
                       }}
                     >
-                      {loadingView ? (
+                      {loadingView && loadingDocument === item.id ? (
                         <CircularProgress size={24} />
                       ) : (
                         <Visibility />

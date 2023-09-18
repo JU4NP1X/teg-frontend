@@ -18,6 +18,7 @@ const docTemplate = {
 const LibraryContext = createContext()
 const LibraryProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const [ordering, setOrdering] = useState('title')
   const [documents, setDocs] = useState(docsTemplate)
   const [selectedFilters, setSelectedFilters] = useState([])
   const [apiFilters, setApiFilters] = useState([])
@@ -70,6 +71,7 @@ const LibraryProvider = ({ children }) => {
             .map(({ category }) => category.id)
             .toString(),
           offset: (currentPage - 1) * 20,
+          ordering,
         },
         signal,
       })
@@ -113,6 +115,7 @@ const LibraryProvider = ({ children }) => {
     if (api.status < 400) {
       setDoc(data)
     }
+    return data
   }
 
   useEffect(() => {
@@ -131,7 +134,7 @@ const LibraryProvider = ({ children }) => {
 
   useEffect(() => {
     fetchDocuments()
-  }, [search, selectedFilters, currentPage])
+  }, [search, selectedFilters, currentPage, ordering])
   return (
     <LibraryContext.Provider
       value={{
@@ -160,6 +163,8 @@ const LibraryProvider = ({ children }) => {
         doc,
         setDoc,
         getDoc,
+        ordering,
+        setOrdering,
       }}
     >
       {children}

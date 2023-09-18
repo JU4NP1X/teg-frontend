@@ -41,11 +41,14 @@ const sortCategories = (newCategories) => {
 const ClassifierProvider = ({ children }) => {
   const { setErrorMessage, setSuccessMessage } = useNotification()
   const [showTable, setShowTable] = useState(true)
+  const [onlyCategoriesDeprecad, setOnlyCategoriesDeprecad] = useState(false)
   const [loadingSaveDocument, setLoadingSaveDocument] = useState(false)
   const [loadingAuthorities, setLoadingAuthorities] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
   const [initialCategoriesAdded, setInitalCategoriesAdded] = useState(false)
   const [search, setSearch] = useState('')
+  const [searchDocument, setSearchDocument] = useState('')
+  const [searchCategoryFilter, setSearchCategoryFilter] = useState('')
   const [loadingCategoriesOptions, setLoadingCategoriesOptions] =
     useState(false)
   const [categoriesOptions, setCategoriesOptions] = useState([])
@@ -53,14 +56,18 @@ const ClassifierProvider = ({ children }) => {
   const [loadingDocs, setLoadingDocs] = useState(false)
   const [page, setPage] = useState(0)
   const [authorities, setAuthorities] = useState([])
+  const [authoritiesListFilter, setAuthoritiesListFilter] = useState([])
+  const [categoriesListFilter, setCategoriesListFilter] = useState([])
   const [categories, setCategories] = useState([])
   const [authority, setAuthority] = useState(null)
+  const [authorityFilter, setAuthorityFilter] = useState(null)
+  const [categoryFilter, setCategoryFilter] = useState(null)
   const [doc, setDoc] = useState(documentTemplate)
   const [docs, setDocs] = useState(docsTemplate)
   const [categoryToAdd, setCategoryToAdd] = useState(null)
   const [categoryAdded, setCategoryAdded] = useState(false)
 
-  const getAuthorityList = async () => {
+  const getAuthorityList = async (active) => {
     setLoadingAuthorities(true)
     const api = ApiConnection()
     const data = await api.get('/categories/authorities/', {
@@ -68,29 +75,33 @@ const ClassifierProvider = ({ children }) => {
         ordering: 'id',
         excludeCounts: true,
         disabled: false,
-        active: true,
+        active,
       },
     })
     if (api.status < 400) {
-      setAuthorities(data.results)
+      if (active !== undefined) setAuthorities(data.results)
+      else setAuthoritiesListFilter(data.results)
     }
     setLoadingAuthorities(false)
   }
 
-  const getCategoriesOptions = async (signal) => {
+  const getCategoriesOptions = async (signal, isFilter = false) => {
     setLoadingCategoriesOptions(true)
     const api = ApiConnection()
+    console.log({ authorityFilter })
 
     const data = await api.get('/categories/translations/', {
       params: {
-        search,
+        search: !isFilter ? search : searchCategoryFilter,
         language: 'es',
         ordering: 'name',
+        authority: isFilter && authorityFilter ? authorityFilter.id : undefined,
       },
       signal, // Pasamos la señal del AbortController a la petición
     })
     if (api.status < 400) {
-      setCategoriesOptions(data.results)
+      if (isFilter) setCategoriesListFilter(data.results)
+      else setCategoriesOptions(data.results)
       setLoadingCategoriesOptions(false)
     } else if (!signal.aborted) {
       setErrorMessage('Error al obtener las opciones de categorías.')
@@ -98,7 +109,7 @@ const ClassifierProvider = ({ children }) => {
     }
   }
 
-  const getDocList = async () => {
+  const getDocList = async (signal) => {
     setLoadingDocs(true)
     const api = ApiConnection()
     const data = await api.get('/documents/list/', {
@@ -106,12 +117,17 @@ const ClassifierProvider = ({ children }) => {
         ordering: 'id',
         limit: 20,
         offset: page * 20,
+        search: searchDocument,
+        categories: categoryFilter ? categoryFilter.category.id : undefined,
+        authorities: authorityFilter ? authorityFilter.id : undefined,
+        deprecated: onlyCategoriesDeprecad ? onlyCategoriesDeprecad : undefined,
       },
+      signal,
     })
     if (api.status < 400) {
       setDocs(data)
+      setLoadingDocs(false)
     }
-    setLoadingDocs(false)
   }
 
   const getDoc = async (doc) => {
@@ -120,6 +136,15 @@ const ClassifierProvider = ({ children }) => {
     if (api.status < 400) {
       setDoc(data)
     }
+  }
+
+  const deleteDoc = async (doc) => {
+    const api = ApiConnection()
+    const data = await api.delete(`/documents/list/${doc.id}/`)
+    if (api.status < 400) {
+      setSuccessMessage('Documento eliminado exitosamente')
+      getDocList()
+    } else setErrorMessage('Error al eliminar el documento')
   }
 
   const classify = async () => {
@@ -194,8 +219,18 @@ const ClassifierProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    getDocList()
-  }, [page])
+    const controller = new AbortController()
+    getDocList(controller.signal)
+    return () => {
+      controller.abort()
+    }
+  }, [
+    page,
+    searchDocument,
+    authorityFilter,
+    categoryFilter,
+    onlyCategoriesDeprecad,
+  ])
 
   useEffect(() => {
     if (categoryToAdd && categoryToAdd.id) getCategory()
@@ -218,6 +253,15 @@ const ClassifierProvider = ({ children }) => {
     }
   }, [search])
 
+  useEffect(() => {
+    const controller = new AbortController()
+    getCategoriesOptions(controller.signal, true) // Guardamos la función de limpieza
+
+    return () => {
+      controller.abort()
+    }
+  }, [authorityFilter, searchCategoryFilter])
+
   const getInitialCategories = async (categories) => {
     setLoadingCategories(true)
     const api = ApiConnection()
@@ -237,7 +281,7 @@ const ClassifierProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (doc.id && doc.categories.length ) {
+    if (doc.id && doc.categories.length) {
       getInitialCategories(doc.category)
     }
   }, [doc.id])
@@ -248,7 +292,7 @@ const ClassifierProvider = ({ children }) => {
       setDoc(documentTemplate)
       setCategories([])
       setCategoriesSelected([])
-    } else getAuthorityList()
+    } else getAuthorityList(true)
   }, [showTable])
 
   useEffect(() => {
@@ -257,6 +301,9 @@ const ClassifierProvider = ({ children }) => {
       setInitalCategoriesAdded(false)
     }
   }, [initialCategoriesAdded])
+  useEffect(() => {
+    getAuthorityList()
+  }, [])
 
   return (
     <ClassifierContext.Provider
@@ -288,6 +335,19 @@ const ClassifierProvider = ({ children }) => {
         setCategoriesSelected,
         saveDocument,
         loadingSaveDocument,
+        deleteDoc,
+        searchDocument,
+        setSearchDocument,
+        authoritiesListFilter,
+        authorityFilter,
+        setAuthorityFilter,
+        categoriesListFilter,
+        categoryFilter,
+        setCategoryFilter,
+        searchCategoryFilter,
+        setSearchCategoryFilter,
+        onlyCategoriesDeprecad,
+        setOnlyCategoriesDeprecad,
       }}
     >
       {children}

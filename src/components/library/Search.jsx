@@ -14,8 +14,8 @@ import {
 } from 'react-material-ui-form-validator'
 import useLibrary from '../../hooks/useLibrary'
 
-const Search = ({ handleSearchChange, handleOrderByChange }) => {
-  const { setSearch } = useLibrary()
+const Search = () => {
+  const { setSearch, ordering, setOrdering } = useLibrary()
   const [searchDocument, setSearchDocument] = useState('')
   return (
     <Card>
@@ -37,12 +37,14 @@ const Search = ({ handleSearchChange, handleOrderByChange }) => {
                 <SelectValidator
                   label={'Ordenar por'}
                   labelid={'order-by-label'}
-                  value={'title'}
-                  onChange={handleOrderByChange}
+                  value={ordering}
+                  onChange={(e) => {
+                    setOrdering(e.target.value)
+                  }}
                   fullWidth
                 >
                   <MenuItem value={'title'}>Título</MenuItem>
-                  <MenuItem value={'description'}>Descripción</MenuItem>
+                  <MenuItem value={'-num_of_access'}>Popularidad</MenuItem>
                 </SelectValidator>
               </Grid>
             </Grid>

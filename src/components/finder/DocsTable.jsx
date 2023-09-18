@@ -1,10 +1,15 @@
 import { Add, Delete, Edit } from '@mui/icons-material'
 import {
+  Autocomplete,
+  Box,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
+  FormControlLabel,
+  FormGroup,
   IconButton,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +17,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Tooltip,
 } from '@mui/material'
 import React, { useState } from 'react'
@@ -33,11 +39,22 @@ const DocsTable = () => {
     loadingDocs,
     page,
     setPage,
-    setDoc,
+    deleteDoc,
     setShowTable,
     getDoc,
-    setCategories,
-    setCategoriesSelected,
+    searchDocument,
+    setSearchDocument,
+    authoritiesListFilter,
+    setAuthorityFilter,
+    authorityFilter,
+    loadingAuthorities,
+    loadingCategoriesOptions,
+    categoriesListFilter,
+    categoryFilter,
+    setCategoryFilter,
+    setSearchCategoryFilter,
+    setOnlyCategoriesDeprecad,
+    onlyCategoriesDeprecad,
   } = useClassifier()
   const [disableButtons, setDisableButtons] = useState(false)
   const getBase64Image = (base64String) => {
@@ -49,7 +66,132 @@ const DocsTable = () => {
   return (
     <Card>
       <CardHeader
-        title={'Documentos'}
+        title={
+          <div style={{ display: 'flex' }}>
+            Documentos
+            <Box sx={{ display: { lg: 'none', xl: 'flex' }, width: '100%' }}>
+              <FormGroup sx={{ ml: 'auto' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      value={onlyCategoriesDeprecad}
+                      onChange={(e, val) => {
+                        setOnlyCategoriesDeprecad(val)
+                      }}
+                    />
+                  }
+                  labelPlacement={'top'}
+                  label={'Solo deprecados'}
+                />
+              </FormGroup>
+              <Autocomplete
+                sx={{ ml: 2 }}
+                getOptionLabel={({ name }) => name}
+                renderOption={(props, { name, color }) => {
+                  return (
+                    <li {...props}>
+                      <span
+                        className={'dot'}
+                        style={{ backgroundColor: color, marginTop: -2 }}
+                      />
+                      {name}
+                    </li>
+                  )
+                }}
+                options={authoritiesListFilter}
+                value={authorityFilter}
+                loading={loadingAuthorities}
+                onChange={(event, value) => {
+                  setAuthorityFilter(value)
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={'Lista de autoridad'}
+                    validators={['required']}
+                    errorMessages={['Este campo es requerido']}
+                    sx={{ ml: 'auto', minWidth: 200 }}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingAuthorities ? (
+                            <CircularProgress
+                              color={'inherit'}
+                              size={24}
+                              sx={{ mt: '-10px' }}
+                            />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                    value={authorityFilter ? authorityFilter.name : ''} // Mostrar solo el nombre del valor seleccionado
+                  />
+                )}
+              />
+              <Autocomplete
+                sx={{ mx: 2 }}
+                getOptionLabel={({ name }) => name}
+                renderOption={(props, { name, authority }) => {
+                  return (
+                    <li {...props}>
+                      <span
+                        className={'dot'}
+                        style={{
+                          backgroundColor: authority.color,
+                          marginTop: -2,
+                        }}
+                      />
+                      {name}
+                    </li>
+                  )
+                }}
+                options={categoriesListFilter}
+                value={categoryFilter}
+                loading={loadingCategoriesOptions}
+                onChange={(event, value) => {
+                  setCategoryFilter(value)
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={'Categorías'}
+                    validators={['required']}
+                    errorMessages={['Este campo es requerido']}
+                    sx={{ minWidth: 300 }}
+                    onChange={(event, value) => {
+                      setSearchCategoryFilter(event.target.value)
+                    }}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCategoriesOptions ? (
+                            <CircularProgress
+                              color={'inherit'}
+                              size={24}
+                              sx={{ mt: '-10px' }}
+                            />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                    value={authorityFilter ? authorityFilter.name : ''} // Mostrar solo el nombre del valor seleccionado
+                  />
+                )}
+              />
+              <TextField
+                sx={{ mr: 'auto', minWidth: 350 }}
+                label={'Buscar'}
+                variant={'outlined'}
+                value={searchDocument}
+                onChange={(e) => setSearchDocument(e.target.value)}
+              />
+            </Box>
+          </div>
+        }
         action={
           <IconButton
             disabled={disableButtons}
@@ -72,7 +214,12 @@ const DocsTable = () => {
       <CardContent style={{ paddingBottom: 0 }}>
         <Border>
           <TableContainer>
-            <SimpleBar style={{ height: 'calc(100vh - 230px)' }}>
+            <SimpleBar
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
+              style={{ height: 'calc(100vh - 230px)' }}
+            >
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
@@ -146,6 +293,11 @@ const DocsTable = () => {
                             color={'error'}
                             sx={{ m: 1 }}
                             aria-label="Eliminar"
+                            onClick={async () => {
+                              setDisableButtons(true)
+                              await deleteDoc(item)
+                              setDisableButtons(false)
+                            }}
                           >
                             <Tooltip title="Eliminar">
                               <Delete />

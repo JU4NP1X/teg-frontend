@@ -45,6 +45,7 @@ const TrainStep = ({ progress, status, active, disabled }) => {
             value={progress - 0}
             label={progress}
             color={getStatusColor(status)}
+            sx={{ mb: 2 }}
           />
         )}
       </Grid>
