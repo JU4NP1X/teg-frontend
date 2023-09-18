@@ -222,7 +222,6 @@ const TagsListCard = (save) => {
           Agregar categoría faltante
         </Typography>
         <Autocomplete
-          id={'asynchronous-demo'}
           open={open}
           onOpen={() => {
             setOpen(true)
@@ -255,7 +254,7 @@ const TagsListCard = (save) => {
               fullWidth
               {...params}
               label={'Buscar'}
-              onKeyDown={(event) => {
+              onChange={(event) => {
                 setSearch(event.target.value)
               }}
               InputProps={{

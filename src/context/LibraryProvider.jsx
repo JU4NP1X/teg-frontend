@@ -48,7 +48,7 @@ const LibraryProvider = ({ children }) => {
       if (api.status < 400) {
         setApiFilters(data.results)
         setLoadingFilters(false)
-      } else setLoadingFilters(false)
+      }
     } catch (error) {
       if (error.name === 'AbortError') {
         console.log('Búsqueda de filtros cancelada')
