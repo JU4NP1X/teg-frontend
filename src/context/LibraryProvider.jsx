@@ -43,6 +43,7 @@ const LibraryProvider = ({ children }) => {
           authority: selectedAuthority?.id,
           exclude: selectedFilters.map(({ id }) => id).toString(),
           limit: 100 - selectedFilters.length,
+          deprecated: false,
         },
         signal,
       })

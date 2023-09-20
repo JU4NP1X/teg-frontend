@@ -88,7 +88,6 @@ const ClassifierProvider = ({ children }) => {
   const getCategoriesOptions = async (signal, isFilter = false) => {
     setLoadingCategoriesOptions(true)
     const api = ApiConnection()
-    console.log({ authorityFilter })
 
     const data = await api.get('/categories/translations/', {
       params: {
@@ -96,6 +95,7 @@ const ClassifierProvider = ({ children }) => {
         language: 'es',
         ordering: 'name',
         authority: isFilter && authorityFilter ? authorityFilter.id : undefined,
+        deprecated: false,
       },
       signal, // Pasamos la señal del AbortController a la petición
     })
