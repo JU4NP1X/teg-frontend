@@ -175,6 +175,7 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.get(`/categories/list/`, {
       params: {
         treeId: categoryToAdd.category.treeId,
+        authority:categoryToAdd.authority.id,
         deprecated: false,
       },
     })
@@ -185,9 +186,9 @@ const ClassifierProvider = ({ children }) => {
           (category) => !categories.map(({ id }) => id).includes(category.id)
         ),
       ]
+      setCategoryAdded(true)
       sortCategories(newCategories)
       setCategories(newCategories)
-      setCategoryAdded(true)
       setLoadingCategories(false)
     } else setLoadingCategories(false)
   }

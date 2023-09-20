@@ -6,7 +6,7 @@ const authorityTemplate = {
   name: '',
   color: null,
   active: false,
-  disabled: false
+  disabled: false,
 }
 
 const authoritiesTemplate = {
@@ -147,6 +147,7 @@ const AuthoritiesProvider = ({ children }) => {
   }
 
   const handleTrainAuthority = async (authority) => {
+    setLoadingAction(true)
     try {
       const api = ApiConnection()
       await api.post(`/categories/train/`, { authorities: [authority.id] })
@@ -165,6 +166,7 @@ const AuthoritiesProvider = ({ children }) => {
   }
 
   const updateAuthority = async () => {
+    setLoadingAction(true)
     try {
       const api = ApiConnection()
       await api.patch(`/categories/authorities/${authority.id}/`, authority)
@@ -172,7 +174,11 @@ const AuthoritiesProvider = ({ children }) => {
         setSuccessMessage('Autoridad actualizada con éxito')
         getPageData(false)
         setOpenAuthorityModal(false)
-      } else setErrorMessage('Error al actualizar la autoridad.')
+        setLoadingAction(false)
+      } else {
+        setErrorMessage('Error al actualizar la autoridad.')
+        setLoadingAction(false)
+      }
     } catch (error) {
       console.error(error)
     }

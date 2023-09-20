@@ -154,6 +154,7 @@ const TagsListCard = (save) => {
                     {category.translation
                       ? category.translation.name
                       : category.name}
+                       <span style={{color: "red"}}>{category.deprecated && " (Deprecada)"}</span>
                   </div>
                 </div>
               }

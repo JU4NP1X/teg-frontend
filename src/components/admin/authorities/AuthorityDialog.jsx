@@ -31,6 +31,7 @@ const AuthorityDialog = ({}) => {
     authority,
     setAuthority,
     setOpenAuthorityModal,
+    loadingAction,
     setLoadingFile,
     updateAuthority,
     openAuthorityModal,
@@ -42,11 +43,13 @@ const AuthorityDialog = ({}) => {
   const [authorityIsActive, setAuhorityIsActive] = useState(authority.active)
 
   const handleCancel = () => {
-    setAuthority(authorityTemplate)
-    onClose()
+    if (!downloadingAuthorities && !loadingAction) {
+      setAuthority(authorityTemplate)
+      onClose()
+    }
   }
   const onClose = () => {
-    if (!downloadingAuthorities) {
+    if (!downloadingAuthorities && !loadingAction) {
       setOpenAuthorityModal(false)
       setAuthority(authorityTemplate)
     }
@@ -224,6 +227,7 @@ const AuthorityDialog = ({}) => {
             </Button>
             <Button
               disabled={
+                loadingAction ||
                 downloadingAuthorities ||
                 (!authority.csvBase64 && !authority.id)
               }
@@ -231,7 +235,13 @@ const AuthorityDialog = ({}) => {
               color={'primary'}
               sx={{ ml: 'auto' }}
             >
-              {!authority.id ? 'Agregar' : 'Guardar'}
+              {loadingAction ? (
+                <CircularProgress size={24} />
+              ) : !authority.id ? (
+                'Agregar'
+              ) : (
+                'Guardar'
+              )}
             </Button>
           </Grid>
         </DialogActions>
