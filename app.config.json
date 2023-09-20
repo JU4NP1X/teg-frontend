@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "VoCo UC",
+      "name": "UC Voc",
       "script": "npx",
       "interpreter": "none",
       "args": "npm run server"

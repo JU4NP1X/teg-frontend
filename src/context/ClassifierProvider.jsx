@@ -175,7 +175,7 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.get(`/categories/list/`, {
       params: {
         treeId: categoryToAdd.category.treeId,
-        authority:categoryToAdd.authority.id,
+        authority: categoryToAdd.authority.id,
         deprecated: false,
       },
     })
@@ -269,7 +269,6 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.get(`/categories/list/`, {
       params: {
         treeId: categories.map(({ treeId }) => treeId).join(','),
-        deprecated: false,
       },
     })
     if (api.status < 400) {

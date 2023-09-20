@@ -111,13 +111,13 @@ const Layout = ({ children }) => {
                     style={{
                       marginTop: 0,
                       marginBottom: 0,
-                      marginLeft: 15,
+                      marginLeft: 45,
                       fontSize: '1.8rem',
                       fontWeight: 'lighter',
                       textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
                     }}
                   >
-                    ClaVo <strong>UC</strong>
+                    <strong>UC V</strong>oc
                   </p>
                 </Tooltip>
               </Typography>

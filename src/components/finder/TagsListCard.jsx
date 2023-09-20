@@ -48,7 +48,6 @@ const TagsListCard = (save) => {
   const [categoriesList, setCategoriesList] = useState(categories)
   const [open, setOpen] = useState(false)
   const [categoriesExpanded, setCategoriesExpanded] = useState([])
-  const [separator, setSeparator] = useState(',')
 
   useEffect(() => {
     setCategories(categoriesList)
@@ -106,9 +105,11 @@ const TagsListCard = (save) => {
       }
     })
   }
+
   useEffect(() => {
     checkSelectionTree(categoriesList)
   }, [categoriesSelected])
+
   const renderCategories = (categories) =>
     categories.map((category) => (
       <>
@@ -154,7 +155,9 @@ const TagsListCard = (save) => {
                     {category.translation
                       ? category.translation.name
                       : category.name}
-                       <span style={{color: "red"}}>{category.deprecated && " (Deprecada)"}</span>
+                    <span style={{ color: 'red' }}>
+                      {category.deprecated && ' (Deprecada)'}
+                    </span>
                   </div>
                 </div>
               }

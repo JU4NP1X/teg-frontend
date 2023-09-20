@@ -2,7 +2,7 @@ const manifestForPlugin = {
   registerType: 'prompt',
   includeAssets: ['favicon.ico', 'logo-192.png', 'logo-512.png'],
   manifest: {
-    short_name: 'Voco UC',
+    short_name: 'UC Voc',
     name: 'Sistema de gestión de categorías de la biblioteca de la UC',
     description: '',
     icons: [

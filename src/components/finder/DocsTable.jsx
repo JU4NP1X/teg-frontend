@@ -62,7 +62,6 @@ const DocsTable = () => {
   }
 
   const isLoading = loadingDocs
-
   return (
     <Card>
       <CardHeader
@@ -79,7 +78,7 @@ const DocsTable = () => {
                 <FormControlLabel
                   control={
                     <Switch
-                      value={onlyCategoriesDeprecad}
+                      checked={onlyCategoriesDeprecad}
                       onChange={(e, val) => {
                         setOnlyCategoriesDeprecad(val)
                       }}
