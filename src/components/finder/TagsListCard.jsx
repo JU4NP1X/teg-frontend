@@ -1,4 +1,4 @@
-import { FileCopy, Save } from '@mui/icons-material'
+import { CleaningServices, FileCopy, Save } from '@mui/icons-material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -210,7 +210,34 @@ const TagsListCard = (save) => {
 
   return (
     <Card sx={{ w: '100%', h: '100%' }}>
-      <CardHeader title={<>Categorías</>} />
+      <CardHeader
+        title={
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            Categorías
+            <Tooltip title="Limpiar categorías no usadas">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setCategories([
+                    ...categoriesList.filter(({ id }) =>
+                      categoriesSelected.includes(id)
+                    ),
+                  ])
+                }}
+                size={'small'}
+              >
+                <CleaningServices />
+              </IconButton>
+            </Tooltip>
+          </div>
+        }
+      />
       <CardContent>
         <Border>
           <SimpleBar
