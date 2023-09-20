@@ -31,7 +31,7 @@ const Library = () => {
       >
         <Filters />
       </Grid>
-      <Grid item md={12} lg={9}>
+      <Grid item lg={12} xl={9}>
         <Search />
         <Card style={{ marginTop: 10 }}>
           <CardContent>

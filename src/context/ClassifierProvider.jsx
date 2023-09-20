@@ -269,10 +269,21 @@ const ClassifierProvider = ({ children }) => {
     const data = await api.get(`/categories/list/`, {
       params: {
         treeId: categories.map(({ treeId }) => treeId).join(','),
+        deprecated: false,
+      },
+    })
+
+    const data2 = await api.get(`/categories/list/`, {
+      params: {
+        treeId: categories.map(({ treeId }) => treeId).join(','),
+        deprecated: true,
       },
     })
     if (api.status < 400) {
-      let categories = data.results
+      let categories = [
+        ...data.results,
+        ...data2.results.filter(({ id }) => categoriesSelected.includes(id)),
+      ]
       sortCategories(categories)
       setCategories(categories)
       setInitalCategoriesAdded(true)
