@@ -94,13 +94,16 @@ const AuthoritiesProvider = ({ children }) => {
   const addAuthority = async () => {
     try {
       const api = ApiConnection()
-      await api.post('/categories/authorities/', authority)
+      const data = await api.post('/categories/authorities/', authority)
       if (api.status < 400) {
         setAuthority(authorityTemplate)
-        setSuccessMessage('Autoridad actualizada con éxito')
+        setSuccessMessage('Autoridad creada con éxito')
         getPageData(false)
         setOpenAuthorityModal(false)
-      } else setErrorMessage('Error al actualizar la autoridad.')
+      } else {
+        if (data.message) setErrorMessage(data.message)
+        else setErrorMessage('Error al crear la autoridad.')
+      }
     } catch (error) {
       console.error(error)
     }
