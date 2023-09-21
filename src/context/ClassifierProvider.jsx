@@ -53,6 +53,7 @@ const ClassifierProvider = ({ children }) => {
     useState(false)
   const [categoriesOptions, setCategoriesOptions] = useState([])
   const [categoriesSelected, setCategoriesSelected] = useState([])
+  const [predictedTrees, setPredictedTrees] = useState([])
   const [loadingDocs, setLoadingDocs] = useState(false)
   const [page, setPage] = useState(0)
   const [authorities, setAuthorities] = useState([])
@@ -164,6 +165,11 @@ const ClassifierProvider = ({ children }) => {
       ]
       sortCategories(newCategories)
 
+      setPredictedTrees([
+        ...predictedTrees,
+        data.filter(({ treeId }) => !predictedTrees.includes(treeId)),
+      ])
+
       setCategories(newCategories)
     } else setErrorMessage('Error al clasificar el texto.')
     setLoadingCategories(false)
@@ -200,11 +206,13 @@ const ClassifierProvider = ({ children }) => {
       await api.put(`/documents/list/${doc.id}/`, {
         ...doc,
         categories: categoriesSelected,
+        predictedTrees,
       })
     else
       await api.post(`/documents/list/`, {
         ...doc,
         categories: categoriesSelected,
+        predictedTrees,
       })
 
     if (api.status < 400) {
