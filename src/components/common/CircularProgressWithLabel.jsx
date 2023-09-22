@@ -24,6 +24,7 @@ const CircularProgressWithLabel = (props) => {
           variant={'caption'}
           component={'div'}
           color={'text.secondary'}
+          sx={{ mb: 2 }}
         >
           <CountUp separator=" " end={props.label} preserveValue={true} /> %
         </Typography>

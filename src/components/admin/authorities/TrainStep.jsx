@@ -42,7 +42,7 @@ const TrainStep = ({ progress, status, active, disabled }) => {
       <Grid item xs={12}>
         {(status === 'TRAINING' || status === 'GETTING_DATA') && (
           <CircularProgressWithLabel
-            value={progress - 0}
+            value={70}
             label={progress}
             color={getStatusColor(status)}
             sx={{ mb: 2 }}
