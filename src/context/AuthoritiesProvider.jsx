@@ -7,6 +7,7 @@ const authorityTemplate = {
   color: null,
   active: false,
   disabled: false,
+  autoSync: true,
 }
 
 const authoritiesTemplate = {

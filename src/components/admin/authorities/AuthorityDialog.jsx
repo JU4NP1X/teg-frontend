@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
+  Tooltip,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import {
@@ -23,6 +25,7 @@ const authorityTemplate = {
   color: null,
   active: false,
   disabled: false,
+  autoSync: true,
 }
 
 const AuthorityDialog = ({}) => {
@@ -110,8 +113,21 @@ const AuthorityDialog = ({}) => {
       aria-labelledby={'form-dialog-title'}
       fullWidth
     >
-      <DialogTitle id={'form-dialog-title'}>
-        {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}
+      <DialogTitle
+        id={'form-dialog-title'}
+        sx={{ display: 'flex', verticalAlign: 'center' }}
+      >
+        {authority.id ? 'Modificar autoridad' : 'Agregar Autoridad'}{' '}
+        {authority.native && (
+          <Tooltip
+            title={
+              'Modificación limitada: 1. No se puede cambiar el nombre. 2. Solo se puede cambiar la traducción de las categorías'
+            }
+            sx={{ ml: 'auto' }}
+          >
+            <Chip label={'Nativa'} color={'info'} />
+          </Tooltip>
+        )}
       </DialogTitle>
       <ValidatorForm
         onSubmit={handleAddAuthority}
@@ -148,16 +164,15 @@ const AuthorityDialog = ({}) => {
             validators={['required']}
             errorMessages={['Este campo es requerido']}
           />
-          {!authority.native && (
-            <FileUploader
-              buttonText={'Haz click o arrastra un .csv con las categorías'}
-              isLoading={setLoadingFile}
-              fileTypes={['.csv']}
-              onFileUpload={(file) =>
-                setAuthority({ ...authority, csvBase64: file })
-              }
-            />
-          )}
+
+          <FileUploader
+            buttonText={'Haz click o arrastra un .csv con las categorías'}
+            isLoading={setLoadingFile}
+            fileTypes={['.csv']}
+            onFileUpload={(file) =>
+              setAuthority({ ...authority, csvBase64: file })
+            }
+          />
 
           <SelectValidator
             id={'active'}
@@ -192,11 +207,29 @@ const AuthorityDialog = ({}) => {
 
           <SelectValidator
             id={'disabled'}
+            label={'¿Desea que sincronice automáticamente?'}
+            labelid={'admin-label'}
+            name={'disabled'}
+            value={authority.autoSync}
+            disabled={authority.disabled}
+            validators={['required']}
+            errorMessages={['Este campo es requerido']}
+            onChange={(e) =>
+              setAuthority({ ...authority, autoSync: e.target.value })
+            }
+            fullWidth
+          >
+            <MenuItem value={true}>Sí</MenuItem>
+            <MenuItem value={false}>No</MenuItem>
+          </SelectValidator>
+
+          <SelectValidator
+            id={'disabled'}
             label={'¿Está deshabilitado?'}
             labelid={'admin-label'}
             name={'disabled'}
             value={authority.disabled}
-            disabled={authority.active}
+            disabled={authority.active || authority.autoSync}
             validators={['required']}
             errorMessages={['Este campo es requerido']}
             onChange={(e) =>
