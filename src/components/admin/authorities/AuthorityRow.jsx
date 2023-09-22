@@ -5,8 +5,8 @@ import moment from 'moment/moment'
 import React, { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import CountUp from 'react-countup'
-import TrainStep from './TrainStep'
 import useAuthorities from '../../../hooks/useAuthorities'
+import TrainStep from './TrainStep'
 
 const data = {
   datasets: [
@@ -48,7 +48,8 @@ const AuthorityRow = ({
   useEffect(() => {
     const calculateRamAvailable = () => {
       const available =
-        systemInfo.ram.total - systemInfo.ram.percent * systemInfo.ram.total /100
+        systemInfo.ram.total -
+        (systemInfo.ram.percent * systemInfo.ram.total) / 100
       setRamAvailable(available)
     }
 
@@ -62,19 +63,19 @@ const AuthorityRow = ({
   }, [systemInfo])
 
   const isTrainingEnabled =
-    ramAvailable >= 8 * 1024 * 1024 * 1024  &&
+    ramAvailable >= 8 * 1024 * 1024 * 1024 &&
     vramAvailable >= 8 * 1024 * 1024 * 1024
 
   let trainingDisabledReason = ''
   if (!isTrainingEnabled) {
-    if (ramAvailable < 8 * 1024 * 1024 * 1024 ) {
-      const ramAvailableGB = ramAvailable / (1024 * 1024 * 1024 )
+    if (ramAvailable < 8 * 1024 * 1024 * 1024) {
+      const ramAvailableGB = ramAvailable / (1024 * 1024 * 1024)
       trainingDisabledReason += ` No hay suficiente RAM disponible. Disponible: ${ramAvailableGB.toFixed(
         2
       )} GB, Necesario: 8 GB.`
     }
-    if (vramAvailable < 8 * 1024 * 1024 * 1024 ) {
-      const vramAvailableGB = vramAvailable / (1024 * 1024 * 1024 )
+    if (vramAvailable < 8 * 1024 * 1024 * 1024) {
+      const vramAvailableGB = vramAvailable / (1024 * 1024 * 1024)
       trainingDisabledReason += ` No hay suficiente VRAM disponible. Disponible: ${vramAvailableGB.toFixed(
         2
       )}GB, Necesario: 8 GB.`
@@ -115,7 +116,9 @@ const AuthorityRow = ({
                   ...data.datasets[0],
                   data: [
                     authority.resume.representatedCategoryCount,
-                    authority.resume.notRepresentatedCategoryCount,
+                    authority.resume.categoryTrainedCount +
+                      authority.resume.categoryNotTrainedCount -
+                      authority.resume.representatedCategoryCount,
                   ],
                 },
               ],
