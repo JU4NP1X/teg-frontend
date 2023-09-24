@@ -219,7 +219,7 @@ const TagsListCard = (save) => {
               justifyContent: 'space-between',
             }}
           >
-            Categorías
+            Categorías del documento
             <Tooltip title="Limpiar categorías no usadas">
               <IconButton
                 onClick={(e) => {
