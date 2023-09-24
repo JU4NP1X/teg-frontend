@@ -75,7 +75,7 @@ const Profile = () => {
     if (api.status < 400) {
       setUser({ ...currentUser, token: user.token })
       setUserInfo(currentUser)
-    } else setErrorMessage('Error al traer información del usuario.')
+    } else if (!currentUser.detail) setErrorMessage('Error al traer información del usuario.')
   }
 
   useEffect(() => {

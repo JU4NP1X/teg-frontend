@@ -5,11 +5,11 @@ const env = import.meta.env
 
 let apiUrl = env.VITE_API_BASE_URL
 apiUrl = apiUrl.slice(-1) !== '/' ? apiUrl + '/' : apiUrl
-const ApiConnection = () => {
+const ApiConnection = (withToken = true) => {
   let Api = axios.create({
     baseURL: apiUrl,
     headers: Session.token()
-      ? { Authorization: `Token ${Session.token()}` }
+      ? { Authorization: withToken ? `Bearer ${Session.token()}` : undefined }
       : {},
   })
 
@@ -34,14 +34,17 @@ const ApiConnection = () => {
     },
     (error) => {
       console.log({ error })
-      let message = 'No autorizado'
+      let message = 'Sesión expirada'
       const response = error.response ?? {}
       let data = response.data ?? {}
 
       Api.status = response.status
       Api.data = transformToCamelCase(data)
 
-      if (Api.status === 401) {
+      if (
+        Api.status === 401 ||
+        (Api.status === 403 && Api.data && Api.data.detail)
+      ) {
         history.replace(`/?errorMessage=${message}&unsetUser=true`)
       }
       return Api.data

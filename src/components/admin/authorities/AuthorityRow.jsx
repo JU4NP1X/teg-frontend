@@ -5,8 +5,8 @@ import moment from 'moment/moment'
 import React, { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import CountUp from 'react-countup'
-import useAuthorities from '../../../hooks/useAuthorities'
 import TrainStep from './TrainStep'
+import useAuthorities from '../../../hooks/useAuthorities'
 
 const data = {
   datasets: [

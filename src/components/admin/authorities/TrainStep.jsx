@@ -30,8 +30,8 @@ const TrainStep = ({ progress, status, active, disabled }) => {
         return 'Entrenando'
       case 'COMPLETE':
         if (disabled) return 'Deshabilitado'
-        if (!active) return 'Inactivo'
-        return 'Activo'
+        if (!active) return 'Predictor inactivo'
+        return 'Predictor activo'
       default:
         return ''
     }

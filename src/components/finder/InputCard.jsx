@@ -70,9 +70,9 @@ const InputCard = () => {
                 renderInput={(params) => (
                   <TextValidator
                     {...params}
-                    label={'Lista de autoridad'}
+                    label={'Predictor de categorías'}
                     placeholder={
-                      'Selecciona una autoridad de dónde buscar categorías'
+                      'Selecciona una autoridad de dónde predecir las categorías. Si no se encuentra listada, comunicarse con el administrador para que active su predictor.'
                     }
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}

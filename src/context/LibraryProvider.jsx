@@ -34,7 +34,7 @@ const LibraryProvider = ({ children }) => {
   const fetchFilters = async (signal) => {
     try {
       setLoadingFilters(true)
-      const api = ApiConnection()
+      const api = ApiConnection(false)
       const data = await api.get('categories/translations/', {
         params: {
           search: filterSearch,
@@ -63,7 +63,7 @@ const LibraryProvider = ({ children }) => {
   const fetchDocuments = async (signal) => {
     try {
       setLoadingDocuments(true)
-      const api = ApiConnection()
+      const api = ApiConnection(false)
       const data = await api.get('documents/list/', {
         params: {
           search: search,
@@ -93,7 +93,7 @@ const LibraryProvider = ({ children }) => {
   const fetchAuthorityList = async () => {
     try {
       setLoadingAuthorities(true)
-      const api = ApiConnection()
+      const api = ApiConnection(false)
       const data = await api.get('categories/authorities/', {
         params: {
           ordering: 'id',
@@ -111,7 +111,7 @@ const LibraryProvider = ({ children }) => {
   }
 
   const getDoc = async (doc) => {
-    const api = ApiConnection()
+    const api = ApiConnection(false)
     const data = await api.get(`/documents/list/${doc.id}/`)
     if (api.status < 400) {
       setDoc(data)

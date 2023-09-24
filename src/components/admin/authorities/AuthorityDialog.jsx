@@ -121,7 +121,7 @@ const AuthorityDialog = ({}) => {
         {authority.native && (
           <Tooltip
             title={
-              'Modificación limitada: 1. No se puede cambiar el nombre. 2. Solo se puede cambiar la traducción de las categorías'
+              'Modificación limitada: 1. No se puede cambiar el nombre. 2. El cambio de categorías solo permite cambiar la traducción. 3. No es posible de eliminar por limitaciones estructurales del sistema.'
             }
             sx={{ ml: 'auto' }}
           >
@@ -176,7 +176,7 @@ const AuthorityDialog = ({}) => {
 
           <SelectValidator
             id={'active'}
-            label={'¿Modelo predictivo activo?'}
+            label={'¿Activar predictor?'}
             labelid={'admin-label'}
             name={'active'}
             value={authority.active}

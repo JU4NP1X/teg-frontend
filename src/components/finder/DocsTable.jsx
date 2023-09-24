@@ -24,6 +24,7 @@ import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
 import Border from '../common/Border'
+import ConfirmationDialog from '../common/ConfirmationDialog'
 
 const titles = [
   { nombre: 'Imagen', align: 'left', width: '20%' },
@@ -32,15 +33,24 @@ const titles = [
   { nombre: 'Autores', align: 'left', width: '10%' },
   { nombre: 'Acciones', align: 'right', width: '10%' },
 ]
+const documentTemplate = {
+  title: '',
+  summary: '',
+  categories: [],
+  pdf: '',
+  img: '',
+}
 
 const DocsTable = () => {
   const {
     docs,
+    doc,
     loadingDocs,
     page,
     setPage,
     deleteDoc,
     setShowTable,
+    setDoc,
     getDoc,
     searchDocument,
     setSearchDocument,
@@ -57,6 +67,7 @@ const DocsTable = () => {
     onlyCategoriesDeprecad,
   } = useClassifier()
   const [disableButtons, setDisableButtons] = useState(false)
+  const [openConfirmation, setOpenConfirmation] = useState(false)
   const getBase64Image = (base64String) => {
     return `data:image/png;base64,${base64String}`
   }
@@ -299,8 +310,8 @@ const DocsTable = () => {
                             aria-label="Eliminar"
                             onClick={async () => {
                               setDisableButtons(true)
-                              await deleteDoc(item)
-                              setDisableButtons(false)
+                              setDoc(item)
+                              setOpenConfirmation(true)
                             }}
                           >
                             <Tooltip title="Eliminar">
@@ -323,6 +334,25 @@ const DocsTable = () => {
           onPageChange={(event, newPage) => setPage(newPage)}
           rowsPerPage={20}
           rowsPerPageOptions={[]}
+        />
+
+        <ConfirmationDialog
+          cancelButtonText={'Cancelar'}
+          confirmButtonText={'Eliminar'}
+          title={'Confirmar eliminación'}
+          message={'¿Estás seguro de que deseas eliminar este documento?'}
+          open={openConfirmation}
+          onClose={() => {
+            setOpenConfirmation(false)
+            setDisableButtons(false)
+            setDoc(documentTemplate)
+          }}
+          onConfirm={async () => {
+            setOpenConfirmation(false)
+            await deleteDoc(doc)
+            setDisableButtons(false)
+            setDoc(documentTemplate)
+          }}
         />
       </CardContent>
     </Card>

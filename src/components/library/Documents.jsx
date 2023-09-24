@@ -17,7 +17,7 @@ import useLibrary from '../../hooks/useLibrary'
 import DocumentViewer from './DocumentViewer'
 
 const Documents = ({ paginatedData, style }) => {
-  const { doc, setDoc, getDoc } = useLibrary()
+  const { doc, getDoc, selectedFilters } = useLibrary()
   const [open, setOpen] = useState(false)
   const [loadingDownload, setLoadingDownload] = useState(false)
   const [loadingView, setLoadingView] = useState(false)
@@ -49,6 +49,8 @@ const Documents = ({ paginatedData, style }) => {
     setLoadingDownload(false)
     setLoadingDocument(0)
   }
+  const filterIds = selectedFilters.map(({ category }) => category.id)
+  
   return (
     <Box style={style}>
       <Grid container spacing={0}>
@@ -108,31 +110,62 @@ const Documents = ({ paginatedData, style }) => {
                   }}
                 >
                   {item.category &&
-                    item.category.map((category) => (
-                      <Chip
-                        key={category.id}
-                        label={
-                          <div
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <span
-                              className={'dot'}
-                              style={{
-                                backgroundColor:
-                                  category.translation.authority.color,
-                                height: 4,
-                                marginTop: 0,
-                                borderRadius: '50%',
-                              }}
-                            />
-                            {category.translation
-                              ? category.translation.name
-                              : category.name}
-                          </div>
-                        }
-                        sx={{ marginRight: '5px' }}
-                      />
-                    ))}
+                    item.category
+                      .filter(({ id }) => filterIds.includes(id))
+                      .map((category) => (
+                        <Chip
+                          key={category.id}
+                          color={'primary'}
+                          label={
+                            <div
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              <span
+                                className={'dot'}
+                                style={{
+                                  backgroundColor:
+                                    category.translation.authority.color,
+                                  height: 4,
+                                  marginTop: 0,
+                                  borderRadius: '50%',
+                                }}
+                              />
+                              {category.translation
+                                ? category.translation.name
+                                : category.name}
+                            </div>
+                          }
+                          sx={{ marginRight: '5px' }}
+                        />
+                      ))}
+                  {item.category &&
+                    item.category
+                      .filter(({ id }) => !filterIds.includes(id))
+                      .map((category) => (
+                        <Chip
+                          key={category.id}
+                          label={
+                            <div
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              <span
+                                className={'dot'}
+                                style={{
+                                  backgroundColor:
+                                    category.translation.authority.color,
+                                  height: 4,
+                                  marginTop: 0,
+                                  borderRadius: '50%',
+                                }}
+                              />
+                              {category.translation
+                                ? category.translation.name
+                                : category.name}
+                            </div>
+                          }
+                          sx={{ marginRight: '5px' }}
+                        />
+                      ))}
                 </Grid>
               </CardContent>
               <Box
