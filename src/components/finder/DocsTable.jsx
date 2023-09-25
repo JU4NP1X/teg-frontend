@@ -122,7 +122,7 @@ const DocsTable = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={'Lista de autoridad'}
+                    label={'Autoridad'}
                     validators={['required']}
                     errorMessages={['Este campo es requerido']}
                     sx={{ ml: 'auto', minWidth: 200 }}

@@ -106,7 +106,7 @@ const LibraryProvider = ({ children }) => {
         setLoadingAuthorities(false)
       }
     } catch (error) {
-      console.error('Error al obtener la lista de autoridad:', error)
+      console.error('Error al obtener la lista de autoridades:', error)
     }
   }
 

@@ -173,14 +173,18 @@ const AuthoritiesProvider = ({ children }) => {
     setLoadingAction(true)
     try {
       const api = ApiConnection()
-      await api.patch(`/categories/authorities/${authority.id}/`, authority)
+      const data = await api.patch(
+        `/categories/authorities/${authority.id}/`,
+        authority
+      )
       if (api.status < 400) {
         setSuccessMessage('Autoridad actualizada con éxito')
         getPageData(false)
         setOpenAuthorityModal(false)
         setLoadingAction(false)
       } else {
-        setErrorMessage('Error al actualizar la autoridad.')
+        if (data.message) setErrorMessage(data.message)
+        else setErrorMessage('Error al actualizar la autoridad.')
         setLoadingAction(false)
       }
     } catch (error) {

@@ -41,7 +41,7 @@ const Authorities = () => {
         <CardHeader
           title={
             <div style={{ display: 'flex' }}>
-              Listas de autoridad
+              Autoridades
               <Box
                 sx={{
                   display: { xs: 'none', md: 'none', lg: 'none', xl: 'flex' },
@@ -162,7 +162,7 @@ const Authorities = () => {
             </div>
           }
           action={
-            <Tooltip title={'Agregar lista de autoridad'}>
+            <Tooltip title={'Agregar autoridad'}>
               <IconButton
                 color={'primary'}
                 size={'small'}

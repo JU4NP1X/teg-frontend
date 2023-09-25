@@ -64,7 +64,7 @@ const Filters = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={'Lista de autoridad'}
+                label={'Autoridad'}
                 value={params.InputProps.value}
                 InputProps={{
                   ...params.InputProps,

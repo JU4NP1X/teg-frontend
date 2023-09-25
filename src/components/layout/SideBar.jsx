@@ -151,7 +151,7 @@ export const SideBar = ({ isOpen, loginHandler, setOpen }) => {
                     <ListItemIcon sx={{ color: 'white' }}>
                       <ListAlt />
                     </ListItemIcon>
-                    <ListItemText primary={'Listas de autoridad'} />
+                    <ListItemText primary={'Autoridades'} />
                   </ListItemButton>
                 </List>
               </>
