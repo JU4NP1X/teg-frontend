@@ -122,7 +122,17 @@ const AuthoritiesTable = ({}) => {
   }
 
   const handleUpdateAuthority = (authority) => {
-    setAuthority(authority)
+    setAuthority({
+      ...authority,
+      lastTrainingDate: undefined,
+      practicalPrecision: undefined,
+      theoreticalPrecision: undefined,
+      percentage: undefined,
+      pid: undefined,
+      numDocumentsClassified: undefined,
+      resume: undefined,
+      status: undefined,
+    })
     setOpenAuthorityModal(true)
   }
   return (
