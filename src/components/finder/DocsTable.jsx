@@ -25,6 +25,7 @@ import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
 import Border from '../common/Border'
 import ConfirmationDialog from '../common/ConfirmationDialog'
+const env = import.meta.env
 
 const titles = [
   { nombre: 'Imagen', align: 'left', width: '20%' },
@@ -265,7 +266,7 @@ const DocsTable = () => {
                       <TableRow key={item.id}>
                         <TableCell>
                           <img
-                            src={getBase64Image(item.img)}
+                            src={`${env.VITE_API_BASE_URL}/documents/img/${item.id}`}
                             alt={'Imagen'}
                             style={{
                               maxHeight: 100,

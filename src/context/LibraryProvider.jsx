@@ -110,15 +110,6 @@ const LibraryProvider = ({ children }) => {
     }
   }
 
-  const getDoc = async (doc) => {
-    const api = ApiConnection(false)
-    const data = await api.get(`/documents/list/${doc.id}/`)
-    if (api.status < 400) {
-      setDoc(data)
-    }
-    return data
-  }
-
   useEffect(() => {
     let abortController = new AbortController()
 
@@ -163,7 +154,6 @@ const LibraryProvider = ({ children }) => {
         setLoadingDocuments,
         doc,
         setDoc,
-        getDoc,
         ordering,
         setOrdering,
       }}

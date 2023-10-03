@@ -15,9 +15,10 @@ import {
 import React, { useState } from 'react'
 import useLibrary from '../../hooks/useLibrary'
 import DocumentViewer from './DocumentViewer'
+const env = import.meta.env
 
 const Documents = ({ paginatedData, style }) => {
-  const { doc, getDoc, selectedFilters } = useLibrary()
+  const { doc, setDoc, selectedFilters } = useLibrary()
   const [open, setOpen] = useState(false)
   const [loadingDownload, setLoadingDownload] = useState(false)
   const [loadingView, setLoadingView] = useState(false)
@@ -25,32 +26,38 @@ const Documents = ({ paginatedData, style }) => {
   const handleDownload = async (item) => {
     setLoadingDownload(true)
     setLoadingDocument(item.id)
-    const { pdf } = await getDoc(item)
-    // Decodificar el string base64 a un blob
-    const byteCharacters = atob(pdf)
-    const byteArrays = []
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512)
-      const byteNumbers = new Array(slice.length)
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i)
-      }
-      const byteArray = new Uint8Array(byteNumbers)
-      byteArrays.push(byteArray)
-    }
-    const blob = new Blob(byteArrays, { type: 'application/pdf' })
 
-    // Crear el enlace de descarga
-    const downloadLink = document.createElement('a')
-    downloadLink.href = URL.createObjectURL(blob)
-    downloadLink.download = `${item.title}.pdf`
-    downloadLink.click()
+    try {
+      const response = await fetch(
+        `${env.VITE_API_BASE_URL}/documents/pdf/${item.id}`,
+        {
+          method: 'GET',
+          responseType: 'blob', // Indica que deseas recibir una respuesta en formato blob (binario)
+        }
+      )
+
+      if (response.ok) {
+        const blob = await response.blob()
+        const downloadUrl = URL.createObjectURL(blob)
+
+        // Crear el enlace de descarga
+        const downloadLink = document.createElement('a')
+        downloadLink.href = downloadUrl
+        downloadLink.download = `${item.title}.pdf`
+        downloadLink.click()
+      } else {
+        // Manejar el caso en que la respuesta no sea exitosa
+        console.error('Error al descargar el documento')
+      }
+    } catch (error) {
+      console.error('Error al descargar el documento:', error)
+    }
 
     setLoadingDownload(false)
     setLoadingDocument(0)
   }
   const filterIds = selectedFilters.map(({ category }) => category.id)
-  
+
   return (
     <Box style={style}>
       <Grid container spacing={0}>
@@ -180,7 +187,7 @@ const Documents = ({ paginatedData, style }) => {
                 <CardMedia
                   component={'img'}
                   height={'50'}
-                  src={`data:image/png;base64,${item.img}`}
+                  src={`${env.VITE_API_BASE_URL}/documents/img/${item.id}`}
                   alt={item.title}
                   sx={{ width: '140px', flexShrink: 0 }}
                 />
@@ -211,7 +218,7 @@ const Documents = ({ paginatedData, style }) => {
                       onClick={async () => {
                         setLoadingView(true)
                         setLoadingDocument(item.id)
-                        await getDoc(item)
+                        setDoc(item)
                         setLoadingView(false)
                         setOpen(true)
                         setLoadingDocument(0)
@@ -239,7 +246,7 @@ const Documents = ({ paginatedData, style }) => {
       <DocumentViewer
         open={open}
         onClose={() => setOpen(false)}
-        pdfBase64={doc.pdf}
+        docId={doc.id}
         title={doc.title}
       />
     </Box>

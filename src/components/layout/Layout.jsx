@@ -5,7 +5,7 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { grey, red } from '@mui/material/colors'
+import { green, grey, red, yellow } from '@mui/material/colors'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import moment from 'moment/moment'
 import { useEffect, useState } from 'react'
@@ -25,6 +25,15 @@ const theme = createTheme({
     },
     secondary: {
       main: red[500],
+    },
+    success: {
+      main: green[600],
+    },
+    warning: {
+      main: yellow[800],
+    },
+    error: {
+      main: red[800],
     },
   },
   typography: {
