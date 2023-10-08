@@ -101,7 +101,7 @@ const Filters = () => {
               e.stopPropagation()
             }}
             style={{
-              height: 'calc(100vh - 382px)',
+              height: 'calc(100vh - 362px)',
             }}
           >
             <List>

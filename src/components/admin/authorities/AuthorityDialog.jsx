@@ -68,8 +68,8 @@ const AuthorityDialog = ({}) => {
   const getAuthorityCategories = async () => {
     setDownloadingAuthorities(true)
     const api = ApiConnection()
-    const data = await api.get('categories/csv/', {
-      params: { authorities: authority.id },
+    const data = await api.post('categories/csv/', {
+      authorityId: authority.id,
     })
 
     if (api.status === 200) {

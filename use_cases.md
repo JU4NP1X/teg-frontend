@@ -250,3 +250,17 @@ FiltrarBuscarDocumentos -.Extend..-  DescargarDocumento
 FiltrarBuscarDocumentos -.Extend..-  VerDocumento
 
 ```
+``` mermaid
+%%{init: {'theme': 'default'}}%%
+
+graph TD
+subgraph UC Voc
+    UsuarioNoRegistrado[<img src='./readme_imgs/monigote.png'> Usuario
+    no registrado]
+    UsuarioRegistrado[<img src='./readme_imgs/monigote.png'> Usuario
+    registrado]
+    Administrador[<img src='./readme_imgs/monigote.png'> Administrador]
+end
+Administrador--> UsuarioRegistrado
+UsuarioRegistrado--> UsuarioNoRegistrado
+```

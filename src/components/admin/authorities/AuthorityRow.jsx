@@ -1,6 +1,6 @@
 import { Delete, Edit, FitnessCenter, Sync } from '@mui/icons-material'
 import { IconButton, TableCell, TableRow, Tooltip } from '@mui/material'
-import { blue, red } from '@mui/material/colors'
+import { blue, orange, red } from '@mui/material/colors'
 import moment from 'moment/moment'
 import React, { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
@@ -12,8 +12,8 @@ const data = {
   datasets: [
     {
       borderWidth: 1,
-      backgroundColor: [blue[400], red[300]],
-      hoverBackgroundColor: [blue[400], red[300]],
+      backgroundColor: [blue[400], orange[800]],
+      hoverBackgroundColor: [blue[400], orange[800]],
     },
   ],
 }
@@ -31,6 +31,11 @@ const options = {
       },
     },
   },
+}
+
+const optionsWithPercentaje = JSON.parse(JSON.stringify(options))
+optionsWithPercentaje['plugins']['tooltip']['callbacks'] = {
+  label: (tooltipItem) => `${tooltipItem.parsed.toFixed(2)} %`,
 }
 
 const AuthorityRow = ({
@@ -126,35 +131,62 @@ const AuthorityRow = ({
           />
         </div>
       </TableCell>
-      <TableCell align={'center'}>
-        <CountUp
-          separator=" "
-          end={authority.resume.categoryTrainedCount}
-          preserveValue={true}
-        />
-      </TableCell>
-      <TableCell align={'center'}>
-        <CountUp
-          separator=" "
-          end={authority.resume.deprecatedCategoryTrainedCount}
-          preserveValue={true}
-        />
-      </TableCell>
-      <TableCell align={'center'}>
-        <CountUp
-          separator=" "
-          end={authority.resume.categoryNotTrainedCount}
-          preserveValue={true}
-        />
-      </TableCell>
+      <Tooltip title={'Categorías (Subcategorías)'}>
+        <TableCell align={'center'}>
+          <CountUp
+            separator=" "
+            end={authority.resume.categoryTrainedCount}
+            preserveValue={true}
+          />{' '}
+          (
+          <CountUp
+            separator=" "
+            end={authority.resume.subcategoryTrainedCount}
+            preserveValue={true}
+          />
+          )
+        </TableCell>
+      </Tooltip>
+      <Tooltip title={'Categorías (Subcategorías)'}>
+        <TableCell align={'center'}>
+          <CountUp
+            separator=" "
+            end={authority.resume.deprecatedCategoryTrainedCount}
+            preserveValue={true}
+          />{' '}
+          (
+          <CountUp
+            separator=" "
+            end={authority.resume.deprecatedSubcategoryTrainedCount}
+            preserveValue={true}
+          />
+          )
+        </TableCell>
+      </Tooltip>
+      <Tooltip title={'Categorías (Subcategorías)'}>
+        <TableCell align={'center'}>
+          <CountUp
+            separator=" "
+            end={authority.resume.categoryNotTrainedCount}
+            preserveValue={true}
+          />{' '}
+          (
+          <CountUp
+            separator=" "
+            end={authority.resume.subcategoryNotTrainedCount}
+            preserveValue={true}
+          />
+          )
+        </TableCell>
+      </Tooltip>
       <TableCell sx={{ textAlign: '-webkit-center' }}>
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
             style={{ height: '100px', width: '100px' }}
-            options={options}
+            options={optionsWithPercentaje}
             data={{
               ...data,
-              labels: ['Porcentaje de éxito', 'Porcentaje de fracaso'],
+              labels: ['Probabilidad de éxito', 'Probabilidad de fracaso'],
               datasets: [
                 {
                   ...data.datasets[0],
@@ -172,10 +204,10 @@ const AuthorityRow = ({
         <div style={{ height: '100px', width: '100px' }}>
           <Doughnut
             style={{ height: '100px', width: '100px' }}
-            options={options}
+            options={optionsWithPercentaje}
             data={{
               ...data,
-              labels: ['Porcentaje de éxito', 'Porcentaje de fracaso'],
+              labels: ['Probabilidad de éxito', 'Probabilidad de fracaso'],
               datasets: [
                 {
                   ...data.datasets[0],

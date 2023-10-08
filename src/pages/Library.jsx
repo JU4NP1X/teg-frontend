@@ -27,11 +27,12 @@ const Library = () => {
         sx={{
           display: { xs: 'none', md: 'none', lg: 'none', xl: 'block' },
         }}
+        style={{ paddingTop: 0 }}
         xl={3}
       >
         <Filters />
       </Grid>
-      <Grid item lg={12} xl={9}>
+      <Grid item lg={12} xl={9} style={{ paddingTop: 0 }}>
         <Search />
         <Card style={{ marginTop: 10 }}>
           <CardContent>
@@ -42,7 +43,7 @@ const Library = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: 'calc(100vh - 317px)',
+                    height: 'calc(100vh - 297px)',
                   }}
                 >
                   <CircularProgress color={'primary'} />
@@ -53,7 +54,7 @@ const Library = () => {
                     e.stopPropagation()
                   }}
                   style={{
-                    height: 'calc(100vh - 317px)',
+                    height: 'calc(100vh - 297px)',
                   }}
                 >
                   <Documents

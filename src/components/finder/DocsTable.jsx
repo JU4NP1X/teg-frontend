@@ -30,8 +30,9 @@ const env = import.meta.env
 const titles = [
   { nombre: 'Imagen', align: 'left', width: '20%' },
   { nombre: 'Título', align: 'left', width: '20%' },
-  { nombre: 'Resumen', align: 'left', width: '40%' },
-  { nombre: 'Autores', align: 'left', width: '10%' },
+  { nombre: 'Resumen', align: 'left', width: '30%' },
+  { nombre: 'Creado por', align: 'left', width: '10%' },
+  { nombre: 'Modificado por', align: 'left', width: '10%' },
   { nombre: 'Acciones', align: 'right', width: '10%' },
 ]
 const documentTemplate = {
@@ -282,7 +283,8 @@ const DocsTable = () => {
                             ? `${item.summary.slice(0, 600)}...`
                             : item.summary}
                         </TableCell>
-                        <TableCell>{item.authors}</TableCell>
+                        <TableCell>{item.createdBy.username}</TableCell>
+                        <TableCell>{item.updatedBy.username}</TableCell>
                         <TableCell align={'right'}>
                           <IconButton
                             disabled={disableButtons}

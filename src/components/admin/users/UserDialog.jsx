@@ -8,7 +8,7 @@ import {
   DialogTitle,
   MenuItem,
 } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   SelectValidator,
   TextValidator,
@@ -25,6 +25,12 @@ const UserDialog = ({
   loadingEdition,
 }) => {
   const { user } = useAuth()
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+    return value == formValues.password
+  })
+  useEffect(() => setConfirmPassword(''), [user.id])
   return (
     <Dialog open={open} onClose={onClose} maxWidth={'md'}>
       <DialogTitle>
@@ -78,6 +84,21 @@ const UserDialog = ({
                 validators={['required']}
                 errorMessages={['Este campo es requerido']}
                 onChange={handleChange}
+                fullWidth
+              />
+            )}
+            {!formValues.id && (
+              <TextValidator
+                label={'Confirmar contraseña'}
+                type={'password'}
+                name={'confirmPassword'}
+                validators={['required', 'isPasswordMatch']}
+                value={confirmPassword}
+                errorMessages={[
+                  'Este campo es requerido',
+                  'Las contraseñas no coinciden',
+                ]}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 fullWidth
               />
             )}

@@ -75,12 +75,17 @@ const Profile = () => {
     if (api.status < 400) {
       setUser({ ...currentUser, token: user.token })
       setUserInfo(currentUser)
-    } else if (!currentUser.detail) setErrorMessage('Error al traer información del usuario.')
+    } else if (!currentUser.detail)
+      setErrorMessage('Error al traer información del usuario.')
   }
 
   useEffect(() => {
     handleGetUser()
   }, [])
+
+  ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+    return value == password
+  })
 
   return (
     <Grid container sx={{ height: 'calc(100vh - 70px)' }}>
@@ -92,6 +97,15 @@ const Profile = () => {
               <CardHeader title={'Modificar datos'} />
               <CardContent>
                 <ValidatorForm onSubmit={handleSave}>
+                  <TextValidator
+                    label={'Usuario'}
+                    name={'username'}
+                    disabled
+                    value={userInfo.username || ''}
+                    validators={['required']}
+                    errorMessages={['Este campo es requerido']}
+                    fullWidth
+                  />
                   <TextValidator
                     label={'Nombre'}
                     fullWidth
@@ -165,7 +179,7 @@ const Profile = () => {
                     fullWidth
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
-                    validators={['required']}
+                    validators={['required', 'isPasswordMatch']}
                     errorMessages={[
                       'Este campo es requerido',
                       'Las contraseñas no coinciden',

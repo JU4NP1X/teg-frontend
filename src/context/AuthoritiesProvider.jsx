@@ -154,7 +154,7 @@ const AuthoritiesProvider = ({ children }) => {
     setLoadingAction(true)
     try {
       const api = ApiConnection()
-      await api.post(`/categories/train/`, { authorities: [authority.id] })
+      await api.post(`/categories/train/`, { authorityId: authority.id })
       if (api.status < 400) {
         setSuccessMessage('Autoridad entrenando.')
         getPageData(false)
