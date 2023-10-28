@@ -194,7 +194,7 @@ const TagsListCard = (save) => {
             <List
               sx={{
                 pl: 4,
-                maxHeight: categoriesExpanded.includes(category.id) ? 1000 : 0,
+                maxHeight: categoriesExpanded.includes(category.id) ? 1000000000000000 : 0,
                 overflow: 'hidden',
                 transition: 'max-height 1s',
               }}
