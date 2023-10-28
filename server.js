@@ -1,11 +1,18 @@
 require('dotenv').config()
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
-const onHeaders = require('on-headers')
 
 const path = require('path')
 const app = express()
-app.disable('x-powered-by')
+app.use(
+  process.env.VITE_PROXY_ENDPOINT,
+  createProxyMiddleware({
+    target: process.env.VITE_API_BASE_URL,
+    changeOrigin: true,
+    pathRewrite: { [process.env.VITE_PROXY_ENDPOINT]: '/' },
+  })
+)
+app.use(express.static(path.join(__dirname, '/dist')))
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '/dist', 'index.html'))
