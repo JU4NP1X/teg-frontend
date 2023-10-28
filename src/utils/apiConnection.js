@@ -3,7 +3,7 @@ import history from './history'
 import Session from './session'
 const env = import.meta.env
 
-let apiUrl = env.VITE_API_BASE_URL
+let apiUrl = env.VITE_PROXY_ENDPOINT
 apiUrl = apiUrl.slice(-1) !== '/' ? apiUrl + '/' : apiUrl
 const ApiConnection = (withToken = true) => {
   let Api = axios.create({
