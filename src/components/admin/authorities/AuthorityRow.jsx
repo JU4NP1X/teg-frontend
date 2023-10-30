@@ -212,8 +212,8 @@ const AuthorityRow = ({
                 {
                   ...data.datasets[0],
                   data: [
-                    authority.resume.practicalPrecision ?? 0,
-                    100 - (authority.resume.practicalPrecision ?? 0),
+                    authority.practicalPrecision,
+                    100 - authority.practicalPrecision,
                   ],
                 },
               ],

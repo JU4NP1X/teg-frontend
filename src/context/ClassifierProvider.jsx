@@ -167,7 +167,9 @@ const ClassifierProvider = ({ children }) => {
 
       setPredictedTrees([
         ...predictedTrees,
-        data.filter(({ treeId }) => !predictedTrees.includes(treeId)),
+        ...data
+          .filter(({ treeId }) => !predictedTrees.includes(treeId))
+          .map(({ treeId }) => treeId),
       ])
 
       setCategories(newCategories)
@@ -203,7 +205,7 @@ const ClassifierProvider = ({ children }) => {
     setLoadingSaveDocument(true)
     const api = ApiConnection()
     if (doc.id)
-      await api.put(`/documents/list/${doc.id}/`, {
+      await api.patch(`/documents/list/${doc.id}/`, {
         ...doc,
         categories: categoriesSelected,
         predictedTrees,
