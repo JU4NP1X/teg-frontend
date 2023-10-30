@@ -5,6 +5,7 @@ import { defineConfig, loadEnv } from 'vite'
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   return defineConfig({
+    manifest: true,
     plugins: [react()],
     server: {
       port: parseInt(process.env.VITE_PORT ?? 3000),
