@@ -39,7 +39,7 @@ const DocumentViewer = ({ open, onClose, docId, title }) => {
       <DialogContent style={{ height: '80vh' }}>
         <FullScreen handle={screen} onChange={fullScreenChange}>
           <Iframe
-            src={`${env.VITE_PROXY_ENDPOINT}/documents/pdf/${docId}`}
+            src={`${env.VITE_PROXY_ENDPOINT}/documents/pdf/${docId}/`}
             width={'100%'}
             height={'100%'}
           />

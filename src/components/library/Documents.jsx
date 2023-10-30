@@ -29,7 +29,7 @@ const Documents = ({ paginatedData, style }) => {
 
     try {
       const response = await fetch(
-        `${env.VITE_PROXY_ENDPOINT}/documents/pdf/${item.id}`,
+        `${env.VITE_PROXY_ENDPOINT}/documents/pdf/${item.id}/`,
         {
           method: 'GET',
           responseType: 'blob', // Indica que deseas recibir una respuesta en formato blob (binario)
@@ -187,7 +187,7 @@ const Documents = ({ paginatedData, style }) => {
                 <CardMedia
                   component={'img'}
                   height={'50'}
-                  src={`${env.VITE_API_BASE_URL}/documents/img/${item.id}`}
+                  src={`${env.VITE_PROXY_ENDPOINT}/documents/img/${item.id}/`}
                   alt={item.title}
                   sx={{ width: '140px', flexShrink: 0 }}
                 />

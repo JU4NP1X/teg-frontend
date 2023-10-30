@@ -267,7 +267,7 @@ const DocsTable = () => {
                       <TableRow key={item.id}>
                         <TableCell>
                           <img
-                            src={`${env.VITE_PROXY_ENDPOINT}/documents/img/${item.id}`}
+                            src={`${env.VITE_PROXY_ENDPOINT}/documents/img/${item.id}/`}
                             alt={'Imagen'}
                             style={{
                               maxHeight: 100,
