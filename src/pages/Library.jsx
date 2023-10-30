@@ -32,7 +32,7 @@ const Library = () => {
       >
         <Filters />
       </Grid>
-      <Grid item lg={12} xl={9} style={{ paddingTop: 0 }}>
+      <Grid item xs={12} md={12} lg={12} xl={9} style={{ paddingTop: 0 }}>
         <Search />
         <Card style={{ marginTop: 10 }}>
           <CardContent>
