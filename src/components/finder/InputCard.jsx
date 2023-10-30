@@ -46,7 +46,7 @@ const InputCard = () => {
             <FormControl
               size={'small'}
               fullWidth
-              style={{ height: 'calc(100vh - 260px)' }}
+              style={{ height: 'calc(100vh - 225px)' }}
             >
               <Autocomplete
                 getOptionLabel={({ name }) => name}
@@ -121,7 +121,7 @@ const InputCard = () => {
                   'Ingrese el texto del que desea obtener el vocabulario controlado, o bien puede pasar directamente el PDF pulsando el botón de abajo.'
                 }
                 multiline
-                rows={20}
+                rows={30}
                 fullWidth
                 validators={['required']}
                 errorMessages={['Este campo es requerido']}

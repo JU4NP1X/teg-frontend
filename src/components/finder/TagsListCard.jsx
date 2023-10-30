@@ -1,4 +1,10 @@
-import { CleaningServices, FileCopy, Save } from '@mui/icons-material'
+import {
+  CleaningServices,
+  Compress,
+  FileCopy,
+  FilterListOff,
+  Save,
+} from '@mui/icons-material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -194,7 +200,9 @@ const TagsListCard = (save) => {
             <List
               sx={{
                 pl: 4,
-                maxHeight: categoriesExpanded.includes(category.id) ? 1000000000000000 : 0,
+                maxHeight: categoriesExpanded.includes(category.id)
+                  ? 1000000000000000
+                  : 0,
                 overflow: 'hidden',
                 transition: 'max-height 1s',
               }}
@@ -220,21 +228,38 @@ const TagsListCard = (save) => {
             }}
           >
             Categorías del documento
-            <Tooltip title="Limpiar categorías no usadas">
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setCategories([
-                    ...categoriesList.filter(({ id }) =>
-                      categoriesSelected.includes(id)
-                    ),
-                  ])
-                }}
-                size={'small'}
-              >
-                <CleaningServices />
-              </IconButton>
-            </Tooltip>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              <Tooltip title="Comprimir categorías">
+                <IconButton
+                  onClick={(e) => {
+                    setCategoriesExpanded([])
+                  }}
+                  size={'small'}
+                >
+                  <Compress />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Limpiar categorías no usadas">
+                <IconButton
+                sx={{ml: 2}}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setCategories([
+                      ...categoriesList.filter(({ id }) =>
+                        categoriesSelected.includes(id)
+                      ),
+                    ])
+                  }}
+                  size={'small'}
+                >
+                  <CleaningServices />
+                </IconButton>
+              </Tooltip>
+            </div>
           </div>
         }
       />
@@ -244,7 +269,7 @@ const TagsListCard = (save) => {
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
-            style={{ height: 'calc(100vh - 467px)' }}
+            style={{ height: 'calc(100vh - 432px)' }}
           >
             <List disablePadding>{renderCategories(categoriesList)}</List>
           </SimpleBar>

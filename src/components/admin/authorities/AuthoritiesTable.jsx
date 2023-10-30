@@ -124,7 +124,6 @@ const AuthoritiesTable = ({}) => {
   const handleUpdateAuthority = (authority) => {
     setAuthority({
       ...authority,
-      lastTrainingDate: undefined,
       practicalPrecision: undefined,
       theoreticalPrecision: undefined,
       percentage: undefined,
@@ -140,7 +139,7 @@ const AuthoritiesTable = ({}) => {
       <TableContainer>
         <Border>
           <SimpleBar
-            style={{ height: 'calc(100vh - 230px)' }}
+            style={{ height: 'calc(100vh - 220px)' }}
             onTouchStart={(e) => {
               e.stopPropagation()
             }}

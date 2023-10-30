@@ -62,7 +62,7 @@ const UsersTable = ({
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
-            style={{ height: 'calc(100vh - 230px)' }}
+            style={{ height: 'calc(100vh - 200px)' }}
           >
             <Table stickyHeader>
               <TableHead>

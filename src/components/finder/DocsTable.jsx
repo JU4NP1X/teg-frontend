@@ -80,7 +80,7 @@ const DocsTable = () => {
       <CardHeader
         title={
           <div style={{ display: 'flex' }}>
-            Documentos
+            Clasificador
             <Box
               sx={{
                 display: { xs: 'none', md: 'none', lg: 'none', xl: 'flex' },
@@ -235,7 +235,7 @@ const DocsTable = () => {
               onTouchStart={(e) => {
                 e.stopPropagation()
               }}
-              style={{ height: 'calc(100vh - 230px)' }}
+              style={{ height: 'calc(100vh - 225px)' }}
             >
               <Table stickyHeader>
                 <TableHead>

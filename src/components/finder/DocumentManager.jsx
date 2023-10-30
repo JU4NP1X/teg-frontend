@@ -6,10 +6,10 @@ import TagsListCard from './TagsListCard'
 const DocumentManager = () => {
   return (
     <Grid container>
-      <Grid item xs={12} md={8} sx={{ p: 2 }}>
+      <Grid item xs={12} md={8} sx={{ pr: 2 }}>
         <InputCard />
       </Grid>
-      <Grid item xs={12} md={4} sx={{ p: 2, display: 'inline-grid' }}>
+      <Grid item xs={12} md={4} sx={{ pl: 2, display: 'inline-grid' }}>
         <TagsListCard />
       </Grid>
     </Grid>
