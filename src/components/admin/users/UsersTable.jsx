@@ -15,6 +15,7 @@ import {
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 import useAuth from '../../../hooks/useAuth'
+import { isMobile } from '../../../utils/utils'
 import Border from '../../common/Border'
 
 const columns = [
@@ -62,7 +63,11 @@ const UsersTable = ({
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
-            style={{ height: 'calc(100vh - 200px)' }}
+            style={{
+              height: isMobile()
+                ? 'calc(100vh - 135px)'
+                : 'calc(100vh - 200px)',
+            }}
           >
             <Table stickyHeader>
               <TableHead>
@@ -127,7 +132,7 @@ const UsersTable = ({
                       colSpan={columns.length}
                       align={'center'}
                       style={{
-                        height: 'calc(100vh - 280px)',
+                        height: 'calc(100vh - 257px)',
                         marginBottom: -200,
                       }}
                     >

@@ -23,6 +23,7 @@ import {
 import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
+import { isMobile } from '../../utils/utils'
 import Border from '../common/Border'
 import ConfirmationDialog from '../common/ConfirmationDialog'
 const env = import.meta.env
@@ -235,7 +236,11 @@ const DocsTable = () => {
               onTouchStart={(e) => {
                 e.stopPropagation()
               }}
-              style={{ height: 'calc(100vh - 225px)' }}
+              style={{
+                height: isMobile()
+                  ? 'calc(100vh - 135px)'
+                  : 'calc(100vh - 225px)',
+              }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -257,7 +262,7 @@ const DocsTable = () => {
                       <TableCell
                         colSpan={titles.length}
                         align={'center'}
-                        style={{ height: 'calc(100vh - 280px)' }}
+                        style={{ height: 'calc(100vh - 250px)' }}
                       >
                         <CircularProgress />
                       </TableCell>

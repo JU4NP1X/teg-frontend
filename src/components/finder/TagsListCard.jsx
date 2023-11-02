@@ -1,10 +1,4 @@
-import {
-  CleaningServices,
-  Compress,
-  FileCopy,
-  FilterListOff,
-  Save,
-} from '@mui/icons-material'
+import { CleaningServices, Compress, FileCopy, Save } from '@mui/icons-material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -245,7 +239,7 @@ const TagsListCard = (save) => {
               </Tooltip>
               <Tooltip title="Limpiar categorías no usadas">
                 <IconButton
-                sx={{ml: 2}}
+                  sx={{ ml: 2 }}
                   onClick={(e) => {
                     e.stopPropagation()
                     setCategories([
@@ -348,13 +342,14 @@ const TagsListCard = (save) => {
             await saveDocument()
             setShowTable(!showTable)
           }}
+          sx={{ mb: 1 }}
           disabled={
             !doc.pdf || categoriesSelected.length === 0 || loadingSaveDocument
           }
         >
           Guardar
           {loadingSaveDocument && (
-            <CircularProgress color={'inherit'} size={24} />
+            <CircularProgress color={'inherit'} size={24} sx={{ ml: 2 }} />
           )}
         </Button>
       </CardActions>
