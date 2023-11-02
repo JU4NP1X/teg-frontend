@@ -16,7 +16,7 @@
     { "src": "logo-192.png", "type": "image/png", "sizes": "192x192" },
     { "src": "logo-512.png", "type": "image/png", "sizes": "512x512" }
   ],
-  "orientation": "any",
+  "orientation": "portrait",
   "theme_color": "#ffffff",
   "status_bar": "#ffffff"
 }
