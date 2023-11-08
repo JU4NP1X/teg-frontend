@@ -20,7 +20,6 @@ import ApiConnection from '../../utils/apiConnection'
 import FileUploader from '../common/FileUploader'
 
 const steps = [
-  'Subir PDF',
   'Seleccionar Portada',
   'Seleccionar Título',
   'Seleccionar Resumen',
@@ -71,7 +70,7 @@ const PDFExtractor = ({ open, onClose }) => {
       const arrayBuffer = e.target.result
       const pdfjsLib = await import('pdfjs-dist')
       const pdf = await pdfjsLib.getDocument(arrayBuffer).promise
-      const pages = pdf.numPages
+      const pages = pdf.numPages < 10 ? pdf.numPages : 10
       const extractedPages = []
 
       for (let i = 0; i < pages; i++) {
@@ -184,31 +183,35 @@ const PDFExtractor = ({ open, onClose }) => {
       keepMounted
       onClose={closeDialog}
       aria-describedby={'alert-dialog-slide-description'}
-      maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
+      maxWidth={'xs'} // Añadido para ajustar el tamaño del diálogo
+      fullWidth
     >
       <DialogTitle>Subir y extraer datos del documento</DialogTitle>
       <DialogContent>
-        <DialogContentText id={'alert-dialog-slide-description'}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Stepper
-              activeStep={step}
-              alternativeStep={step + 1}
-              alternativeLabel
+        {step !== 0 && (
+          <DialogContentText id={'alert-dialog-slide-description'}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
             >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </div>
-        </DialogContentText>
+              <Stepper
+                activeStep={step - 1}
+                alternativeStep={step}
+                alternativeLabel
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </div>
+          </DialogContentText>
+        )}
+
         {step === 0 && (
           <FileUploader
             buttonText={'Haz click o arrastra un .pdf a clasificar'}
@@ -225,7 +228,8 @@ const PDFExtractor = ({ open, onClose }) => {
             }}
             style={{
               maxHeight: '50vh',
-              width: 500,
+              width: 390,
+              maxWidth: '70vw',
               textAlign: 'center',
             }}
           >
@@ -256,7 +260,7 @@ const PDFExtractor = ({ open, onClose }) => {
           size={'small'}
           variant={'outlined'}
         >
-          Anterior
+          Ant
         </Button>
         <Pagination
           count={numPages || 0}
@@ -286,7 +290,7 @@ const PDFExtractor = ({ open, onClose }) => {
             size={'small'}
             variant={'outlined'}
           >
-            Siguiente
+            Sig
           </Button>
         )}
       </DialogActions>

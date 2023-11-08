@@ -221,7 +221,19 @@ const TagsListCard = (save) => {
               justifyContent: 'space-between',
             }}
           >
-            Categorías del documento
+            <div
+              style={{
+                width: 'calc(100% - 100px)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              Categorías del documento
+            </div>
+
             <div
               style={{
                 display: 'flex',

@@ -16,7 +16,7 @@ const DocumentManager = () => {
         sx={{
           pl: { xs: 0, md: 2 },
           pb: { xs: 2, md: 0 },
-          mt: { xs: '20 !important', md: 0 },
+          mt: { xs: '20 !important', md: '0 !important' },
           display: 'inline-grid',
         }}
       >
