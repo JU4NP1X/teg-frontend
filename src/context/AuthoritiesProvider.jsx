@@ -41,7 +41,7 @@ const AuthoritiesProvider = ({ children }) => {
   const [refreshSys, setRefreshSys] = useState(false)
   const [authorities, setAuthorities] = useState(authoritiesTemplate)
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [loading, setLoading] = useState(true)
   const [loadingAction, setLoadingAction] = useState(false)
   const [loadingFile, setLoadingFile] = useState(false)

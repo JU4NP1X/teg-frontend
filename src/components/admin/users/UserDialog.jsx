@@ -36,7 +36,7 @@ const UserDialog = ({
       <DialogTitle>
         {formValues.id ? 'Editar Usuario' : 'Agregar Usuario'}
       </DialogTitle>
-      <ValidatorForm onSubmit={onSave}>
+      <ValidatorForm onSubmit={onSave} style={{ margin: 0 }}>
         <DialogContent>
           <DialogContentText width={500}>
             <TextValidator

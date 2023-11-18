@@ -1,144 +1,127 @@
 import { createContext, useEffect, useState } from 'react'
+import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
 
+const UsersContext = createContext()
+
+const usersTemplate = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: [],
+}
 const userTemplate = {
-  usrName: '',
-  usrLastName: '',
-  cmpId: '',
-  usrEmail: '',
-  roles: [],
-  usrStatus: '',
-  isNewUser: true,
+  title: '',
+  summary: '',
+  categories: [],
+  pdf: '',
+  img: '',
 }
 
-const UsersContext = createContext()
 const UsersProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false)
-  const [loadingUser, setLoadingUser] = useState(false)
-  const [error, setError] = useState(false)
-  const [users, setUsers] = useState([])
-  const [totalRows, setTotalRows] = useState(0)
-  const [page, setPage] = useState(1)
-  const [rows, setRows] = useState(10)
-  const [value, setValue] = useState('')
-  const [column, setColumn] = useState('')
-  const [order, setOrder] = useState('DESC')
-  const [listCompanies, setListCompanies] = useState([])
-  const [rolesList, setRolesList] = useState([])
-  const [user, setUserData] = useState(userTemplate)
-  const [columns, setColumns] = useState({
-    rolName: '',
-    cmpName: '',
-    usrName: '',
-    usrLastName: '',
-    usrEmail: '',
-  })
+  const { setErrorMessage, setSuccessMessage } = useNotification()
+  const [page, setPage] = useState(0)
+  const [rows, setRows] = useState(20)
+  const [loadingSaveUser, setLoadingSaveUser] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [loadingUsers, setLoadingUsers] = useState(false)
+  const [search, setSearch] = useState('')
+  const [isAdmin, setIsAdmin] = useState(-1)
+  const [user, setUser] = useState(userTemplate)
+  const [users, setUsers] = useState(usersTemplate)
 
-  const Api = ApiConnection()
-
-  const setUser = async ({ usrId }) => {
-    if (!usrId) return setUserData(userTemplate)
-
-    try {
-      setLoadingUser(true)
-      const user = await Api.get(`users/${usrId}`)
-      setUserData({ ...user, isNewUser: false })
-      setLoadingUser(false)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getUsers = async () => {
-    try {
-      setLoading(true)
-      console.log({ users })
-      const result = await Api.get('users', {
-        params: {
-          page: page /* + 1 */,
-          rows,
-          rolName: columns.rolName,
-          cmpName: columns.cmpName,
-          usrName: columns.usrName,
-          usrLastName: columns.usrLastName,
-          usrEmail: columns.usrEmail,
-          orderByUsrStatus: order,
-        },
-      })
-      if (Api.status < 400) {
-        const totalRows = result.totalRows
-        const users = result.users
-        setUsers(users)
-        setTotalRows(totalRows)
-        setLoading(false)
-      } else {
-        setError(true)
-      }
-    } catch (error) {
-      setError(true)
-      console.log(error)
-    }
-  }
-
-  const getCompanies = async () => {
-    const Api = ApiConnection()
-    const listCompanies = await Api.get('/companies', {
-      params: { onlyIndexed: false },
+  const getUsersList = async (signal) => {
+    setLoadingUsers(true)
+    const api = ApiConnection()
+    const data = await api.get('/users/list/', {
+      params: {
+        ordering: 'id',
+        limit: 20,
+        offset: page * 20,
+        search: search,
+        isAdmin: isAdmin === -1 ? undefined : isAdmin,
+      },
+      signal,
     })
-    setListCompanies(listCompanies)
+    if (api.status < 400) {
+      setUsers(data)
+      setLoadingUsers(false)
+    }
   }
 
-  const getRoles = async () => {
-    const Api = ApiConnection()
-    const listRoles = await Api.get('/roles/actives')
-    setRolesList(listRoles)
+  const getUser = async (user) => {
+    const api = ApiConnection()
+    const data = await api.get(`/users/list/${user.id}/`)
+    if (api.status < 400) {
+      setUser(data)
+    }
   }
 
-  //Get Data
-  useEffect(() => {
-    getUsers()
-  }, [page, order, rows])
+  const deleteUser = async (user) => {
+    setLoadingSaveUser(true)
+    const api = ApiConnection()
+    const data = await api.delete(`/users/list/${user.id}/`)
+    if (api.status < 400) {
+      setSuccessMessage('Usuario eliminado exitosamente')
+      getUsersList()
+    } else setErrorMessage('Error al eliminar el usuarioo')
+    setLoadingSaveUser(false)
+  }
+
+  const saveUser = async () => {
+    setLoadingSaveUser(true)
+    const api = ApiConnection()
+    if (user.id) await api.patch(`/users/list/${user.id}/`, user)
+    else await api.post(`/users/list/`, user)
+
+    if (api.status < 400) {
+      setSuccessMessage(
+        `Usuario ${user.id ? 'modificado' : 'añadido'} exitosamente.`
+      )
+      setLoadingSaveUser(false)
+    } else
+      setErrorMessage(`Error al ${user.id ? 'modificar' : 'crear'} el usuario.`)
+    setLoadingSaveUser(false)
+    setShowModal(false)
+  }
 
   useEffect(() => {
-    setPage(1)
-    getUsers()
-  }, [columns])
+    const controller = new AbortController()
+    getUsersList(controller.signal)
+    return () => {
+      controller.abort()
+    }
+  }, [page, search, isAdmin, rows])
 
-  //Get Companies and roles
   useEffect(() => {
-    getCompanies()
-    getRoles()
-  }, [])
+    if (!showModal) {
+      getUsersList()
+      setUser(userTemplate)
+    }
+  }, [showModal])
 
   return (
     <UsersContext.Provider
       value={{
-        loading,
-        loadingUser,
-        totalRows,
-        setTotalRows,
-        page,
-        setPage,
-        rows,
-        setRows,
-        value,
-        getUsers,
-        setValue,
-        order,
-        setOrder,
-        listCompanies,
-        setListCompanies,
-        rolesList,
-        setRolesList,
+        isAdmin,
+        setIsAdmin,
         user,
         setUser,
+        showModal,
+        setShowModal,
         users,
         setUsers,
-        setUserData,
-        column,
-        setColumn,
-        columns,
-        setColumns,
+        loadingUsers,
+        setLoadingUsers,
+        page,
+        setPage,
+        getUser,
+        setSearch,
+        saveUser,
+        loadingSaveUser,
+        deleteUser,
+        rows,
+        setRows,
       }}
     >
       {children}

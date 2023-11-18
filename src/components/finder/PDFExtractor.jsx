@@ -266,7 +266,7 @@ const PDFExtractor = ({ open, onClose }) => {
           size={'small'}
           style={{ margin: '20px auto' }}
         />
-        {step === steps.length - 1 ? (
+        {step === steps.length ? (
           <Button
             disabled={(!summaryImage && step === 3) || loading}
             onClick={handleFinish}

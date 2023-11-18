@@ -15,6 +15,7 @@ import Profile from './pages/Profile'
 import Authorities from './pages/admin/Authorities'
 import Users from './pages/admin/Users'
 import history from './utils/history'
+import { UsersProvider } from './context/UsersProvider'
 
 Chart.register([Tooltip])
 Chart.register(ArcElement)
@@ -54,7 +55,14 @@ function App() {
                   </AuthoritiesProvider>
                 }
               />
-              <Route path={'/admin/users'} element={<Users />} />
+              <Route
+                path={'/admin/users'}
+                element={
+                  <UsersProvider>
+                    <Users />
+                  </UsersProvider>
+                }
+              />
             </Route>
           </Routes>
         </NotificationProvider>

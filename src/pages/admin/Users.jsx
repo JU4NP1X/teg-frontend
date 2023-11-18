@@ -1,9 +1,13 @@
 import { Add } from '@mui/icons-material'
 import {
+  Box,
   Card,
   CardContent,
   CardHeader,
   IconButton,
+  MenuItem,
+  Select,
+  TextField,
   Tooltip,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
@@ -12,6 +16,12 @@ import UsersTable from '../../components/admin/users/UsersTable'
 import ConfirmationDialog from '../../components/common/ConfirmationDialog'
 import useNotification from '../../hooks/useNotification'
 import ApiConnection from '../../utils/apiConnection'
+import useUsers from '../../hooks/useUsers'
+import {
+  SelectValidator,
+  TextValidator,
+  ValidatorForm,
+} from 'react-material-ui-form-validator'
 
 const userTemplate = {
   fistName: '',
@@ -21,47 +31,40 @@ const userTemplate = {
 }
 
 const Users = () => {
-  const [users, setUsers] = useState({
-    count: null,
-    next: null,
-    previous: null,
-    results: [],
-  })
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const {
+    isAdmin,
+    setIsAdmin,
+    user,
+    setUser,
+    showModal,
+    setShowModal,
+    users,
+    loadingUsers,
+    page,
+    setPage,
+    search,
+    setSearch,
+    saveUser,
+    loadingSaveUser,
+    deleteUser,
+    rows,
+    setRows,
+  } = useUsers()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [formValues, setFormValues] = useState(userTemplate)
-  const [loading, setLoading] = useState(false)
-  const [loadingEdition, setLoadingEdition] = useState(false)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [page, setPage] = useState(0)
-  const { setSuccessMessage, setErrorMessage } = useNotification()
 
-  const handleDeleteUser = (userId) => {
-    setSelectedUser(userId)
+  const handleDeleteUser = (user) => {
+    setUser(user)
     setDeleteDialogOpen(true)
   }
 
   const handleEditUser = (user) => {
-    setFormValues(user)
-    setEditDialogOpen(true)
+    setUser(user)
+    setShowModal(true)
   }
 
   const handleConfirmDelete = async () => {
-    try {
-      setLoadingEdition(true)
-      const api = ApiConnection()
-      await api.delete(`/users/list/${selectedUser}`)
-      if (api.status < 400) {
-        fetchUsers()
-        setLoadingEdition(false)
-        setDeleteDialogOpen(false)
-        setSuccessMessage('Usuario borrado exitosamente')
-      } else setErrorMessage('Error al realizar la acción')
-    } catch (error) {
-      setLoadingEdition(false)
-      console.error(error)
-    }
+    deleteUser(user)
+    handleCloseDeleteDialog()
   }
 
   const handleCloseDeleteDialog = () => {
@@ -69,72 +72,69 @@ const Users = () => {
   }
 
   const handleCloseDialog = () => {
-    setEditDialogOpen(false)
-  }
-
-  const handleSaveUser = async () => {
-    setLoadingEdition(true)
-    const api = ApiConnection()
-    if (formValues.id) {
-      await api.patch(`/users/list/${formValues.id}/`, formValues)
-    } else {
-      await api.post('/users/list/', formValues)
-    }
-    if (api.status < 400) {
-      setSuccessMessage(
-        `Usuario ${formValues.id ? 'Modificado' : 'Guardado'} exitosamente`
-      )
-
-      setEditDialogOpen(false)
-      fetchUsers()
-      setLoadingEdition(false)
-    } else {
-      setErrorMessage(
-        `Error al ${
-          formValues.id ? 'modificar' : 'crear'
-        } el usuario, asegúrese que el correo o el nombre de usuario no se encuentren ya en uso`
-      )
-      setLoadingEdition(false)
-    }
+    setShowModal(false)
   }
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    setFormValues((prevValues) => ({
+    setUser((prevValues) => ({
       ...prevValues,
       [name]: value,
     }))
   }
 
-  const fetchUsers = async () => {
-    setLoading(true)
-    try {
-      const api = ApiConnection()
-      const data = await api.get('/users/list/', {
-        params: {
-          limit: rowsPerPage,
-          offset: page * rowsPerPage,
-        },
-      })
-      setUsers(data)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchUsers()
-  }, [page, rowsPerPage])
-
   return (
     <>
       <Card>
         <CardHeader
-          title={'Usuarios'}
+          title={
+            <div style={{ display: 'flex' }}>
+              Usuarios
+              <Box
+                sx={{
+                  display: { xs: 'none', md: 'none', lg: 'none', xl: 'flex' },
+                  width: '100%',
+                }}
+              >
+                <ValidatorForm
+                  onSubmit={() => {}}
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <div style={{ marginLeft: 'auto', paddingRight: 250 }}>
+                    <SelectValidator
+                      sx={{ minWidth: 250 }}
+                      id={'isAdmin'}
+                      label={'Tipo de usuario'}
+                      labelid={'admin-label'}
+                      name={'isAdmin'}
+                      value={isAdmin}
+                      onChange={(e) => setIsAdmin(e.target.value)}
+                    >
+                      <MenuItem value={-1}>Todos</MenuItem>
+                      <MenuItem value={1}>Administrador</MenuItem>
+                      <MenuItem value={0}>Estandar</MenuItem>
+                    </SelectValidator>
+                  </div>
+                  <div style={{ marginRight: 'auto' }}>
+                    <TextValidator
+                      sx={{ minWidth: 350 }}
+                      label={'Buscar'}
+                      variant={'outlined'}
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
+                </ValidatorForm>
+              </Box>
+            </div>
+          }
           action={
-            <Tooltip title="Agregar usuario">
+            <Tooltip title={'Agregar usuario'}>
               <IconButton
                 color={'primary'}
                 size={'small'}
@@ -151,20 +151,20 @@ const Users = () => {
             users={users}
             handleEditUser={handleEditUser}
             handleDeleteUser={handleDeleteUser}
-            loading={loading}
+            loading={loadingUsers}
             page={page}
             setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            setRowsPerPage={setRowsPerPage}
+            rowsPerPage={rows}
+            setRowsPerPage={setRows}
           />
         </CardContent>
       </Card>
       <UserDialog
-        open={editDialogOpen}
+        open={showModal}
         onClose={handleCloseDialog}
-        onSave={handleSaveUser}
-        formValues={formValues}
-        loadingEdition={loadingEdition}
+        onSave={saveUser}
+        formValues={user}
+        loadingEdition={loadingSaveUser}
         handleChange={handleChange}
       />
       <ConfirmationDialog
@@ -173,7 +173,7 @@ const Users = () => {
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
-        loadingEdition={loadingEdition}
+        loadingEdition={loadingSaveUser}
         cancelButtonText={'Cancelar'}
         confirmButtonText={'Eliminar'}
       />

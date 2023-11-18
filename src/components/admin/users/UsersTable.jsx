@@ -62,7 +62,7 @@ const UsersTable = ({
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
-            style={{ height: 'calc(100vh - 200px)' }}
+            style={{ height: 'calc(100vh - 225px)' }}
           >
             <Table stickyHeader>
               <TableHead>
@@ -109,7 +109,7 @@ const UsersTable = ({
                         </Tooltip>
                         <Tooltip title="Eliminar usuario">
                           <IconButton
-                            onClick={() => handleDeleteUser(item.id)}
+                            onClick={() => handleDeleteUser(item)}
                             size={'small'}
                             color={'error'}
                             sx={{ m: 1 }}
