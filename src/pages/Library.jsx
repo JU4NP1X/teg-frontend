@@ -11,6 +11,7 @@ import Documents from '../components/library/Documents'
 import Filters from '../components/library/Filters'
 import Search from '../components/library/Search'
 import useLibrary from '../hooks/useLibrary'
+import { isMobile } from '../utils/utils'
 
 const Library = () => {
   const { documents, currentPage, setCurrentPage, loadingDocuments } =
@@ -26,8 +27,8 @@ const Library = () => {
         item
         sx={{
           display: { xs: 'none', md: 'none', lg: 'none', xl: 'block' },
+          pt: '0 !important',
         }}
-        style={{ paddingTop: 0 }}
         xl={3}
       >
         <Filters />
@@ -37,32 +38,36 @@ const Library = () => {
         <Card style={{ marginTop: 10 }}>
           <CardContent>
             <Border>
-              {loadingDocuments ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: 'calc(100vh - 297px)',
-                  }}
-                >
-                  <CircularProgress color={'primary'} />
-                </div>
-              ) : (
-                <SimpleBar
-                  onTouchStart={(e) => {
-                    e.stopPropagation()
-                  }}
-                  style={{
-                    height: 'calc(100vh - 297px)',
-                  }}
-                >
+              <SimpleBar
+                onTouchStart={(e) => {
+                  e.stopPropagation()
+                }}
+                style={{
+                  height: isMobile()
+                    ? 'calc(100vh - 240px)'
+                    : 'calc(100vh - 297px)',
+                }}
+              >
+                {loadingDocuments ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: isMobile()
+                        ? 'calc(100vh - 250px)'
+                        : 'calc(100vh - 297px)',
+                    }}
+                  >
+                    <CircularProgress color={'primary'} />
+                  </div>
+                ) : (
                   <Documents
                     paginatedData={documents.results}
                     loading={loadingDocuments}
                   />
-                </SimpleBar>
-              )}
+                )}
+              </SimpleBar>
             </Border>
           </CardContent>
         </Card>

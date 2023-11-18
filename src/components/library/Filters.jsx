@@ -39,7 +39,7 @@ const Filters = () => {
     <Card>
       <CardHeader title={'Filtrar por categoría'} />
       <CardContent>
-        <FormControl fullWidth style={{ marginTop: 20, marginBottom: 14 }}>
+        <FormControl fullWidth style={{ marginTop: -5, marginBottom: 14 }}>
           <Autocomplete
             id={'controllable-states-demo'}
             getOptionLabel={({ name }) => name}
@@ -101,7 +101,7 @@ const Filters = () => {
               e.stopPropagation()
             }}
             style={{
-              height: 'calc(100vh - 362px)',
+              height: 'calc(100vh - 337px)',
             }}
           >
             <List>

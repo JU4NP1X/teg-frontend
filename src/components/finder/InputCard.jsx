@@ -12,6 +12,7 @@ import {
 import { useState } from 'react'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import useClassifier from '../../hooks/useClassifier'
+import { isSx } from '../../utils/utils'
 import PDFExtractor from './PDFExtractor'
 
 const InputCard = () => {
@@ -142,33 +143,33 @@ const InputCard = () => {
           <CardActions disableSpacing sx={{ pb: 0 }}>
             <Button
               variant={'outlined'}
-              startIcon={<Cancel />}
+              startIcon={isSx() ? undefined : <Cancel />}
               sx={{ mr: 'auto' }}
               onClick={() => {
                 setShowTable(!showTable)
               }}
               disabled={loadingCategories || loadingSaveDocument}
             >
-              Cancelar
+              {isSx() ? <Cancel /> : 'Cancelar'}
             </Button>
             <Button
               variant={'outlined'}
-              startIcon={<Upload />}
+              startIcon={isSx() ? undefined : <Upload />}
               onClick={() => {
                 setOpenPDFExtractor(true)
               }}
               disabled={loadingCategories || loadingSaveDocument}
             >
-              {doc.pdf ? 'Modificar' : 'Subir'} PDF
+              {isSx() ? <Upload /> : <>{doc.pdf ? 'Modificar' : 'Subir'} PDF</>}
             </Button>
             <Button
               type={'submit'}
               variant={'contained'}
-              startIcon={<Category />}
-              sx={{ ml: 'auto', width: '270px' }}
+              startIcon={isSx() ? undefined : <Category />}
+              sx={{ ml: 'auto', width: isSx() ? 'auto' : '270px' }}
               disabled={loadingCategories || loadingSaveDocument}
             >
-              Predecir categorías
+              {isSx() ? <Category /> : 'Predecir categorías'}
               {loadingCategories && (
                 <CircularProgress color={'inherit'} size={24} sx={{ ml: 2 }} />
               )}

@@ -11,6 +11,7 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import useAuth from '../hooks/useAuth'
 import useNotification from '../hooks/useNotification'
 import ApiConnection from '../utils/apiConnection'
+import { isSx } from '../utils/utils'
 
 const Profile = () => {
   const { user, setUser } = useAuth()
@@ -88,11 +89,11 @@ const Profile = () => {
   })
 
   return (
-    <Grid container sx={{ height: 'calc(100vh - 70px)' }}>
+    <Grid container sx={{ height: isSx() ? '100vh' : 'calc(100vh - 70px)' }}>
       <Grid item xs={0} md={4} />
       <Grid item xs={12} md={4} sx={{ display: 'flex' }}>
-        <Grid container spacing={4} sx={{ marginTop: 'auto' }}>
-          <Grid item xs={12}>
+        <Grid container spacing={4} sx={{ my: 0 }}>
+          <Grid item xs={12} sx={{ pt: 0 }}>
             <Card>
               <CardHeader title={'Modificar datos'} />
               <CardContent>

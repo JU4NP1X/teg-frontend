@@ -12,6 +12,7 @@ import {
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 import useAuthorities from '../../../hooks/useAuthorities'
+import { isMobile } from '../../../utils/utils'
 import Border from '../../common/Border'
 import AuthorityRow from './AuthorityRow'
 
@@ -139,7 +140,11 @@ const AuthoritiesTable = ({}) => {
       <TableContainer>
         <Border>
           <SimpleBar
-            style={{ height: 'calc(100vh - 220px)' }}
+            style={{
+              height: isMobile()
+                ? 'calc(100vh - 135px)'
+                : 'calc(100vh - 223px)',
+            }}
             onTouchStart={(e) => {
               e.stopPropagation()
             }}
@@ -184,7 +189,7 @@ const AuthoritiesTable = ({}) => {
                     <TableCell
                       colSpan={columns.length}
                       align={'center'}
-                      style={{ height: 'calc(100vh - 357px)' }}
+                      style={{ height: 'calc(100vh - 345px)' }}
                     >
                       <CircularProgress />
                     </TableCell>

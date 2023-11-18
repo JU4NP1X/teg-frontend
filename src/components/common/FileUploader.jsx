@@ -61,6 +61,7 @@ const FileUploader = ({
           placeContent: 'center',
           placeItems: 'center',
           cursor: loading || loadingFile ? undefined : 'pointer',
+          textAlign: 'center',
         }}
         onClick={() => {
           if (!loading && !loadingFile) fileInputRef.current.click()

@@ -1,3 +1,5 @@
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Dialog from '@mui/material/Dialog'
@@ -10,17 +12,18 @@ import Slide from '@mui/material/Slide'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import React, { useEffect, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { pdfjs } from 'react-pdf'
 import SimpleBar from 'simplebar-react'
 import useClassifier from '../../hooks/useClassifier'
 import ApiConnection from '../../utils/apiConnection'
+import { isSx } from '../../utils/utils'
+import Border from '../common/Border'
 import FileUploader from '../common/FileUploader'
 
 const steps = [
-  'Subir PDF',
   'Seleccionar Portada',
   'Seleccionar Título',
   'Seleccionar Resumen',
@@ -48,6 +51,14 @@ const PDFExtractor = ({ open, onClose }) => {
   const [summaryImage, setSummaryImage] = useState(null)
   const [updatingFile, setUpdatingFile] = useState(false)
   const [loading, setLoading] = useState(false) // Estado para controlar la carga
+  const simpleBarRef = createRef({ current: {} })
+
+  const scrollToBottom = () => {
+    simpleBarRef.current.scrollTop += 50
+  }
+  const scrollToTop = () => {
+    simpleBarRef.current.scrollTop -= 50
+  }
 
   const base64ToFile = (base64String) => {
     try {
@@ -71,7 +82,7 @@ const PDFExtractor = ({ open, onClose }) => {
       const arrayBuffer = e.target.result
       const pdfjsLib = await import('pdfjs-dist')
       const pdf = await pdfjsLib.getDocument(arrayBuffer).promise
-      const pages = pdf.numPages
+      const pages = pdf.numPages < 10 ? pdf.numPages : 10
       const extractedPages = []
 
       for (let i = 0; i < pages; i++) {
@@ -184,31 +195,35 @@ const PDFExtractor = ({ open, onClose }) => {
       keepMounted
       onClose={closeDialog}
       aria-describedby={'alert-dialog-slide-description'}
-      maxWidth={'lg'} // Añadido para ajustar el tamaño del diálogo
+      maxWidth={'xs'} // Añadido para ajustar el tamaño del diálogo
+      fullWidth
     >
       <DialogTitle>Subir y extraer datos del documento</DialogTitle>
-      <DialogContent>
-        <DialogContentText id={'alert-dialog-slide-description'}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Stepper
-              activeStep={step}
-              alternativeStep={step + 1}
-              alternativeLabel
+      <DialogContent sx={{ px: 1 }}>
+        {step !== 0 && (
+          <DialogContentText id={'alert-dialog-slide-description'}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
             >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </div>
-        </DialogContentText>
+              <Stepper
+                activeStep={step - 1}
+                alternativeStep={step}
+                alternativeLabel
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </div>
+          </DialogContentText>
+        )}
+
         {step === 0 && (
           <FileUploader
             buttonText={'Haz click o arrastra un .pdf a clasificar'}
@@ -219,29 +234,84 @@ const PDFExtractor = ({ open, onClose }) => {
         )}
 
         {step !== 0 && selectedPages[currentPage] && (
-          <SimpleBar
-            onTouchStart={(e) => {
-              e.stopPropagation()
-            }}
+          <Border
             style={{
-              maxHeight: '50vh',
-              width: 500,
-              textAlign: 'center',
+              width: 390,
+              maxWidth: '70vw',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              display: 'grid',
             }}
           >
-            <ReactCrop
-              crop={crop}
-              onChange={handleCropChange}
-              onComplete={handleCropComplete}
+            <IconButton
+              sx={{
+                mx: 'auto',
+                position: 'sticky',
+                mb: -4,
+                zIndex: 1,
+                display: !isSx() ? 'none' : undefined,
+              }}
+              onClick={scrollToTop}
+              size={'small'}
+              variant={'outlined'}
             >
-              <img src={selectedPages[currentPage].image} alt={'Page'} />
-            </ReactCrop>
-          </SimpleBar>
+              <ArrowUpward />
+            </IconButton>
+            <SimpleBar
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
+              style={{
+                maxHeight: '44vh',
+                width: 390,
+                maxWidth: '70vw',
+                textAlign: 'center',
+              }}
+              scrollableNodeProps={{ ref: simpleBarRef }}
+            >
+              <ReactCrop
+                crop={crop}
+                onChange={handleCropChange}
+                onComplete={handleCropComplete}
+              >
+                <img src={selectedPages[currentPage].image} alt={'Page'} />
+              </ReactCrop>
+            </SimpleBar>
+
+            <IconButton
+              sx={{
+                mx: 'auto',
+                position: 'sticky',
+                mt: -4,
+                display: !isSx() ? 'none' : undefined,
+              }}
+              onClick={scrollToBottom}
+              size={'small'}
+              variant={'outlined'}
+            >
+              <ArrowDownward />
+            </IconButton>
+          </Border>
         )}
+      </DialogContent>
+      <DialogContent
+        sx={{
+          alignSelf: 'center',
+          display: step !== 0 ? undefined : 'none',
+          px: 0,
+        }}
+      >
+        <Pagination
+          count={numPages || 0}
+          page={currentPage + 1}
+          onChange={handlePageChange}
+          color={'primary'}
+          size={'small'}
+        />
       </DialogContent>
       <DialogActions
         style={{
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           display: step !== 0 ? undefined : 'none',
         }}
       >

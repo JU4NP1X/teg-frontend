@@ -13,7 +13,7 @@ import { Outlet } from 'react-router-dom'
 import SimpleBar from 'simplebar-react'
 import 'simplebar-react/dist/simplebar.min.css'
 import '../../styles/layout/layout.css'
-import { isMobile } from '../../utils/utils'
+import { isMobile, isSx } from '../../utils/utils'
 import Swipe from '../common/Swipe'
 import { Drawer } from './Drawer'
 import { SideBar } from './SideBar'
@@ -108,7 +108,7 @@ const Layout = ({ children }) => {
                 >
                   <img
                     src={'/img/uc-logo.png'}
-                    style={{ marginLeft: isMobile() ? 5 : -5, height: 50 }}
+                    style={{ marginLeft: isSx() ? 5 : -5, height: 50 }}
                   />
                 </Tooltip>
                 <Tooltip
@@ -166,12 +166,13 @@ const Layout = ({ children }) => {
                 alignContent={'center'}
                 alignItems={'center'}
                 sx={{
-                  p: 4,
+                  px: { sx: 0, md: 0, lg: 4 },
+                  py: { sx: 0, md: 0, lg: 4 },
                 }}
               >
                 <SimpleBar
                   style={{
-                    height: 'calc(100vh - 65px)',
+                    height: isMobile() ? '100vh' : 'calc(100vh - 65px)',
                     overflow: 'auto',
                     display: 'grid',
                     width: '100%',

@@ -23,7 +23,7 @@ const Search = () => {
         <FormControl fullWidth sx={{ marginTop: '10px' }}>
           <ValidatorForm onSubmit={() => setSearch(searchDocument)}>
             <Grid container alignItems={'center'} spacing={1}>
-              <Grid item xs={9}>
+              <Grid item xs={12} md={9}>
                 <TextValidator
                   label={'Buscar'}
                   variant={'outlined'}
@@ -33,7 +33,7 @@ const Search = () => {
                 />
               </Grid>
 
-              <Grid item xs={3}>
+              <Grid item md={3} sx={{ display: { xs: 'none', md: 'block' } }}>
                 <SelectValidator
                   label={'Ordenar por'}
                   labelid={'order-by-label'}
